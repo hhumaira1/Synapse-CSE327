@@ -121,7 +121,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#fafbff] via-[#f5f7ff] to-[#eff2ff] dark:from-[#0a0b14] dark:via-[#0f1117] dark:to-[#14151f]">
-      {/* Navigation */}
+      {/* Navigation */} 
       <nav className="sticky top-0 z-50 border-b border-[#e5e7eb]/50 bg-white/70 backdrop-blur-xl dark:border-[#1f2937]/50 dark:bg-[#0a0b14]/70 transition-all duration-300">
         <div className="container mx-auto flex items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2.5">
@@ -217,7 +217,7 @@ export default function Home() {
             </div>
             <div className="flex items-center gap-1.5">
               <CheckCircle className="h-4 w-4 text-[#10b981]" />
-              <span>14-day trial</span>
+              <span>14-days trial</span>
             </div>
             <div className="flex items-center gap-1.5">
               <CheckCircle className="h-4 w-4 text-[#10b981]" />
@@ -387,7 +387,7 @@ export default function Home() {
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
               <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white/10 font-semibold px-8 py-6">
-                Schedule a Demo
+                Schedule A Demo
               </Button>
             </div>
             <div className="mt-6 flex items-center justify-center gap-6 text-sm text-white/80">
@@ -401,7 +401,7 @@ export default function Home() {
               </span>
               <span className="flex items-center gap-1.5">
                 <CheckCircle className="h-4 w-4" />
-                14-day trial
+                14-days trial
               </span>
             </div>
           </CardContent>
@@ -418,7 +418,7 @@ export default function Home() {
                   <Sparkles className="h-5 w-5 text-white" />
                 </div>
                 <span className="text-lg font-black bg-gradient-to-r from-[#6366f1] to-[#a855f7] bg-clip-text text-transparent">
-                  SynapseCRM
+                  Synapse
                 </span>
               </div>
               <p className="text-sm text-[#64748b] dark:text-[#94a3b8] leading-relaxed">
