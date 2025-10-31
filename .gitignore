@@ -1,0 +1,25 @@
+node_modules/
+.env
+.env.local
+.env.*.local
+dist/
+build/
+.next/
+*.log
+.DS_Store
+.idea/
+.vscode/
+
+# Frontend-specific ignores
+Frontend/node_modules/
+Frontend/.next/
+Frontend/.env*
+
+# Backend-specific ignores (add when creating NestJS)
+backend/node_modules/
+backend/dist/
+backend/.env*
+
+# General
+*.log
+.DS_Store
