@@ -1,0 +1,356 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ==================== ENUMS ====================
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  MEMBER
+}
+
+enum TenantType {
+  ORGANIZATION
+  PERSONAL
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  UNQUALIFIED
+  CONVERTED
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TicketSource {
+  INTERNAL
+  PORTAL
+  EMAIL
+  API
+}
+
+enum InteractionType {
+  EMAIL
+  CALL
+  MEETING
+  NOTE
+  TICKET
+}
+
+// ==================== MULTI-TENANT FOUNDATION ====================
+
+model Tenant {
+  id        String     @id @default(cuid())
+  name      String
+  slug      String     @unique
+  type      TenantType @default(ORGANIZATION)
+  settings  Json?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  users           User[]
+  contacts        Contact[]
+  leads           Lead[]
+  pipelines       Pipeline[]
+  deals           Deal[]
+  interactions    Interaction[]
+  tickets         Ticket[]
+  integrations    Integration[]
+  callLogs        CallLog[]
+  portalCustomers PortalCustomer[]
+
+  @@map("tenants")
+}
+
+// ==================== INTERNAL CRM USERS ====================
+
+model User {
+  id        String   @id @default(cuid())
+  tenantId  String
+  clerkId   String   @unique
+  email     String   @unique
+  name      String?
+  role      UserRole @default(MEMBER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant          Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  interactions    Interaction[]
+  ticketsAssigned Ticket[]      @relation("TicketAssignedUser")
+
+  @@unique([tenantId, clerkId])
+  @@index([tenantId])
+  @@map("users")
+}
+
+// ==================== CORE CRM ENTITIES ====================
+
+model Contact {
+  id           String   @id @default(cuid())
+  tenantId     String
+  firstName    String
+  lastName     String
+  email        String?
+  phone        String?
+  company      String?
+  jobTitle     String?
+  source       String?
+  notes        String?
+  customFields Json?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  tenant          Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  leads           Lead[]
+  interactions    Interaction[]
+  deals           Deal[]
+  tickets         Ticket[]
+  callLogs        CallLog[]
+  portalCustomers PortalCustomer[]
+
+  @@index([tenantId])
+  @@index([email])
+  @@map("contacts")
+}
+
+model Lead {
+  id          String     @id @default(cuid())
+  tenantId    String
+  contactId   String?
+  source      String
+  status      LeadStatus @default(NEW)
+  value       Decimal?
+  convertedAt DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  tenant  Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  contact Contact? @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  deals   Deal[]
+
+  @@index([tenantId])
+  @@index([contactId])
+  @@index([status])
+  @@map("leads")
+}
+
+model Pipeline {
+  id        String   @id @default(cuid())
+  tenantId  String
+  name      String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  stages Stage[]
+  deals  Deal[]
+
+  @@index([tenantId])
+  @@map("pipelines")
+}
+
+model Stage {
+  id         String   @id @default(cuid())
+  pipelineId String
+  name       String
+  order      Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  pipeline Pipeline @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
+  deals    Deal[]
+
+  @@unique([pipelineId, order])
+  @@index([pipelineId])
+  @@map("stages")
+}
+
+model Deal {
+  id                String    @id @default(cuid())
+  tenantId          String
+  contactId         String
+  leadId            String?
+  pipelineId        String
+  stageId           String
+  title             String
+  description       String?
+  value             Decimal?
+  probability       Decimal? // 0.0 to 1.0
+  expectedCloseDate DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  tenant       Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  contact      Contact       @relation(fields: [contactId], references: [id], onDelete: Restrict)
+  lead         Lead?         @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  pipeline     Pipeline      @relation(fields: [pipelineId], references: [id], onDelete: Restrict)
+  stage        Stage         @relation(fields: [stageId], references: [id], onDelete: Restrict)
+  interactions Interaction[]
+  tickets      Ticket[]
+  callLogs     CallLog[]
+
+  @@index([tenantId])
+  @@index([contactId])
+  @@index([leadId])
+  @@index([pipelineId])
+  @@index([stageId])
+  @@map("deals")
+}
+
+model Interaction {
+  id        String          @id @default(cuid())
+  tenantId  String
+  contactId String
+  dealId    String?
+  userId    String?
+  type      InteractionType
+  subject   String?
+  content   String
+  dateTime  DateTime        @default(now())
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  tenant  Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  contact Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  deal    Deal?   @relation(fields: [dealId], references: [id], onDelete: SetNull)
+  user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId])
+  @@index([contactId])
+  @@index([dealId])
+  @@index([userId])
+  @@index([type])
+  @@map("interactions")
+}
+
+// ==================== TICKETS / ISSUE TRACKING ====================
+
+model Ticket {
+  id                        String         @id @default(cuid())
+  tenantId                  String
+  contactId                 String
+  portalCustomerId          String?
+  dealId                    String?
+  externalId                String?
+  externalSystem            String?
+  title                     String
+  description               String?
+  status                    TicketStatus   @default(OPEN)
+  priority                  TicketPriority @default(MEDIUM)
+  source                    TicketSource   @default(INTERNAL)
+  submittedByPortalCustomer Boolean        @default(false)
+  createdAt                 DateTime       @default(now())
+  updatedAt                 DateTime       @updatedAt
+  assignedUserId            String?
+
+  tenant         Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  contact        Contact         @relation(fields: [contactId], references: [id], onDelete: Restrict)
+  portalCustomer PortalCustomer? @relation(fields: [portalCustomerId], references: [id], onDelete: SetNull)
+  deal           Deal?           @relation(fields: [dealId], references: [id], onDelete: SetNull)
+  assignedUser   User?           @relation("TicketAssignedUser", fields: [assignedUserId], references: [id], onDelete: SetNull)
+
+  @@unique([tenantId, externalId, externalSystem])
+  @@index([tenantId])
+  @@index([contactId])
+  @@index([portalCustomerId])
+  @@index([dealId])
+  @@index([assignedUserId])
+  @@index([status])
+  @@index([priority])
+  @@map("tickets")
+}
+
+// ==================== INTEGRATIONS ====================
+
+model Integration {
+  id           String    @id @default(cuid())
+  tenantId     String
+  serviceName  String // gmail, calendar, voip, osticket
+  isActive     Boolean   @default(false)
+  config       Json? // OAuth tokens, API keys, scopes
+  lastSyncAt   DateTime?
+  syncStatus   String? // success, failed, in_progress
+  errorMessage String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, serviceName])
+  @@index([tenantId])
+  @@map("integrations")
+}
+
+// ==================== CALL LOGS ====================
+
+model CallLog {
+  id            String   @id @default(cuid())
+  tenantId      String
+  contactId     String
+  dealId        String?
+  fromNumber    String
+  toNumber      String
+  duration      Int? // seconds
+  outcome       String? // completed, missed, voicemail
+  recordingUrl  String?
+  transcription String?
+  summary       String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  tenant  Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  contact Contact @relation(fields: [contactId], references: [id], onDelete: Restrict)
+  deal    Deal?   @relation(fields: [dealId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId])
+  @@index([contactId])
+  @@index([dealId])
+  @@map("call_logs")
+}
+
+// ==================== PORTAL CUSTOMERS ====================
+
+model PortalCustomer {
+  id        String   @id @default(cuid())
+  tenantId  String
+  contactId String?
+  clerkId   String? // Nullable for invitation flow, filled on first login
+  email     String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant  Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  contact Contact? @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  tickets Ticket[]
+
+  @@unique([tenantId, clerkId]) // One user can belong to multiple tenants
+  @@unique([tenantId, email]) // Prevent duplicate emails per tenant
+  @@index([clerkId]) // Fast lookup of all user's tenants
+  @@index([tenantId])
+  @@index([contactId])
+  @@map("portal_customers")
+}
