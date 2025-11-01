@@ -1,26 +1,28 @@
 # SynapseCRM - AI Coding Agent Instructions
 
-> **Development Approach**: Backend-first workflow. Complete the backend API (Phases 1-4) before starting frontend integration.
+> **Development Approach**: Backend-first workflow. Build and test backend APIs before frontend integration.
 
 ## Project Overview
-**SynapseCRM** is a full-stack AI-powered CRM platform built as a monorepo with Next.js 16 frontend and NestJS 11 backend. The project follows a **multi-tenant architecture** designed to manage contacts, leads, deals, tickets, and integrations with external services (Gmail, VoIP, ticketing systems).
+**SynapseCRM** is a multi-tenant AI-powered CRM platform with Next.js 16 frontend and NestJS 11 backend. The system manages contacts, leads, deals, tickets, and portal customers with strict tenant isolation at the database level.
 
 ## Architecture
 
-### Monorepo Structure
+### Monorepo Structure (ACTUAL)
 ```
-synapsecrm/
-├── Frontend/           # Next.js 16 app (React 19, Tailwind CSS 4)
-├── server_backend/     # NestJS 11 API (Express, Prisma ORM)
-└── synapse-crm-workflow.md  # Complete development workflow documentation
+synapse/
+├── Frontend/           # Next.js 16 (React 19, Tailwind CSS 4, shadcn/ui)
+├── server/             # NestJS 11 API (Express 5, Prisma 6.18+)
+├── synapse-crm-workflow.md      # Complete 5-phase development guide
+└── tech-stack-2025-changes.md   # Migration notes for Next.js 16, NestJS 11, Prisma 6.18+
 ```
 
-**Critical Separation**: Frontend and backend are **separate applications** with independent dependencies. Never cross-reference imports between them—they communicate only via HTTP API calls.
+**Critical**: Directories are `Frontend/` and `server/`, NOT `server_backend/`. Backend runs on port **3000** by default (not 3001 as docs suggest).
 
 ### Tech Stack (2025)
 - **Frontend**: Next.js 16.0.0, React 19.2.0, Tailwind CSS 4, shadcn/ui (New York style), Lucide icons
-- **Backend**: NestJS 11, Prisma 6.18+ (with `prisma.config.ts`), Clerk Authentication, Supabase PostgreSQL
-- **Shared Patterns**: TypeScript strict mode, ESM modules (`"module": "nodenext"`), class-validator for DTOs
+- **Backend**: NestJS 11, Prisma 6.18+ (with `prisma.config.ts`), Clerk Authentication (planned), Supabase PostgreSQL
+- **Database**: 13 Prisma models with enums (Tenant, User, Contact, Lead, Pipeline, Stage, Deal, Interaction, Ticket, Integration, CallLog, PortalCustomer)
+- **Shared Patterns**: TypeScript strict mode, ESM modules, class-validator for DTOs
 
 ## Development Workflows
 
@@ -43,26 +45,26 @@ synapsecrm/
   ```
 
 ### Backend (NestJS 11)
-- **Run dev**: `cd server_backend && npm run start:dev` (port 3001 per workflow doc)
+- **Run dev**: `cd server && npm run start:dev` (default port 3000, change in `main.ts` to 3001 for production)
 - **Generate resources**: `nest generate module <name>`, `nest generate service <name>/<name>`, etc.
 - **Test**: `npm run test` (Jest with `ts-jest`)
 - **Key Dependencies**: `@clerk/backend`, `@prisma/client`, `@nestjs/passport`, `@nestjs/axios`, `class-validator`
 
 **NestJS 11 Specifics**:
 - Uses **Express 5** by default (breaking change from v10)
-- **Module Resolution**: `"module": "nodenext"` requires `.js` extensions in imports OR `tsconfig-paths` (currently using latter)
-- **Decorators**: Must enable `"emitDecoratorMetadata": true` and `"experimentalDecorators": true`
+- **Wildcard routes** must be named: use `@Get('/*splat')` NOT `@Get('/*')`
+- **Module Resolution**: Uses `tsconfig-paths` for path aliases (no manual `.js` extensions needed)
+- **Decorators**: Already enabled in `tsconfig.json`
 
 ### Database & Authentication
-- **Prisma ORM**: Version 6.18+ uses **TypeScript config file** (`prisma.config.ts`) instead of `package.json` configuration
-  - Schema location: `prisma/schema.prisma`
-  - Migrations: `prisma/migrations/`
-  - Client output: `prisma/generated/client` (custom location)
+- **Prisma ORM**: Version 6.18+ uses **TypeScript config file** (`prisma.config.ts` at project root)
+  - Schema location: `server/prisma/schema.prisma`
+  - Client output: `server/prisma/generated/client` (custom location)
   - Commands: `npx prisma generate`, `npx prisma db push`, `npx prisma studio`
   
-- **Authentication Strategy**: **Clerk** for user authentication (JWT tokens)
-  - Backend verifies tokens via `@clerk/backend` in `ClerkAuthGuard`
-  - Frontend uses `@clerk/nextjs` (NOT YET INSTALLED—document specifies it but `package.json` missing it)
+- **Authentication Strategy**: **Clerk** planned (not yet implemented)
+  - Backend will verify tokens via `@clerk/backend` in `ClerkAuthGuard`
+  - Frontend will use `@clerk/nextjs` (not yet installed)
   - Multi-tenant isolation: Every entity has `tenantId` foreign key
 
 - **Database**: Supabase PostgreSQL with **direct connection URL** for migrations
@@ -71,18 +73,18 @@ synapsecrm/
   DIRECT_URL="postgresql://..."  # Critical for Supabase connection pooler
   ```
 
-**Required Backend Environment Variables** (`server_backend/.env`):
+**Required Backend Environment Variables** (`server/.env`):
 ```env
 # Database (Supabase PostgreSQL - get from Supabase dashboard)
 DATABASE_URL="postgresql://postgres:[PASSWORD]@[HOST]:5432/postgres"
 DIRECT_URL="postgresql://postgres:[PASSWORD]@[HOST]:5432/postgres"
 
-# Clerk Authentication (get from Clerk dashboard)
+# Clerk Authentication (get from Clerk dashboard - WHEN IMPLEMENTED)
 CLERK_SECRET_KEY="sk_test_..."
 CLERK_PUBLISHABLE_KEY="pk_test_..."
 
 # Server Configuration
-PORT=3001
+PORT=3001  # Change from default 3000 to avoid frontend conflict
 NODE_ENV="development"
 FRONTEND_URL="http://localhost:3000"  # For CORS
 ```
@@ -90,28 +92,32 @@ FRONTEND_URL="http://localhost:3000"  # For CORS
 ## Project-Specific Conventions
 
 ### Multi-Tenant Pattern (CRITICAL - READ FIRST)
-**Every database entity MUST include `tenantId`** for data isolation:
+**Every database entity MUST include `tenantId`** for data isolation. The Prisma schema defines enums for type safety:
+
 ```prisma
-model Contact {
-  id        String   @id @default(cuid())
-  tenantId  String
-  // ... other fields
-  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  @@index([tenantId])
-}
+enum UserRole { ADMIN, MANAGER, MEMBER }
+enum LeadStatus { NEW, CONTACTED, QUALIFIED, UNQUALIFIED, CONVERTED }
+enum TicketStatus { OPEN, IN_PROGRESS, RESOLVED, CLOSED }
+enum TicketPriority { LOW, MEDIUM, HIGH, URGENT }
 ```
 
 **API Endpoints** must:
-1. Extract tenant from authenticated user via `ClerkAuthGuard`
-2. Filter all queries by `tenantId` (see `ContactService.findAll()` example in workflow doc)
-3. Use `findFirst` or `findMany` with `where: { tenantId, ... }` to prevent cross-tenant data leaks
+1. Extract tenant from authenticated user via `ClerkAuthGuard` (when implemented)
+2. Filter all queries by `tenantId`—use `findFirst` or `findMany` with `where: { tenantId, ... }` to prevent cross-tenant data leaks
+3. Use TypeScript enums instead of strings for status fields
 
-**Example Service Method (Backend)**:
+**Example Service Method**:
 ```typescript
+import { LeadStatus } from 'prisma/generated/client';
+
 async findAll(tenantId: string, filters?: any) {
-  return this.prisma.contact.findMany({
-    where: { tenantId, ...filters },  // Always include tenantId
-    include: { leads: true },
+  return this.prisma.lead.findMany({
+    where: { 
+      tenantId, 
+      status: LeadStatus.NEW,  // Type-safe enum
+      ...filters 
+    },
+    include: { contact: true, deals: true },
   });
 }
 ```
@@ -190,7 +196,7 @@ Per workflow doc, Phase 2 features include:
 - **VoIP**: Store calls in `CallLog` model
 - **Ticket Systems**: Link osTicket/Helpy via `Integration` model with `externalId`
 
-## Common Commands Reference
+### Common Commands Reference
 
 ### Frontend
 ```powershell
@@ -202,7 +208,7 @@ npm run lint             # ESLint check
 
 ### Backend
 ```powershell
-cd server_backend
+cd server
 npm run start:dev        # Watch mode
 npm run test             # Run Jest tests
 npm run test:e2e         # E2E tests
@@ -217,20 +223,22 @@ npx prisma studio        # Open database GUI
 
 ## Known Gotchas
 
-1. **Missing Frontend Dependencies**: Workflow doc specifies `@clerk/nextjs`, `@tanstack/react-query`, `axios`, `zustand`, `react-hook-form` but `package.json` only has base Next.js deps. Install before implementing auth/data fetching.
+1. **Directory Names**: Backend is in `server/` NOT `server_backend/`. Workflow docs reference outdated paths.
 
-2. **Prisma 6.18+ Config**: Must create `prisma/prisma.config.ts` with `directUrl` for Supabase:
-   ```ts
-   export default defineConfig({
-     datasource: { url: env("DATABASE_URL"), directUrl: env("DIRECT_URL") }
-   });
+2. **Default Backend Port**: `main.ts` uses port 3000 by default. Change to 3001 in production to avoid frontend conflict.
+
+3. **Prisma Client Path**: Generated client is at `prisma/generated/client`. Import as:
+   ```typescript
+   import { PrismaClient, UserRole } from 'prisma/generated/client';
    ```
 
-3. **Next.js 16 Async Params**: Pages using `params` or `searchParams` must declare them as `Promise<T>` and await them.
+4. **Missing Frontend Auth**: Workflow doc specifies `@clerk/nextjs`, `@tanstack/react-query`, `axios`, but not installed. Install before implementing auth.
 
-4. **NestJS Port**: Workflow doc sets backend to port **3001** (not default 3000) to avoid conflict with frontend.
+5. **Prisma Config Location**: `prisma.config.ts` is at **project root** (`server/prisma.config.ts`), not inside `prisma/` directory.
 
-5. **No Prisma Schema Exists Yet**: Workflow doc contains complete schema with 12+ models (Tenant, User, Contact, Lead, Pipeline, Stage, Deal, Interaction, Ticket, Integration, CallLog) but schema file not in repo. Initialize Prisma first.
+6. **Next.js 16 Async Params**: Pages using `params` or `searchParams` must declare them as `Promise<T>` and await them.
+
+7. **Enum Usage**: Always use Prisma-generated TypeScript enums (e.g., `TicketStatus.OPEN`) instead of strings for type safety.
 
 ## Workflow Documentation
 **Critical Reference**: Read `synapse-crm-workflow.md` for:
@@ -255,30 +263,23 @@ npx prisma studio        # Open database GUI
 
 #### Phase 1: Database Foundation
 ```powershell
-cd server_backend
-npx prisma init  # Creates prisma/ directory and schema.prisma
+cd server
+npx prisma generate  # Already done - client exists at prisma/generated/client
+npx prisma db push   # Already done - schema pushed to Supabase
+npx prisma studio    # Use this to inspect database
 ```
-1. **Create `prisma/prisma.config.ts`** (see workflow doc section 2.4)
-2. **Copy complete schema** from `synapse-crm-workflow.md` into `prisma/schema.prisma` (12 models: Tenant, User, Contact, Lead, Pipeline, Stage, Deal, Interaction, Ticket, Integration, CallLog)
-3. **Set environment variables** in `server_backend/.env`:
-   - `DATABASE_URL` (Supabase PostgreSQL)
-   - `DIRECT_URL` (Supabase direct connection)
-   - `CLERK_SECRET_KEY`
-   - `CLERK_PUBLISHABLE_KEY`
-4. Run `npx prisma generate && npx prisma db push`
 
 #### Phase 2: Core Infrastructure
 ```powershell
-nest generate module database
-nest generate service database/prisma
+# Already completed - DatabaseModule and PrismaService exist
+# Verify: check server/src/database/database.module.ts
 ```
-1. **PrismaService** (see workflow doc section 2.7) - handles DB connection lifecycle
-2. **Configure `app.module.ts`** - import DatabaseModule, ConfigModule
-3. **Update `main.ts`**:
+**Remaining tasks**:
+1. Update `main.ts`:
    - Enable global ValidationPipe
    - Enable CORS for `http://localhost:3000`
    - Set global prefix to `'api'`
-   - Change port to 3001
+   - Change port from 3000 to 3001
 
 #### Phase 3: Authentication Module
 ```powershell
@@ -350,10 +351,12 @@ npm install @clerk/nextjs axios @tanstack/react-query react-hook-form zustand
 3. Leads, Deals, Tickets pages
 4. Form components with `react-hook-form`
 
-## Current Project State (as of Oct 31, 2025)
-- ✅ Frontend: Basic Next.js 16 app with landing page, shadcn/ui setup
-- ✅ Backend: NestJS 11 boilerplate with Clerk/Prisma dependencies installed
-- ❌ Database: Prisma schema not initialized (no `schema.prisma` file)
-- ❌ Authentication: Clerk integration code not implemented (guards, services missing)
-- ❌ API Endpoints: No feature modules (Contact, Lead, Deal, etc.) created yet
-- 🎯 **Next Action**: Initialize Prisma and create database schema (Backend Phase 1)
+## Current Project State (as of Nov 1, 2025)
+- ✅ Frontend: Landing page complete with shadcn/ui, Tailwind CSS 4, full responsive design
+- ✅ Backend: NestJS 11 with PrismaService, DatabaseModule configured
+- ✅ Database: Complete Prisma schema (13 models) generated and pushed to Supabase
+- ✅ Prisma Config: Modern TypeScript config (`prisma.config.ts`) with directUrl support
+- ❌ Authentication: Clerk integration code not implemented (guards, services, controllers missing)
+- ❌ API Endpoints: No feature modules (Contact, Lead, Deal, Ticket, etc.) exist yet
+- ❌ Frontend Auth: No Clerk provider, no authentication pages
+- 🎯 **Next Action**: Implement authentication infrastructure (Backend Phase 3)
