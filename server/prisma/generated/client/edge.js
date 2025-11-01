@@ -346,7 +346,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "G:\\Cse 327\\synapsecrm\\server_backend\\prisma\\generated\\client",
+      "value": "G:\\Cse 327\\synapse\\server\\prisma\\generated\\client",
       "fromEnvVar": null
     },
     "config": {
@@ -360,7 +360,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "G:\\Cse 327\\synapsecrm\\server_backend\\prisma\\schema.prisma",
+    "sourceFilePath": "G:\\Cse 327\\synapse\\server\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -374,6 +374,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
