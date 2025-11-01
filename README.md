@@ -132,6 +132,7 @@ cp .env.example .env
 # - DATABASE_URL (Supabase PostgreSQL)
 # - DIRECT_URL (Supabase direct connection)
 # - CLERK_SECRET_KEY
+
 # - CLERK_PUBLISHABLE_KEY
 
 # Generate Prisma client and push schema

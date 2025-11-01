@@ -42,6 +42,7 @@ export class ClerkAuthGuard implements CanActivate {
     try {
       // Our global type file 'src/types/express/index.d.ts'
       // ensures 'request.user' is valid TypeScript
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const payload = await this.clerkService.verifyToken(token);
       console.log(
         'ClerkAuthGuard - Token verified, payload keys:',
