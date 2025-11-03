@@ -1,28 +1,68 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useApiClient } from '@/lib/api';
 import { useUser } from '@clerk/nextjs';
+import { useUserStatus } from '@/hooks/useUserStatus';
 
 export default function OnboardPage() {
   const router = useRouter();
   const { user, isLoaded } = useUser();
   const apiClient = useApiClient();
+  const queryClient = useQueryClient();
   const [tenantName, setTenantName] = useState('');
+  const userStatus = useUserStatus();
+
+  // Redirect to dashboard if user already exists and doesn't need onboarding
+  useEffect(() => {
+    console.log('OnboardPage - User status changed:', {
+      isLoaded: userStatus.isLoaded,
+      userExists: userStatus.userExists,
+      needsOnboarding: userStatus.needsOnboarding,
+      error: userStatus.error
+    });
+
+    if (userStatus.isLoaded && userStatus.userExists && !userStatus.needsOnboarding) {
+      console.log('User already exists, redirecting to dashboard...');
+      router.push('/dashboard');
+    }
+  }, [userStatus.isLoaded, userStatus.userExists, userStatus.needsOnboarding, userStatus.error, router]);
 
   const mutation = useMutation({
     mutationFn: async (data: { tenantName: string }) => {
+      console.log('Starting onboarding with data:', data);
       const response = await apiClient.post('/auth/onboard', data);
+      console.log('Onboarding response:', response.data);
       return response.data;
     },
-    onSuccess: () => {
-      router.push('/dashboard');
+    onSuccess: async (data) => {
+      console.log('Onboarding successful:', data);
+      
+      try {
+        // Force refetch user status query and wait for it to complete
+        await queryClient.refetchQueries({ 
+          queryKey: ['user-status'],
+          type: 'active' 
+        });
+        
+        console.log('User status refetched successfully, redirecting to dashboard...');
+        
+        // Redirect to dashboard
+        router.push('/dashboard');
+      } catch (error) {
+        console.error('Failed to refetch user status:', error);
+        // Still redirect even if refetch fails
+        router.push('/dashboard');
+      }
     },
-    onError: (error: any) => {
-      console.error('Onboarding failed:', error.response?.data);
-      alert('Onboarding failed. Please try again.');
+    onError: (error: unknown) => {
+      const apiError = error as { response?: { data?: { message?: string } } };
+      console.error('Onboarding failed:', apiError.response?.data);
+      
+      const errorMessage = apiError.response?.data?.message || 'Onboarding failed. Please try again.';
+      alert(errorMessage);
     },
   });
 
@@ -35,10 +75,29 @@ export default function OnboardPage() {
     mutation.mutate({ tenantName });
   };
 
-  if (!isLoaded || !user) {
+  if (!isLoaded || !user || !userStatus.isLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-lg text-gray-600">Loading...</div>
+        <div className="text-center">
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent"></div>
+          <p className="mt-4 text-lg text-gray-600">
+            {!isLoaded ? 'Loading user...' : 
+             !userStatus.isLoaded ? 'Checking account status...' : 
+             'Loading...'}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // If user exists and doesn't need onboarding, don't show the form
+  if (userStatus.userExists && !userStatus.needsOnboarding) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent"></div>
+          <p className="mt-4 text-lg text-gray-600">Redirecting to dashboard...</p>
+        </div>
       </div>
     );
   }
@@ -46,6 +105,15 @@ export default function OnboardPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-50 to-indigo-100 p-4">
       <div className="bg-white p-8 rounded-xl shadow-2xl max-w-md w-full">
+        {/* Debug info - remove in production */}
+        {process.env.NODE_ENV === 'development' && (
+          <div className="mb-4 p-3 bg-gray-100 rounded text-xs">
+            <strong>Debug:</strong> userExists: {userStatus.userExists ? 'true' : 'false'}, 
+            needsOnboarding: {userStatus.needsOnboarding ? 'true' : 'false'}, 
+            error: {userStatus.error || 'none'}
+          </div>
+        )}
+
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome to Synapse CRM</h1>
           <p className="text-gray-600">Let&apos;s set up your workspace</p>

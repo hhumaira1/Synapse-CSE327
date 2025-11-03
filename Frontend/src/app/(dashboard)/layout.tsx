@@ -1,10 +1,11 @@
 'use client';
 
 import { ReactNode, useEffect } from 'react';
-import { useAuth, UserButton } from '@clerk/nextjs';
+import { UserButton } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useUserStatus } from '@/hooks/useUserStatus';
 import { 
   LayoutDashboard, 
   Users, 
@@ -27,21 +28,68 @@ const navigation = [
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const { isLoaded, isSignedIn } = useAuth();
   const router = useRouter();
+  const { isLoaded, isSignedIn, needsOnboarding, userExists, error } = useUserStatus();
 
   useEffect(() => {
-    if (isLoaded && !isSignedIn) {
-      router.push('/sign-in');
-    }
-  }, [isLoaded, isSignedIn, router]);
+    if (!isLoaded) return; // Wait for everything to load
 
-  if (!isLoaded || !isSignedIn) {
+    if (!isSignedIn) {
+      // Not signed in, redirect to sign-in page
+      router.push('/sign-in');
+      return;
+    }
+
+    if (needsOnboarding) {
+      // User is signed in but needs onboarding
+      console.log('User needs onboarding, redirecting...');
+      router.push('/onboard');
+      return;
+    }
+
+    if (error) {
+      // Handle API errors
+      console.error('User status check failed:', error);
+      // Could redirect to error page or show error message
+    }
+
+  }, [isLoaded, isSignedIn, needsOnboarding, userExists, error, router]);
+
+  // Show loading state while checking authentication and user status
+  if (!isLoaded || !isSignedIn || needsOnboarding) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
+          <p className="mt-4 text-gray-600">
+            {!isLoaded ? 'Loading...' : 
+             !isSignedIn ? 'Redirecting to sign in...' : 
+             needsOnboarding ? 'Setting up your workspace...' : 
+             'Loading dashboard...'}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state if there's an API error
+  if (error && !userExists) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="text-red-600 mb-4">
+            <svg className="h-12 w-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 18.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+          </div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Something went wrong</h2>
+          <p className="text-gray-600 mb-4">We couldn&apos;t verify your account. Please try again.</p>
+          <button 
+            onClick={() => router.push('/onboard')}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            Complete Setup
+          </button>
         </div>
       </div>
     );
