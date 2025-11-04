@@ -3,10 +3,56 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
-import { Sparkles, Menu, X } from "lucide-react";
+import { Sparkles, Menu, X, LayoutDashboard } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useUserStatus } from "@/hooks/useUserStatus";
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isCheckingAccess, setIsCheckingAccess] = useState(false);
+  const router = useRouter();
+  const { isLoaded, userExists } = useUserStatus();
+
+  const handleDashboardClick = async () => {
+    setIsCheckingAccess(true);
+    
+    try {
+      // Get Clerk token
+      const clerk = (window as { Clerk?: { session?: { getToken: () => Promise<string> } } }).Clerk;
+      const token = await clerk?.session?.getToken();
+      
+      // Check if user has portal access
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/portal/customers/my-access`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      const hasPortalAccess = response.ok && (await response.json()).length > 0;
+
+      // Route based on access type
+      if (userExists && hasPortalAccess) {
+        // Has both - default to workspace dashboard (they can switch from there)
+        router.push('/dashboard');
+      } else if (userExists) {
+        // Only has workspace
+        router.push('/dashboard');
+      } else if (hasPortalAccess) {
+        // Only has portal access
+        router.push('/portal/dashboard');
+      } else {
+        // No access - needs onboarding
+        router.push('/onboard');
+      }
+    } catch (error) {
+      console.error('Error checking access:', error);
+      // Default to onboarding on error
+      router.push('/onboard');
+    } finally {
+      setIsCheckingAccess(false);
+      setIsMenuOpen(false);
+    }
+  };
 
   const navigationLinks = [
     { href: "#features", label: "Features" },
@@ -56,6 +102,16 @@ export function Navbar() {
           </SignedOut>
 
           <SignedIn>
+            <Button
+              onClick={handleDashboardClick}
+              disabled={!isLoaded || isCheckingAccess}
+              variant="outline"
+              size="sm"
+              className="border-[#6366f1]/30 text-[#1e293b] hover:bg-[#6366f1]/10 dark:text-white font-semibold gap-2"
+            >
+              <LayoutDashboard className="h-4 w-4" />
+              {isCheckingAccess ? 'Loading...' : 'Dashboard'}
+            </Button>
             <UserButton
               afterSignOutUrl="/"
               appearance={{
@@ -111,17 +167,28 @@ export function Navbar() {
               </SignedOut>
 
               <SignedIn>
-                <div className="flex items-center justify-between pt-2">
-                  <span className="text-sm text-[#64748b] dark:text-[#94a3b8]">Signed in</span>
-                  <UserButton
-                    afterSignOutUrl="/"
-                    appearance={{
-                      elements: {
-                        avatarBox: "h-8 w-8",
-                        userButtonPopoverCard: "shadow-xl border border-gray-200",
-                      }
-                    }}
-                  />
+                <div className="flex flex-col gap-2 pt-2">
+                  <Button
+                    onClick={handleDashboardClick}
+                    disabled={!isLoaded || isCheckingAccess}
+                    variant="outline"
+                    className="w-full border-[#6366f1]/30 text-[#1e293b] dark:text-white gap-2"
+                  >
+                    <LayoutDashboard className="h-4 w-4" />
+                    {isCheckingAccess ? 'Loading...' : 'Dashboard'}
+                  </Button>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-[#64748b] dark:text-[#94a3b8]">Signed in</span>
+                    <UserButton
+                      afterSignOutUrl="/"
+                      appearance={{
+                        elements: {
+                          avatarBox: "h-8 w-8",
+                          userButtonPopoverCard: "shadow-xl border border-gray-200",
+                        }
+                      }}
+                    />
+                  </div>
                 </div>
               </SignedIn>
             </div>

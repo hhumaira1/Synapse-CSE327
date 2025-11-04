@@ -137,6 +137,7 @@ exports.Prisma.UserScalarFieldEnum = {
   email: 'email',
   name: 'name',
   role: 'role',
+  isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -272,6 +273,21 @@ exports.Prisma.PortalCustomerScalarFieldEnum = {
   clerkId: 'clerkId',
   email: 'email',
   name: 'name',
+  accessToken: 'accessToken',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.UserInvitationScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  email: 'email',
+  role: 'role',
+  invitedBy: 'invitedBy',
+  token: 'token',
+  expiresAt: 'expiresAt',
+  acceptedAt: 'acceptedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -361,7 +377,8 @@ exports.Prisma.ModelName = {
   Ticket: 'Ticket',
   Integration: 'Integration',
   CallLog: 'CallLog',
-  PortalCustomer: 'PortalCustomer'
+  PortalCustomer: 'PortalCustomer',
+  UserInvitation: 'UserInvitation'
 };
 
 /**

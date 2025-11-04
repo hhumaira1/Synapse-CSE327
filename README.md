@@ -1,43 +1,63 @@
 # SynapseCRM
 
-* [ ] 
-
-> **AI-Powered CRM Platform** - A modern, full-stack Customer Relationship Management system built with the latest technologies for 2025.
+> **AI-Powered Multi-Tenant CRM Platform** - A modern, full-stack Customer Relationship Management system with advanced user isolation and team collaboration features.
 
 ## 🌟 Overview
 
-SynapseCRM is a comprehensive, multi-tenant CRM platform designed to streamline business operations with AI-powered insights. Built with a modern monorepo architecture featuring Next.js 16 frontend and NestJS 11 backend, it offers seamless contact management, lead tracking, deal pipeline management, and integrated communication tools.
+SynapseCRM is a comprehensive, multi-tenant CRM platform designed to streamline business operations with intelligent user management. Built with Next.js 16 frontend and NestJS 11 backend, it offers seamless contact management, lead tracking, deal pipeline management, team collaboration, and customer portal access.
 
 ## ✨ Key Features
 
 ### 🎯 Core CRM Functionality
 
-- [ ] **Contact Management** - Centralized customer database with detailed profiles
-- [ ] **Lead Tracking** - Automated lead scoring and nurturing workflows
-- [ ] **Deal Pipeline** - Visual sales pipeline with customizable stages
-- [ ] **Ticket Management** - Integrated customer support system
-- [ ] **Interaction History** - Complete communication timeline per contact
+- **Contact Management** - Centralized customer database with detailed profiles
+- **Lead Tracking** - Automated lead scoring and nurturing workflows
+- **Deal Pipeline** - Visual sales pipeline with customizable stages
+- **Ticket Management** - Integrated customer support system
+- **Interaction History** - Complete communication timeline per contact
 
-### 🔐 Authentication & Security
+### � Advanced User Management (NEW! ✨)
+
+- **Employee Invitations** - Email-based team member onboarding with role assignment
+- **Customer Portal Access** - Dedicated portal for customer ticket management
+- **Multi-Tenant Isolation** - ONE EMAIL = ONE INTERNAL USER globally enforced
+- **Flexible Customer Access** - Same email can access multiple customer portals
+- **Tenant Selection** - Seamless switching between accessible workspaces
+- **Team Management** - Admin dashboard for user roles and permissions
+- **Email Notifications** - Professional HTML invitation emails via Nodemailer
+
+### �🔐 Authentication & Security
 
 - **Clerk Authentication** - Secure user management with JWT tokens
 - **Multi-Tenant Architecture** - Complete data isolation between organizations
-- **Role-Based Access Control** - Admin, Manager, and Member permissions
+- **Role-Based Access Control** - ADMIN, MANAGER, MEMBER, and CUSTOMER roles
+- **Invitation System** - Secure token-based invitations with 7-day expiry
+- **Global Email Validation** - Prevents duplicate internal user accounts
 - **Session Management** - Secure token-based authentication
+
+### 📧 Email Integration
+
+- **Nodemailer Integration** - Professional email delivery system
+- **Gmail Support** - Easy setup with App Passwords
+- **Custom Templates** - Beautiful HTML email templates for invitations
+- **Multi-Provider Support** - Gmail, Outlook, Yahoo, and custom SMTP
+- **Graceful Degradation** - System works even if email not configured
 
 ### 🎨 Modern UI/UX
 
 - **Responsive Design** - Mobile-first approach with Tailwind CSS 4
 - **Component Library** - shadcn/ui components with consistent design system
-- **Dark/Light Mode** - User preference-based theming
+- **Tenant Selection Page** - Beautiful interface for multi-workspace access
+- **Settings Dashboard** - Comprehensive team management interface
+- **Real-time Notifications** - Success/error feedback with toast notifications
 - **Accessibility** - WCAG compliant interface components
 
 ### 🔌 Integration Ready
 
-- **Gmail Integration** - Email synchronization and management
-- **VoIP Support** - Call logging and communication tracking
-- **External APIs** - RESTful API for third-party integrations
-- **Webhook Support** - Real-time event notifications
+- **Customer Portal** - Self-service ticket management for customers
+- **RESTful API** - Complete backend API for integrations
+- **Webhook Support** - Real-time event notifications (planned)
+- **External APIs** - Ready for Gmail, VoIP, and other integrations
 
 ## 🏗️ Architecture
 
@@ -332,12 +352,62 @@ model Contact {
 
 ## 📚 Additional Resources
 
+### Documentation
+
+- **[📚 Documentation Index](./DOCUMENTATION_INDEX.md)** - Complete guide to all documentation 🗺️
+- **[🎯 Project Overview](./PROJECT_OVERVIEW.md)** - Complete implementation summary
+- **[Quick Start Guide](./QUICK_START.md)** - Get up and running in 5 minutes ⚡
+- **[Testing Guide](./TESTING_GUIDE.md)** - Comprehensive testing procedures 🧪
+- **[Deployment Checklist](./DEPLOYMENT_CHECKLIST.md)** - Complete production deployment guide 🚀
+- **[Implementation Summary](./IMPLEMENTATION_SUMMARY.md)** - Complete feature documentation
+- **[Email Setup Guide](./EMAIL_SETUP.md)** - Configure email invitations
 - **[Development Workflow](./synapse-crm-workflow.md)** - Detailed development guide
+- **[Tech Stack Changes](./tech-stack-2025-changes.md)** - Migration notes
+
+### External Resources
+
 - **[Clerk Documentation](https://clerk.com/docs)** - Authentication setup
 - **[Prisma Guide](https://www.prisma.io/docs)** - Database management
 - **[Next.js 16 Docs](https://nextjs.org/docs)** - Frontend framework
 - **[NestJS Documentation](https://docs.nestjs.com)** - Backend framework
 - **[shadcn/ui](https://ui.shadcn.com)** - UI component library
+- **[Nodemailer](https://nodemailer.com)** - Email delivery system
+
+## 🎯 Recent Updates
+
+### v1.0.0 - Multi-Tenant User Isolation (November 4, 2025)
+
+**Major Features Added:**
+
+✨ **Employee Invitation System**
+- Email-based team member invitations
+- Role assignment (ADMIN, MANAGER, MEMBER)
+- Global email uniqueness validation
+- Beautiful HTML email templates
+
+✨ **Customer Portal System**
+- Customer portal access invitations
+- Flexible multi-tenant customer access
+- Self-service ticket management
+- Dedicated customer portal interface
+
+✨ **Multi-Tenant Access**
+- Tenant selection page for multi-access users
+- Seamless workspace switching
+- Role-based access per tenant
+- Complete data isolation
+
+✨ **Team Management**
+- Settings page with team management
+- View and manage team members
+- Pending invitation tracking
+- User deactivation controls
+
+✨ **Email Integration**
+- Nodemailer integration
+- Gmail/Outlook/Yahoo support
+- Professional HTML templates
+- Graceful degradation
 
 ## 📄 License
 

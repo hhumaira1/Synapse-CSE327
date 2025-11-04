@@ -18,18 +18,18 @@ import {
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Contacts', href: '/dashboard/contacts', icon: Users },
-  { name: 'Leads', href: '/dashboard/leads', icon: TrendingUp },
-  { name: 'Deals', href: '/dashboard/deals', icon: DollarSign },
-  { name: 'Tickets', href: '/dashboard/tickets', icon: Ticket },
-  { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
-  { name: 'Settings', href: '/dashboard/settings', icon: Settings },
+  { name: 'Contacts', href: '/contacts', icon: Users },
+  { name: 'Leads', href: '/leads', icon: TrendingUp },
+  { name: 'Deals', href: '/deals', icon: DollarSign },
+  { name: 'Tickets', href: '/tickets', icon: Ticket },
+  { name: 'Analytics', href: '/analytics', icon: BarChart3 },
+  { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { isLoaded, isSignedIn, needsOnboarding, userExists, error } = useUserStatus();
+  const { isLoaded, isSignedIn, needsOnboarding, userExists, user, error } = useUserStatus();
 
   useEffect(() => {
     if (!isLoaded) return; // Wait for everything to load
@@ -118,8 +118,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               }}
             />
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900 truncate">Admin User</p>
-              <p className="text-xs text-gray-500">Internal CRM</p>
+              <p className="text-sm font-medium text-gray-900 truncate">
+                {user && typeof user === 'object' && 'name' in user ? (user as any).name : 'User'}
+              </p>
+              <p className="text-xs text-gray-500">
+                {user && typeof user === 'object' && 'role' in user ? (user as any).role : 'Member'}
+              </p>
             </div>
           </div>
         </div>
