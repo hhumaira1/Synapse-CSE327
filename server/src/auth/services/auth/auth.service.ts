@@ -1,4 +1,9 @@
-import { BadRequestException, ConflictException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { UserRole } from 'prisma/generated/client/wasm';
 import { PrismaService } from 'src/database/prisma/prisma.service';
 import { ClerkService } from 'src/clerk/clerk/clerk.service';
@@ -23,25 +28,25 @@ export class AuthService {
       where: { clerkId },
       include: { tenant: true },
     });
-    
+
     if (!user) {
       if (!tenantId) {
         this.logger.warn(`No tenantId provided for new user: ${clerkId}`);
         throw new BadRequestException('Tenant ID required for new users');
       }
-      
+
       // Check if email is already used by another internal user
       const existingUser = await this.prisma.user.findUnique({
         where: { email },
       });
-      
+
       if (existingUser) {
         throw new ConflictException(
           'This email is already associated with an internal user in another organization. ' +
-          'Each email can only be used for one company account.'
+            'Each email can only be used for one company account.',
         );
       }
-      
+
       user = await this.prisma.user.create({
         data: {
           clerkId,
@@ -52,7 +57,7 @@ export class AuthService {
         },
         include: { tenant: true },
       });
-      
+
       this.logger.log(`Created new user ${user.id} for tenant ${tenantId}`);
     }
 
@@ -70,12 +75,12 @@ export class AuthService {
     const existingUser = await this.prisma.user.findUnique({
       where: { email },
     });
-    
+
     if (existingUser) {
       throw new ConflictException(
         `The email ${email} is already registered as an internal user. ` +
-        `Each email can only create one workspace. ` +
-        `If you need to join an existing workspace, ask the admin to invite you.`,
+          `Each email can only create one workspace. ` +
+          `If you need to join an existing workspace, ask the admin to invite you.`,
       );
     }
 
@@ -122,13 +127,13 @@ export class AuthService {
       where: { clerkId },
       include: { tenant: true },
     });
-    
+
     // Get portal customer access (can be multiple)
     const portalAccess = await this.prisma.portalCustomer.findMany({
       where: { clerkId, isActive: true },
       include: { tenant: true },
     });
-    
+
     return {
       internalAccess: internalUser
         ? {

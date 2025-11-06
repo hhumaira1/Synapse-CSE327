@@ -6,7 +6,7 @@ async function seedContacts() {
   try {
     // First, let's get a tenant to add contacts to
     const tenant = await prisma.tenant.findFirst();
-    
+
     if (!tenant) {
       console.log('No tenant found. Please create a tenant first.');
       return;
@@ -25,7 +25,8 @@ async function seedContacts() {
           phone: '+1 (555) 123-4567',
           company: 'Example Corp',
           jobTitle: 'CEO',
-          notes: 'Potential high-value client. Interested in enterprise solutions.',
+          notes:
+            'Potential high-value client. Interested in enterprise solutions.',
         },
       }),
       prisma.contact.create({
@@ -49,7 +50,8 @@ async function seedContacts() {
           phone: '+1 (555) 555-0123',
           company: 'Global Corp',
           jobTitle: 'VP of Operations',
-          notes: 'Budget owner for operations. Looking for cost-effective solutions.',
+          notes:
+            'Budget owner for operations. Looking for cost-effective solutions.',
         },
       }),
       prisma.contact.create({
@@ -78,10 +80,11 @@ async function seedContacts() {
     ]);
 
     console.log(`Created ${contacts.length} sample contacts:`);
-    contacts.forEach(contact => {
-      console.log(`- ${contact.firstName} ${contact.lastName} (${contact.email})`);
+    contacts.forEach((contact) => {
+      console.log(
+        `- ${contact.firstName} ${contact.lastName} (${contact.email})`,
+      );
     });
-
   } catch (error) {
     console.error('Error seeding contacts:', error);
   } finally {

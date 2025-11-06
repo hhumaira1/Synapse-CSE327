@@ -162,9 +162,11 @@ exports.Prisma.LeadScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
   contactId: 'contactId',
+  title: 'title',
   source: 'source',
   status: 'status',
   value: 'value',
+  notes: 'notes',
   convertedAt: 'convertedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -174,6 +176,7 @@ exports.Prisma.PipelineScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
   name: 'name',
+  description: 'description',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -200,6 +203,7 @@ exports.Prisma.DealScalarFieldEnum = {
   value: 'value',
   probability: 'probability',
   expectedCloseDate: 'expectedCloseDate',
+  notes: 'notes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

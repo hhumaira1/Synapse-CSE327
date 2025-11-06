@@ -59,7 +59,9 @@ export class EmailService {
     const acceptUrl = `${frontendUrl}/accept-invite?token=${invitationToken}`;
 
     const mailOptions = {
-      from: this.configService.get<string>('EMAIL_FROM') || this.configService.get<string>('EMAIL_USER'),
+      from:
+        this.configService.get<string>('EMAIL_FROM') ||
+        this.configService.get<string>('EMAIL_USER'),
       to: email,
       subject: `You've been invited to join ${tenantName} on SynapseCRM`,
       html: `
@@ -171,7 +173,9 @@ export class EmailService {
     const acceptUrl = `${frontendUrl}/portal/accept-invite?token=${invitationToken}`;
 
     const mailOptions = {
-      from: this.configService.get<string>('EMAIL_FROM') || this.configService.get<string>('EMAIL_USER'),
+      from:
+        this.configService.get<string>('EMAIL_FROM') ||
+        this.configService.get<string>('EMAIL_USER'),
       to: email,
       subject: `Access Your Customer Portal - ${tenantName}`,
       html: `
@@ -264,7 +268,10 @@ export class EmailService {
       await this.transporter.sendMail(mailOptions);
       this.logger.log(`Customer portal invitation email sent to ${email}`);
     } catch (error) {
-      this.logger.error(`Failed to send customer invitation email to ${email}`, error);
+      this.logger.error(
+        `Failed to send customer invitation email to ${email}`,
+        error,
+      );
       throw error;
     }
   }

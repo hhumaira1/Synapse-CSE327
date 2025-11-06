@@ -7,8 +7,14 @@ import { Toaster } from 'react-hot-toast';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 60 * 1000, // 1 minute
-      refetchOnWindowFocus: false,
+      staleTime: 0, // Always consider data stale - refetch on mount
+      gcTime: 5 * 60 * 1000, // Keep in cache for 5 minutes
+      refetchOnWindowFocus: false, // Don't refetch when user returns to tab
+      refetchOnMount: true, // Always refetch when component mounts
+      retry: 1, // Only retry failed requests once
+    },
+    mutations: {
+      retry: 1, // Retry failed mutations once
     },
   },
 });

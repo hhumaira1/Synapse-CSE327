@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { ReactNode, useEffect } from 'react';
@@ -13,12 +14,14 @@ import {
   DollarSign, 
   Ticket,
   Settings,
-  BarChart3
+  BarChart3,
+  Workflow
 } from 'lucide-react';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Contacts', href: '/contacts', icon: Users },
+  { name: 'Pipelines', href: '/pipelines', icon: Workflow },
   { name: 'Leads', href: '/leads', icon: TrendingUp },
   { name: 'Deals', href: '/deals', icon: DollarSign },
   { name: 'Tickets', href: '/tickets', icon: Ticket },

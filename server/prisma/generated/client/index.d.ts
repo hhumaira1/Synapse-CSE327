@@ -6402,9 +6402,11 @@ export namespace Prisma {
     id: string | null
     tenantId: string | null
     contactId: string | null
+    title: string | null
     source: string | null
     status: $Enums.LeadStatus | null
     value: Decimal | null
+    notes: string | null
     convertedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -6414,9 +6416,11 @@ export namespace Prisma {
     id: string | null
     tenantId: string | null
     contactId: string | null
+    title: string | null
     source: string | null
     status: $Enums.LeadStatus | null
     value: Decimal | null
+    notes: string | null
     convertedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -6426,9 +6430,11 @@ export namespace Prisma {
     id: number
     tenantId: number
     contactId: number
+    title: number
     source: number
     status: number
     value: number
+    notes: number
     convertedAt: number
     createdAt: number
     updatedAt: number
@@ -6448,9 +6454,11 @@ export namespace Prisma {
     id?: true
     tenantId?: true
     contactId?: true
+    title?: true
     source?: true
     status?: true
     value?: true
+    notes?: true
     convertedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -6460,9 +6468,11 @@ export namespace Prisma {
     id?: true
     tenantId?: true
     contactId?: true
+    title?: true
     source?: true
     status?: true
     value?: true
+    notes?: true
     convertedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -6472,9 +6482,11 @@ export namespace Prisma {
     id?: true
     tenantId?: true
     contactId?: true
+    title?: true
     source?: true
     status?: true
     value?: true
+    notes?: true
     convertedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -6571,9 +6583,11 @@ export namespace Prisma {
     id: string
     tenantId: string
     contactId: string | null
+    title: string
     source: string
     status: $Enums.LeadStatus
     value: Decimal | null
+    notes: string | null
     convertedAt: Date | null
     createdAt: Date
     updatedAt: Date
@@ -6602,9 +6616,11 @@ export namespace Prisma {
     id?: boolean
     tenantId?: boolean
     contactId?: boolean
+    title?: boolean
     source?: boolean
     status?: boolean
     value?: boolean
+    notes?: boolean
     convertedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -6618,9 +6634,11 @@ export namespace Prisma {
     id?: boolean
     tenantId?: boolean
     contactId?: boolean
+    title?: boolean
     source?: boolean
     status?: boolean
     value?: boolean
+    notes?: boolean
     convertedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -6632,9 +6650,11 @@ export namespace Prisma {
     id?: boolean
     tenantId?: boolean
     contactId?: boolean
+    title?: boolean
     source?: boolean
     status?: boolean
     value?: boolean
+    notes?: boolean
     convertedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -6646,15 +6666,17 @@ export namespace Prisma {
     id?: boolean
     tenantId?: boolean
     contactId?: boolean
+    title?: boolean
     source?: boolean
     status?: boolean
     value?: boolean
+    notes?: boolean
     convertedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type LeadOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "contactId" | "source" | "status" | "value" | "convertedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["lead"]>
+  export type LeadOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "contactId" | "title" | "source" | "status" | "value" | "notes" | "convertedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["lead"]>
   export type LeadInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
     contact?: boolean | Lead$contactArgs<ExtArgs>
@@ -6681,9 +6703,11 @@ export namespace Prisma {
       id: string
       tenantId: string
       contactId: string | null
+      title: string
       source: string
       status: $Enums.LeadStatus
       value: Prisma.Decimal | null
+      notes: string | null
       convertedAt: Date | null
       createdAt: Date
       updatedAt: Date
@@ -7116,9 +7140,11 @@ export namespace Prisma {
     readonly id: FieldRef<"Lead", 'String'>
     readonly tenantId: FieldRef<"Lead", 'String'>
     readonly contactId: FieldRef<"Lead", 'String'>
+    readonly title: FieldRef<"Lead", 'String'>
     readonly source: FieldRef<"Lead", 'String'>
     readonly status: FieldRef<"Lead", 'LeadStatus'>
     readonly value: FieldRef<"Lead", 'Decimal'>
+    readonly notes: FieldRef<"Lead", 'String'>
     readonly convertedAt: FieldRef<"Lead", 'DateTime'>
     readonly createdAt: FieldRef<"Lead", 'DateTime'>
     readonly updatedAt: FieldRef<"Lead", 'DateTime'>
@@ -7593,6 +7619,7 @@ export namespace Prisma {
     id: string | null
     tenantId: string | null
     name: string | null
+    description: string | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -7602,6 +7629,7 @@ export namespace Prisma {
     id: string | null
     tenantId: string | null
     name: string | null
+    description: string | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -7611,6 +7639,7 @@ export namespace Prisma {
     id: number
     tenantId: number
     name: number
+    description: number
     isActive: number
     createdAt: number
     updatedAt: number
@@ -7622,6 +7651,7 @@ export namespace Prisma {
     id?: true
     tenantId?: true
     name?: true
+    description?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -7631,6 +7661,7 @@ export namespace Prisma {
     id?: true
     tenantId?: true
     name?: true
+    description?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -7640,6 +7671,7 @@ export namespace Prisma {
     id?: true
     tenantId?: true
     name?: true
+    description?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -7722,6 +7754,7 @@ export namespace Prisma {
     id: string
     tenantId: string
     name: string
+    description: string | null
     isActive: boolean
     createdAt: Date
     updatedAt: Date
@@ -7748,6 +7781,7 @@ export namespace Prisma {
     id?: boolean
     tenantId?: boolean
     name?: boolean
+    description?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7761,6 +7795,7 @@ export namespace Prisma {
     id?: boolean
     tenantId?: boolean
     name?: boolean
+    description?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7771,6 +7806,7 @@ export namespace Prisma {
     id?: boolean
     tenantId?: boolean
     name?: boolean
+    description?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7781,12 +7817,13 @@ export namespace Prisma {
     id?: boolean
     tenantId?: boolean
     name?: boolean
+    description?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type PipelineOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "name" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["pipeline"]>
+  export type PipelineOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "name" | "description" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["pipeline"]>
   export type PipelineInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
     stages?: boolean | Pipeline$stagesArgs<ExtArgs>
@@ -7811,6 +7848,7 @@ export namespace Prisma {
       id: string
       tenantId: string
       name: string
+      description: string | null
       isActive: boolean
       createdAt: Date
       updatedAt: Date
@@ -8243,6 +8281,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Pipeline", 'String'>
     readonly tenantId: FieldRef<"Pipeline", 'String'>
     readonly name: FieldRef<"Pipeline", 'String'>
+    readonly description: FieldRef<"Pipeline", 'String'>
     readonly isActive: FieldRef<"Pipeline", 'Boolean'>
     readonly createdAt: FieldRef<"Pipeline", 'DateTime'>
     readonly updatedAt: FieldRef<"Pipeline", 'DateTime'>
@@ -9877,6 +9916,7 @@ export namespace Prisma {
     value: Decimal | null
     probability: Decimal | null
     expectedCloseDate: Date | null
+    notes: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -9893,6 +9933,7 @@ export namespace Prisma {
     value: Decimal | null
     probability: Decimal | null
     expectedCloseDate: Date | null
+    notes: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -9909,6 +9950,7 @@ export namespace Prisma {
     value: number
     probability: number
     expectedCloseDate: number
+    notes: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -9937,6 +9979,7 @@ export namespace Prisma {
     value?: true
     probability?: true
     expectedCloseDate?: true
+    notes?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -9953,6 +9996,7 @@ export namespace Prisma {
     value?: true
     probability?: true
     expectedCloseDate?: true
+    notes?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -9969,6 +10013,7 @@ export namespace Prisma {
     value?: true
     probability?: true
     expectedCloseDate?: true
+    notes?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -10072,6 +10117,7 @@ export namespace Prisma {
     value: Decimal | null
     probability: Decimal | null
     expectedCloseDate: Date | null
+    notes: string | null
     createdAt: Date
     updatedAt: Date
     _count: DealCountAggregateOutputType | null
@@ -10107,6 +10153,7 @@ export namespace Prisma {
     value?: boolean
     probability?: boolean
     expectedCloseDate?: boolean
+    notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
@@ -10132,6 +10179,7 @@ export namespace Prisma {
     value?: boolean
     probability?: boolean
     expectedCloseDate?: boolean
+    notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
@@ -10153,6 +10201,7 @@ export namespace Prisma {
     value?: boolean
     probability?: boolean
     expectedCloseDate?: boolean
+    notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
@@ -10174,11 +10223,12 @@ export namespace Prisma {
     value?: boolean
     probability?: boolean
     expectedCloseDate?: boolean
+    notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type DealOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "contactId" | "leadId" | "pipelineId" | "stageId" | "title" | "description" | "value" | "probability" | "expectedCloseDate" | "createdAt" | "updatedAt", ExtArgs["result"]["deal"]>
+  export type DealOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "contactId" | "leadId" | "pipelineId" | "stageId" | "title" | "description" | "value" | "probability" | "expectedCloseDate" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["deal"]>
   export type DealInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
     contact?: boolean | ContactDefaultArgs<ExtArgs>
@@ -10229,6 +10279,7 @@ export namespace Prisma {
       value: Prisma.Decimal | null
       probability: Prisma.Decimal | null
       expectedCloseDate: Date | null
+      notes: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["deal"]>
@@ -10673,6 +10724,7 @@ export namespace Prisma {
     readonly value: FieldRef<"Deal", 'Decimal'>
     readonly probability: FieldRef<"Deal", 'Decimal'>
     readonly expectedCloseDate: FieldRef<"Deal", 'DateTime'>
+    readonly notes: FieldRef<"Deal", 'String'>
     readonly createdAt: FieldRef<"Deal", 'DateTime'>
     readonly updatedAt: FieldRef<"Deal", 'DateTime'>
   }
@@ -18394,9 +18446,11 @@ export namespace Prisma {
     id: 'id',
     tenantId: 'tenantId',
     contactId: 'contactId',
+    title: 'title',
     source: 'source',
     status: 'status',
     value: 'value',
+    notes: 'notes',
     convertedAt: 'convertedAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -18409,6 +18463,7 @@ export namespace Prisma {
     id: 'id',
     tenantId: 'tenantId',
     name: 'name',
+    description: 'description',
     isActive: 'isActive',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -18441,6 +18496,7 @@ export namespace Prisma {
     value: 'value',
     probability: 'probability',
     expectedCloseDate: 'expectedCloseDate',
+    notes: 'notes',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -19092,9 +19148,11 @@ export namespace Prisma {
     id?: StringFilter<"Lead"> | string
     tenantId?: StringFilter<"Lead"> | string
     contactId?: StringNullableFilter<"Lead"> | string | null
+    title?: StringFilter<"Lead"> | string
     source?: StringFilter<"Lead"> | string
     status?: EnumLeadStatusFilter<"Lead"> | $Enums.LeadStatus
     value?: DecimalNullableFilter<"Lead"> | Decimal | DecimalJsLike | number | string | null
+    notes?: StringNullableFilter<"Lead"> | string | null
     convertedAt?: DateTimeNullableFilter<"Lead"> | Date | string | null
     createdAt?: DateTimeFilter<"Lead"> | Date | string
     updatedAt?: DateTimeFilter<"Lead"> | Date | string
@@ -19107,9 +19165,11 @@ export namespace Prisma {
     id?: SortOrder
     tenantId?: SortOrder
     contactId?: SortOrderInput | SortOrder
+    title?: SortOrder
     source?: SortOrder
     status?: SortOrder
     value?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
     convertedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -19125,9 +19185,11 @@ export namespace Prisma {
     NOT?: LeadWhereInput | LeadWhereInput[]
     tenantId?: StringFilter<"Lead"> | string
     contactId?: StringNullableFilter<"Lead"> | string | null
+    title?: StringFilter<"Lead"> | string
     source?: StringFilter<"Lead"> | string
     status?: EnumLeadStatusFilter<"Lead"> | $Enums.LeadStatus
     value?: DecimalNullableFilter<"Lead"> | Decimal | DecimalJsLike | number | string | null
+    notes?: StringNullableFilter<"Lead"> | string | null
     convertedAt?: DateTimeNullableFilter<"Lead"> | Date | string | null
     createdAt?: DateTimeFilter<"Lead"> | Date | string
     updatedAt?: DateTimeFilter<"Lead"> | Date | string
@@ -19140,9 +19202,11 @@ export namespace Prisma {
     id?: SortOrder
     tenantId?: SortOrder
     contactId?: SortOrderInput | SortOrder
+    title?: SortOrder
     source?: SortOrder
     status?: SortOrder
     value?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
     convertedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -19160,9 +19224,11 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Lead"> | string
     tenantId?: StringWithAggregatesFilter<"Lead"> | string
     contactId?: StringNullableWithAggregatesFilter<"Lead"> | string | null
+    title?: StringWithAggregatesFilter<"Lead"> | string
     source?: StringWithAggregatesFilter<"Lead"> | string
     status?: EnumLeadStatusWithAggregatesFilter<"Lead"> | $Enums.LeadStatus
     value?: DecimalNullableWithAggregatesFilter<"Lead"> | Decimal | DecimalJsLike | number | string | null
+    notes?: StringNullableWithAggregatesFilter<"Lead"> | string | null
     convertedAt?: DateTimeNullableWithAggregatesFilter<"Lead"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Lead"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Lead"> | Date | string
@@ -19175,6 +19241,7 @@ export namespace Prisma {
     id?: StringFilter<"Pipeline"> | string
     tenantId?: StringFilter<"Pipeline"> | string
     name?: StringFilter<"Pipeline"> | string
+    description?: StringNullableFilter<"Pipeline"> | string | null
     isActive?: BoolFilter<"Pipeline"> | boolean
     createdAt?: DateTimeFilter<"Pipeline"> | Date | string
     updatedAt?: DateTimeFilter<"Pipeline"> | Date | string
@@ -19187,6 +19254,7 @@ export namespace Prisma {
     id?: SortOrder
     tenantId?: SortOrder
     name?: SortOrder
+    description?: SortOrderInput | SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -19202,6 +19270,7 @@ export namespace Prisma {
     NOT?: PipelineWhereInput | PipelineWhereInput[]
     tenantId?: StringFilter<"Pipeline"> | string
     name?: StringFilter<"Pipeline"> | string
+    description?: StringNullableFilter<"Pipeline"> | string | null
     isActive?: BoolFilter<"Pipeline"> | boolean
     createdAt?: DateTimeFilter<"Pipeline"> | Date | string
     updatedAt?: DateTimeFilter<"Pipeline"> | Date | string
@@ -19214,6 +19283,7 @@ export namespace Prisma {
     id?: SortOrder
     tenantId?: SortOrder
     name?: SortOrder
+    description?: SortOrderInput | SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -19229,6 +19299,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Pipeline"> | string
     tenantId?: StringWithAggregatesFilter<"Pipeline"> | string
     name?: StringWithAggregatesFilter<"Pipeline"> | string
+    description?: StringNullableWithAggregatesFilter<"Pipeline"> | string | null
     isActive?: BoolWithAggregatesFilter<"Pipeline"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Pipeline"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Pipeline"> | Date | string
@@ -19315,6 +19386,7 @@ export namespace Prisma {
     value?: DecimalNullableFilter<"Deal"> | Decimal | DecimalJsLike | number | string | null
     probability?: DecimalNullableFilter<"Deal"> | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: DateTimeNullableFilter<"Deal"> | Date | string | null
+    notes?: StringNullableFilter<"Deal"> | string | null
     createdAt?: DateTimeFilter<"Deal"> | Date | string
     updatedAt?: DateTimeFilter<"Deal"> | Date | string
     tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
@@ -19339,6 +19411,7 @@ export namespace Prisma {
     value?: SortOrderInput | SortOrder
     probability?: SortOrderInput | SortOrder
     expectedCloseDate?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     tenant?: TenantOrderByWithRelationInput
@@ -19366,6 +19439,7 @@ export namespace Prisma {
     value?: DecimalNullableFilter<"Deal"> | Decimal | DecimalJsLike | number | string | null
     probability?: DecimalNullableFilter<"Deal"> | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: DateTimeNullableFilter<"Deal"> | Date | string | null
+    notes?: StringNullableFilter<"Deal"> | string | null
     createdAt?: DateTimeFilter<"Deal"> | Date | string
     updatedAt?: DateTimeFilter<"Deal"> | Date | string
     tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
@@ -19390,6 +19464,7 @@ export namespace Prisma {
     value?: SortOrderInput | SortOrder
     probability?: SortOrderInput | SortOrder
     expectedCloseDate?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: DealCountOrderByAggregateInput
@@ -19414,6 +19489,7 @@ export namespace Prisma {
     value?: DecimalNullableWithAggregatesFilter<"Deal"> | Decimal | DecimalJsLike | number | string | null
     probability?: DecimalNullableWithAggregatesFilter<"Deal"> | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: DateTimeNullableWithAggregatesFilter<"Deal"> | Date | string | null
+    notes?: StringNullableWithAggregatesFilter<"Deal"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Deal"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Deal"> | Date | string
   }
@@ -20337,9 +20413,11 @@ export namespace Prisma {
 
   export type LeadCreateInput = {
     id?: string
+    title: string
     source: string
     status?: $Enums.LeadStatus
     value?: Decimal | DecimalJsLike | number | string | null
+    notes?: string | null
     convertedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -20352,9 +20430,11 @@ export namespace Prisma {
     id?: string
     tenantId: string
     contactId?: string | null
+    title: string
     source: string
     status?: $Enums.LeadStatus
     value?: Decimal | DecimalJsLike | number | string | null
+    notes?: string | null
     convertedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -20363,9 +20443,11 @@ export namespace Prisma {
 
   export type LeadUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20378,9 +20460,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     tenantId?: StringFieldUpdateOperationsInput | string
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20391,9 +20475,11 @@ export namespace Prisma {
     id?: string
     tenantId: string
     contactId?: string | null
+    title: string
     source: string
     status?: $Enums.LeadStatus
     value?: Decimal | DecimalJsLike | number | string | null
+    notes?: string | null
     convertedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -20401,9 +20487,11 @@ export namespace Prisma {
 
   export type LeadUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20413,9 +20501,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     tenantId?: StringFieldUpdateOperationsInput | string
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20424,6 +20514,7 @@ export namespace Prisma {
   export type PipelineCreateInput = {
     id?: string
     name: string
+    description?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -20436,6 +20527,7 @@ export namespace Prisma {
     id?: string
     tenantId: string
     name: string
+    description?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -20446,6 +20538,7 @@ export namespace Prisma {
   export type PipelineUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20458,6 +20551,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     tenantId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20469,6 +20563,7 @@ export namespace Prisma {
     id?: string
     tenantId: string
     name: string
+    description?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -20477,6 +20572,7 @@ export namespace Prisma {
   export type PipelineUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20486,6 +20582,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     tenantId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20564,6 +20661,7 @@ export namespace Prisma {
     value?: Decimal | DecimalJsLike | number | string | null
     probability?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     tenant: TenantCreateNestedOneWithoutDealsInput
@@ -20588,6 +20686,7 @@ export namespace Prisma {
     value?: Decimal | DecimalJsLike | number | string | null
     probability?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     interactions?: InteractionUncheckedCreateNestedManyWithoutDealInput
@@ -20602,6 +20701,7 @@ export namespace Prisma {
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     probability?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneRequiredWithoutDealsNestedInput
@@ -20626,6 +20726,7 @@ export namespace Prisma {
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     probability?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     interactions?: InteractionUncheckedUpdateManyWithoutDealNestedInput
@@ -20645,6 +20746,7 @@ export namespace Prisma {
     value?: Decimal | DecimalJsLike | number | string | null
     probability?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -20656,6 +20758,7 @@ export namespace Prisma {
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     probability?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -20672,6 +20775,7 @@ export namespace Prisma {
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     probability?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21739,9 +21843,11 @@ export namespace Prisma {
     id?: SortOrder
     tenantId?: SortOrder
     contactId?: SortOrder
+    title?: SortOrder
     source?: SortOrder
     status?: SortOrder
     value?: SortOrder
+    notes?: SortOrder
     convertedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -21755,9 +21861,11 @@ export namespace Prisma {
     id?: SortOrder
     tenantId?: SortOrder
     contactId?: SortOrder
+    title?: SortOrder
     source?: SortOrder
     status?: SortOrder
     value?: SortOrder
+    notes?: SortOrder
     convertedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -21767,9 +21875,11 @@ export namespace Prisma {
     id?: SortOrder
     tenantId?: SortOrder
     contactId?: SortOrder
+    title?: SortOrder
     source?: SortOrder
     status?: SortOrder
     value?: SortOrder
+    notes?: SortOrder
     convertedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -21833,6 +21943,7 @@ export namespace Prisma {
     id?: SortOrder
     tenantId?: SortOrder
     name?: SortOrder
+    description?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -21842,6 +21953,7 @@ export namespace Prisma {
     id?: SortOrder
     tenantId?: SortOrder
     name?: SortOrder
+    description?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -21851,6 +21963,7 @@ export namespace Prisma {
     id?: SortOrder
     tenantId?: SortOrder
     name?: SortOrder
+    description?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -21955,6 +22068,7 @@ export namespace Prisma {
     value?: SortOrder
     probability?: SortOrder
     expectedCloseDate?: SortOrder
+    notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -21976,6 +22090,7 @@ export namespace Prisma {
     value?: SortOrder
     probability?: SortOrder
     expectedCloseDate?: SortOrder
+    notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -21992,6 +22107,7 @@ export namespace Prisma {
     value?: SortOrder
     probability?: SortOrder
     expectedCloseDate?: SortOrder
+    notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -24532,9 +24648,11 @@ export namespace Prisma {
 
   export type LeadCreateWithoutTenantInput = {
     id?: string
+    title: string
     source: string
     status?: $Enums.LeadStatus
     value?: Decimal | DecimalJsLike | number | string | null
+    notes?: string | null
     convertedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24545,9 +24663,11 @@ export namespace Prisma {
   export type LeadUncheckedCreateWithoutTenantInput = {
     id?: string
     contactId?: string | null
+    title: string
     source: string
     status?: $Enums.LeadStatus
     value?: Decimal | DecimalJsLike | number | string | null
+    notes?: string | null
     convertedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24567,6 +24687,7 @@ export namespace Prisma {
   export type PipelineCreateWithoutTenantInput = {
     id?: string
     name: string
+    description?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24577,6 +24698,7 @@ export namespace Prisma {
   export type PipelineUncheckedCreateWithoutTenantInput = {
     id?: string
     name: string
+    description?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -24601,6 +24723,7 @@ export namespace Prisma {
     value?: Decimal | DecimalJsLike | number | string | null
     probability?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     contact: ContactCreateNestedOneWithoutDealsInput
@@ -24623,6 +24746,7 @@ export namespace Prisma {
     value?: Decimal | DecimalJsLike | number | string | null
     probability?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     interactions?: InteractionUncheckedCreateNestedManyWithoutDealInput
@@ -24955,9 +25079,11 @@ export namespace Prisma {
     id?: StringFilter<"Lead"> | string
     tenantId?: StringFilter<"Lead"> | string
     contactId?: StringNullableFilter<"Lead"> | string | null
+    title?: StringFilter<"Lead"> | string
     source?: StringFilter<"Lead"> | string
     status?: EnumLeadStatusFilter<"Lead"> | $Enums.LeadStatus
     value?: DecimalNullableFilter<"Lead"> | Decimal | DecimalJsLike | number | string | null
+    notes?: StringNullableFilter<"Lead"> | string | null
     convertedAt?: DateTimeNullableFilter<"Lead"> | Date | string | null
     createdAt?: DateTimeFilter<"Lead"> | Date | string
     updatedAt?: DateTimeFilter<"Lead"> | Date | string
@@ -24986,6 +25112,7 @@ export namespace Prisma {
     id?: StringFilter<"Pipeline"> | string
     tenantId?: StringFilter<"Pipeline"> | string
     name?: StringFilter<"Pipeline"> | string
+    description?: StringNullableFilter<"Pipeline"> | string | null
     isActive?: BoolFilter<"Pipeline"> | boolean
     createdAt?: DateTimeFilter<"Pipeline"> | Date | string
     updatedAt?: DateTimeFilter<"Pipeline"> | Date | string
@@ -25022,6 +25149,7 @@ export namespace Prisma {
     value?: DecimalNullableFilter<"Deal"> | Decimal | DecimalJsLike | number | string | null
     probability?: DecimalNullableFilter<"Deal"> | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: DateTimeNullableFilter<"Deal"> | Date | string | null
+    notes?: StringNullableFilter<"Deal"> | string | null
     createdAt?: DateTimeFilter<"Deal"> | Date | string
     updatedAt?: DateTimeFilter<"Deal"> | Date | string
   }
@@ -25535,9 +25663,11 @@ export namespace Prisma {
 
   export type LeadCreateWithoutContactInput = {
     id?: string
+    title: string
     source: string
     status?: $Enums.LeadStatus
     value?: Decimal | DecimalJsLike | number | string | null
+    notes?: string | null
     convertedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25548,9 +25678,11 @@ export namespace Prisma {
   export type LeadUncheckedCreateWithoutContactInput = {
     id?: string
     tenantId: string
+    title: string
     source: string
     status?: $Enums.LeadStatus
     value?: Decimal | DecimalJsLike | number | string | null
+    notes?: string | null
     convertedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25610,6 +25742,7 @@ export namespace Prisma {
     value?: Decimal | DecimalJsLike | number | string | null
     probability?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     tenant: TenantCreateNestedOneWithoutDealsInput
@@ -25632,6 +25765,7 @@ export namespace Prisma {
     value?: Decimal | DecimalJsLike | number | string | null
     probability?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     interactions?: InteractionUncheckedCreateNestedManyWithoutDealInput
@@ -26017,6 +26151,7 @@ export namespace Prisma {
     value?: Decimal | DecimalJsLike | number | string | null
     probability?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     tenant: TenantCreateNestedOneWithoutDealsInput
@@ -26039,6 +26174,7 @@ export namespace Prisma {
     value?: Decimal | DecimalJsLike | number | string | null
     probability?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     interactions?: InteractionUncheckedCreateNestedManyWithoutDealInput
@@ -26256,6 +26392,7 @@ export namespace Prisma {
     value?: Decimal | DecimalJsLike | number | string | null
     probability?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     tenant: TenantCreateNestedOneWithoutDealsInput
@@ -26278,6 +26415,7 @@ export namespace Prisma {
     value?: Decimal | DecimalJsLike | number | string | null
     probability?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     interactions?: InteractionUncheckedCreateNestedManyWithoutDealInput
@@ -26393,6 +26531,7 @@ export namespace Prisma {
   export type PipelineCreateWithoutStagesInput = {
     id?: string
     name: string
+    description?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26404,6 +26543,7 @@ export namespace Prisma {
     id?: string
     tenantId: string
     name: string
+    description?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26422,6 +26562,7 @@ export namespace Prisma {
     value?: Decimal | DecimalJsLike | number | string | null
     probability?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     tenant: TenantCreateNestedOneWithoutDealsInput
@@ -26444,6 +26585,7 @@ export namespace Prisma {
     value?: Decimal | DecimalJsLike | number | string | null
     probability?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     interactions?: InteractionUncheckedCreateNestedManyWithoutDealInput
@@ -26475,6 +26617,7 @@ export namespace Prisma {
   export type PipelineUpdateWithoutStagesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26486,6 +26629,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     tenantId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26602,9 +26746,11 @@ export namespace Prisma {
 
   export type LeadCreateWithoutDealsInput = {
     id?: string
+    title: string
     source: string
     status?: $Enums.LeadStatus
     value?: Decimal | DecimalJsLike | number | string | null
+    notes?: string | null
     convertedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26616,9 +26762,11 @@ export namespace Prisma {
     id?: string
     tenantId: string
     contactId?: string | null
+    title: string
     source: string
     status?: $Enums.LeadStatus
     value?: Decimal | DecimalJsLike | number | string | null
+    notes?: string | null
     convertedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26632,6 +26780,7 @@ export namespace Prisma {
   export type PipelineCreateWithoutDealsInput = {
     id?: string
     name: string
+    description?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26643,6 +26792,7 @@ export namespace Prisma {
     id?: string
     tenantId: string
     name: string
+    description?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26916,9 +27066,11 @@ export namespace Prisma {
 
   export type LeadUpdateWithoutDealsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26930,9 +27082,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     tenantId?: StringFieldUpdateOperationsInput | string
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26952,6 +27106,7 @@ export namespace Prisma {
   export type PipelineUpdateWithoutDealsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26963,6 +27118,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     tenantId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27145,6 +27301,7 @@ export namespace Prisma {
     value?: Decimal | DecimalJsLike | number | string | null
     probability?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     tenant: TenantCreateNestedOneWithoutDealsInput
@@ -27168,6 +27325,7 @@ export namespace Prisma {
     value?: Decimal | DecimalJsLike | number | string | null
     probability?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     tickets?: TicketUncheckedCreateNestedManyWithoutDealInput
@@ -27334,6 +27492,7 @@ export namespace Prisma {
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     probability?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneRequiredWithoutDealsNestedInput
@@ -27357,6 +27516,7 @@ export namespace Prisma {
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     probability?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tickets?: TicketUncheckedUpdateManyWithoutDealNestedInput
@@ -27532,6 +27692,7 @@ export namespace Prisma {
     value?: Decimal | DecimalJsLike | number | string | null
     probability?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     tenant: TenantCreateNestedOneWithoutDealsInput
@@ -27555,6 +27716,7 @@ export namespace Prisma {
     value?: Decimal | DecimalJsLike | number | string | null
     probability?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     interactions?: InteractionUncheckedCreateNestedManyWithoutDealInput
@@ -27758,6 +27920,7 @@ export namespace Prisma {
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     probability?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneRequiredWithoutDealsNestedInput
@@ -27781,6 +27944,7 @@ export namespace Prisma {
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     probability?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     interactions?: InteractionUncheckedUpdateManyWithoutDealNestedInput
@@ -28021,6 +28185,7 @@ export namespace Prisma {
     value?: Decimal | DecimalJsLike | number | string | null
     probability?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     tenant: TenantCreateNestedOneWithoutDealsInput
@@ -28044,6 +28209,7 @@ export namespace Prisma {
     value?: Decimal | DecimalJsLike | number | string | null
     probability?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     interactions?: InteractionUncheckedCreateNestedManyWithoutDealInput
@@ -28177,6 +28343,7 @@ export namespace Prisma {
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     probability?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneRequiredWithoutDealsNestedInput
@@ -28200,6 +28367,7 @@ export namespace Prisma {
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     probability?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     interactions?: InteractionUncheckedUpdateManyWithoutDealNestedInput
@@ -28661,9 +28829,11 @@ export namespace Prisma {
   export type LeadCreateManyTenantInput = {
     id?: string
     contactId?: string | null
+    title: string
     source: string
     status?: $Enums.LeadStatus
     value?: Decimal | DecimalJsLike | number | string | null
+    notes?: string | null
     convertedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -28672,6 +28842,7 @@ export namespace Prisma {
   export type PipelineCreateManyTenantInput = {
     id?: string
     name: string
+    description?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -28688,6 +28859,7 @@ export namespace Prisma {
     value?: Decimal | DecimalJsLike | number | string | null
     probability?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -28872,9 +29044,11 @@ export namespace Prisma {
 
   export type LeadUpdateWithoutTenantInput = {
     id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28885,9 +29059,11 @@ export namespace Prisma {
   export type LeadUncheckedUpdateWithoutTenantInput = {
     id?: StringFieldUpdateOperationsInput | string
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28897,9 +29073,11 @@ export namespace Prisma {
   export type LeadUncheckedUpdateManyWithoutTenantInput = {
     id?: StringFieldUpdateOperationsInput | string
     contactId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28908,6 +29086,7 @@ export namespace Prisma {
   export type PipelineUpdateWithoutTenantInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28918,6 +29097,7 @@ export namespace Prisma {
   export type PipelineUncheckedUpdateWithoutTenantInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28928,6 +29108,7 @@ export namespace Prisma {
   export type PipelineUncheckedUpdateManyWithoutTenantInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28940,6 +29121,7 @@ export namespace Prisma {
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     probability?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     contact?: ContactUpdateOneRequiredWithoutDealsNestedInput
@@ -28962,6 +29144,7 @@ export namespace Prisma {
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     probability?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     interactions?: InteractionUncheckedUpdateManyWithoutDealNestedInput
@@ -28980,6 +29163,7 @@ export namespace Prisma {
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     probability?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -29407,9 +29591,11 @@ export namespace Prisma {
   export type LeadCreateManyContactInput = {
     id?: string
     tenantId: string
+    title: string
     source: string
     status?: $Enums.LeadStatus
     value?: Decimal | DecimalJsLike | number | string | null
+    notes?: string | null
     convertedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -29439,6 +29625,7 @@ export namespace Prisma {
     value?: Decimal | DecimalJsLike | number | string | null
     probability?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -29490,9 +29677,11 @@ export namespace Prisma {
 
   export type LeadUpdateWithoutContactInput = {
     id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29503,9 +29692,11 @@ export namespace Prisma {
   export type LeadUncheckedUpdateWithoutContactInput = {
     id?: StringFieldUpdateOperationsInput | string
     tenantId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29515,9 +29706,11 @@ export namespace Prisma {
   export type LeadUncheckedUpdateManyWithoutContactInput = {
     id?: StringFieldUpdateOperationsInput | string
     tenantId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
     source?: StringFieldUpdateOperationsInput | string
     status?: EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29569,6 +29762,7 @@ export namespace Prisma {
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     probability?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneRequiredWithoutDealsNestedInput
@@ -29591,6 +29785,7 @@ export namespace Prisma {
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     probability?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     interactions?: InteractionUncheckedUpdateManyWithoutDealNestedInput
@@ -29609,6 +29804,7 @@ export namespace Prisma {
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     probability?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -29761,6 +29957,7 @@ export namespace Prisma {
     value?: Decimal | DecimalJsLike | number | string | null
     probability?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -29772,6 +29969,7 @@ export namespace Prisma {
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     probability?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneRequiredWithoutDealsNestedInput
@@ -29794,6 +29992,7 @@ export namespace Prisma {
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     probability?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     interactions?: InteractionUncheckedUpdateManyWithoutDealNestedInput
@@ -29812,6 +30011,7 @@ export namespace Prisma {
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     probability?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -29835,6 +30035,7 @@ export namespace Prisma {
     value?: Decimal | DecimalJsLike | number | string | null
     probability?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -29872,6 +30073,7 @@ export namespace Prisma {
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     probability?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneRequiredWithoutDealsNestedInput
@@ -29894,6 +30096,7 @@ export namespace Prisma {
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     probability?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     interactions?: InteractionUncheckedUpdateManyWithoutDealNestedInput
@@ -29912,6 +30115,7 @@ export namespace Prisma {
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     probability?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -29927,6 +30131,7 @@ export namespace Prisma {
     value?: Decimal | DecimalJsLike | number | string | null
     probability?: Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: Date | string | null
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -29938,6 +30143,7 @@ export namespace Prisma {
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     probability?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tenant?: TenantUpdateOneRequiredWithoutDealsNestedInput
@@ -29960,6 +30166,7 @@ export namespace Prisma {
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     probability?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     interactions?: InteractionUncheckedUpdateManyWithoutDealNestedInput
@@ -29978,6 +30185,7 @@ export namespace Prisma {
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     probability?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     expectedCloseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

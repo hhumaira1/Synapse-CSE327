@@ -10,6 +10,11 @@ import { UsersModule } from './users/users.module';
 import { CommonModule } from './common/common.module';
 import { PortalModule } from './portal/portal.module';
 import { ContactsModule } from './contacts/contacts.module';
+import { PipelinesModule } from './pipelines/pipelines.module';
+import { StagesModule } from './stages/stages.module';
+import { LeadsModule } from './leads/leads.module';
+import { DealsModule } from './deals/deals.module';
+import { AnalyticsModule } from './analytics/analytics.module';
 
 @Module({
   imports: [
@@ -24,6 +29,11 @@ import { ContactsModule } from './contacts/contacts.module';
     UsersModule,
     PortalModule,
     ContactsModule,
+    PipelinesModule,
+    StagesModule,
+    LeadsModule,
+    DealsModule,
+    AnalyticsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
