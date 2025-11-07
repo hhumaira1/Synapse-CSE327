@@ -32,8 +32,8 @@ export function Navbar() {
 
       // Route based on access type
       if (userExists && hasPortalAccess) {
-        // Has both - default to workspace dashboard (they can switch from there)
-        router.push('/dashboard');
+        // Has both - route to workspace selector
+        router.push('/select-workspace');
       } else if (userExists) {
         // Only has workspace
         router.push('/dashboard');

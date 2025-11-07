@@ -117,11 +117,11 @@ export default function PortalDashboardPage() {
               {hasWorkspace && (
                 <Button
                   variant="outline"
-                  onClick={() => router.push('/dashboard')}
+                  onClick={() => router.push('/select-workspace')}
                   className="border-indigo-600 text-indigo-600 hover:bg-indigo-50"
                 >
                   <LayoutDashboard className="h-4 w-4 mr-2" />
-                  My Workspace
+                  Switch Workspace
                 </Button>
               )}
               
@@ -306,8 +306,7 @@ export default function PortalDashboardPage() {
                         <Button 
                           variant="outline" 
                           size="sm"
-                          disabled
-                          title="Coming soon: Create and view tickets"
+                          onClick={() => router.push('/portal/tickets')}
                         >
                           <Ticket className="h-4 w-4 mr-2" />
                           Tickets
@@ -328,7 +327,7 @@ export default function PortalDashboardPage() {
                     <Button 
                       variant="outline" 
                       className="w-full justify-start h-auto py-4"
-                      disabled
+                      onClick={() => router.push('/portal/tickets')}
                     >
                       <Plus className="h-5 w-5 mr-3 text-indigo-600" />
                       <div className="text-left">

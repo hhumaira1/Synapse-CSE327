@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useApiClient } from "@/lib/api";
 import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import { LeadStatus, TicketStatus, type Lead, type Ticket } from "@/types/prisma";
 import {
   Users,
@@ -16,6 +17,7 @@ import {
 export default function DashboardPage() {
   const { user } = useUser();
   const apiClient = useApiClient();
+  const router = useRouter();
 
   const { data: stats, isLoading } = useQuery({
     queryKey: ["dashboard-stats"],
@@ -66,6 +68,7 @@ export default function DashboardPage() {
       textColor: "text-blue-700",
       change: "+12%",
       trend: "up",
+      onClick: () => router.push("/contacts"),
     },
     {
       label: "Active Leads",
@@ -76,6 +79,7 @@ export default function DashboardPage() {
       textColor: "text-green-700",
       change: "+8%",
       trend: "up",
+      onClick: () => router.push("/leads?status=NEW,CONTACTED"),
     },
     {
       label: "Open Deals",
@@ -86,6 +90,7 @@ export default function DashboardPage() {
       textColor: "text-purple-700",
       change: "+23%",
       trend: "up",
+      onClick: () => router.push("/deals"),
     },
     {
       label: "Pending Tickets",
@@ -96,6 +101,7 @@ export default function DashboardPage() {
       textColor: "text-orange-700",
       change: "-5%",
       trend: "down",
+      onClick: () => router.push("/tickets?status=OPEN,IN_PROGRESS"),
     },
   ];
 
@@ -120,7 +126,8 @@ export default function DashboardPage() {
           return (
             <div
               key={stat.label}
-              className="bg-white rounded-xl shadow-sm p-6 border border-gray-200 hover:shadow-md transition"
+              className="bg-white rounded-xl shadow-sm p-6 border border-gray-200 hover:shadow-md transition cursor-pointer"
+              onClick={stat.onClick}
             >
               <div className="flex items-center justify-between mb-4">
                 <div className={`${stat.bgColor} p-3 rounded-lg`}>
@@ -184,22 +191,22 @@ export default function DashboardPage() {
             {[
               {
                 label: "Add Contact",
-                href: "/dashboard/contacts/new",
+                href: "/contacts",
                 icon: Users,
               },
               {
                 label: "Create Lead",
-                href: "/dashboard/leads/new",
+                href: "/leads",
                 icon: TrendingUp,
               },
               {
                 label: "New Deal",
-                href: "/dashboard/deals/new",
+                href: "/deals",
                 icon: DollarSign,
               },
               {
                 label: "New Ticket",
-                href: "/dashboard/tickets/new",
+                href: "/tickets",
                 icon: TicketIcon,
               },
             ].map((action) => {

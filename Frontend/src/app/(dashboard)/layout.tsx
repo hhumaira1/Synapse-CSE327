@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { UserButton } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useUserStatus } from '@/hooks/useUserStatus';
+import { useApiClient } from '@/lib/api';
+import { Button } from '@/components/ui/button';
 import { 
   LayoutDashboard, 
   Users, 
@@ -15,7 +17,8 @@ import {
   Ticket,
   Settings,
   BarChart3,
-  Workflow
+  Workflow,
+  Store
 } from 'lucide-react';
 
 const navigation = [
@@ -32,7 +35,25 @@ const navigation = [
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const apiClient = useApiClient();
   const { isLoaded, isSignedIn, needsOnboarding, userExists, user, error } = useUserStatus();
+  const [hasPortalAccess, setHasPortalAccess] = useState(false);
+
+  // Check for portal access
+  useEffect(() => {
+    const checkPortalAccess = async () => {
+      if (!isLoaded || !isSignedIn) return;
+      
+      try {
+        const response = await apiClient.get('/portal/customers/my-access');
+        setHasPortalAccess(response.data && response.data.length > 0);
+      } catch {
+        setHasPortalAccess(false);
+      }
+    };
+
+    checkPortalAccess();
+  }, [isLoaded, isSignedIn, apiClient]);
 
   useEffect(() => {
     if (!isLoaded) return; // Wait for everything to load
@@ -163,6 +184,17 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               {navigation.find(item => pathname === item.href)?.name || 'Dashboard'}
             </h2>
             <div className="flex items-center gap-4">
+              {hasPortalAccess && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => router.push('/select-workspace')}
+                  className="flex items-center gap-2"
+                >
+                  <Store className="h-4 w-4" />
+                  Switch Workspace
+                </Button>
+              )}
               <button className="p-2 rounded-lg hover:bg-gray-100 text-gray-600">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
