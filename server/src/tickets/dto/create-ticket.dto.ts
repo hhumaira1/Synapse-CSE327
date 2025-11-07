@@ -39,4 +39,3 @@ export class CreateTicketDto {
   @IsString({ message: 'Assigned User ID must be a valid string' })
   assignedUserId?: string;
 }
-
