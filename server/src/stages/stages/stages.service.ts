@@ -174,4 +174,3 @@ export class StagesService {
     return { message: 'Stage deleted successfully' };
   }
 }
-

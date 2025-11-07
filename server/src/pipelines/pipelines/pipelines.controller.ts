@@ -66,4 +66,3 @@ export class PipelinesController {
     return this.pipelinesService.remove(user.tenantId, id);
   }
 }
-

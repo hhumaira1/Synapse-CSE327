@@ -113,4 +113,3 @@ export class PipelinesService {
     return { message: 'Pipeline deleted successfully' };
   }
 }
-

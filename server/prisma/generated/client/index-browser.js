@@ -241,6 +241,18 @@ exports.Prisma.TicketScalarFieldEnum = {
   assignedUserId: 'assignedUserId'
 };
 
+exports.Prisma.TicketCommentScalarFieldEnum = {
+  id: 'id',
+  ticketId: 'ticketId',
+  userId: 'userId',
+  portalCustomerId: 'portalCustomerId',
+  content: 'content',
+  authorName: 'authorName',
+  isInternal: 'isInternal',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.IntegrationScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
@@ -379,6 +391,7 @@ exports.Prisma.ModelName = {
   Deal: 'Deal',
   Interaction: 'Interaction',
   Ticket: 'Ticket',
+  TicketComment: 'TicketComment',
   Integration: 'Integration',
   CallLog: 'CallLog',
   PortalCustomer: 'PortalCustomer',

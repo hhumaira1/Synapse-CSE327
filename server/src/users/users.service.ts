@@ -41,6 +41,7 @@ export class UsersService {
     invitedByUserId: string,
     email: string,
     role: UserRole,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     name: string,
   ) {
     const normalizedEmail = email.toLowerCase();

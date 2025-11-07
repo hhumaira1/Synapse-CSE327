@@ -104,6 +104,7 @@ model User {
   tenant          Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   interactions    Interaction[]
   ticketsAssigned Ticket[]      @relation("TicketAssignedUser")
+  ticketComments  TicketComment[] @relation("TicketComments")
   invitations     UserInvitation[] // Invitations sent to users
 
   @@unique([tenantId, clerkId])
@@ -278,10 +279,11 @@ model Ticket {
   assignedUserId            String?
 
   tenant         Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  contact        Contact         @relation(fields: [contactId], references: [id], onDelete: Restrict)
+  contact        Contact         @relation(fields: [contactId], references: [id], onDelete: Cascade)
   portalCustomer PortalCustomer? @relation(fields: [portalCustomerId], references: [id], onDelete: SetNull)
   deal           Deal?           @relation(fields: [dealId], references: [id], onDelete: SetNull)
   assignedUser   User?           @relation("TicketAssignedUser", fields: [assignedUserId], references: [id], onDelete: SetNull)
+  comments       TicketComment[]
 
   @@unique([tenantId, externalId, externalSystem])
   @@index([tenantId])
@@ -292,6 +294,27 @@ model Ticket {
   @@index([status])
   @@index([priority])
   @@map("tickets")
+}
+
+model TicketComment {
+  id               String   @id @default(cuid())
+  ticketId         String
+  userId           String?
+  portalCustomerId String?
+  content          String
+  authorName       String?  // Name of the person who commented (from Clerk)
+  isInternal       Boolean  @default(true) // true = internal user, false = portal customer
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  ticket         Ticket          @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  user           User?           @relation("TicketComments", fields: [userId], references: [id], onDelete: Restrict)
+  portalCustomer PortalCustomer? @relation(fields: [portalCustomerId], references: [id], onDelete: Restrict)
+
+  @@index([ticketId])
+  @@index([userId])
+  @@index([portalCustomerId])
+  @@map("ticket_comments")
 }
 
 // ==================== INTEGRATIONS ====================
@@ -356,11 +379,12 @@ model PortalCustomer {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  tenant  Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  contact Contact? @relation(fields: [contactId], references: [id], onDelete: SetNull)
-  tickets Ticket[]
+  tenant         Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  contact        Contact?        @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  tickets        Ticket[]
+  ticketComments TicketComment[]
 
-  @@unique([tenantId, clerkId])  // One user can belong to multiple tenants
+  @@unique([tenantId, clerkId]) // One user can belong to multiple tenants
   @@unique([tenantId, email])    // Prevent duplicate emails per tenant
   @@index([clerkId])              // Fast lookup of all user's tenants
   @@index([tenantId])

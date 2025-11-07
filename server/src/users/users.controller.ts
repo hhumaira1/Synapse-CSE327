@@ -41,8 +41,13 @@ export class UsersController {
     }
 
     // Only ADMIN and MANAGER can invite users
-    if (currentUser.role !== UserRole.ADMIN && currentUser.role !== UserRole.MANAGER) {
-      throw new ForbiddenException('Only admins and managers can invite new employees');
+    if (
+      currentUser.role !== UserRole.ADMIN &&
+      currentUser.role !== UserRole.MANAGER
+    ) {
+      throw new ForbiddenException(
+        'Only admins and managers can invite new employees',
+      );
     }
 
     return this.usersService.inviteEmployee(
@@ -92,8 +97,13 @@ export class UsersController {
       throw new ForbiddenException('User not found');
     }
 
-    if (currentUser.role !== UserRole.ADMIN && currentUser.role !== UserRole.MANAGER) {
-      throw new ForbiddenException('Only admins and managers can view pending invitations');
+    if (
+      currentUser.role !== UserRole.ADMIN &&
+      currentUser.role !== UserRole.MANAGER
+    ) {
+      throw new ForbiddenException(
+        'Only admins and managers can view pending invitations',
+      );
     }
 
     return this.usersService.getPendingInvitations(currentUser.tenantId);
@@ -114,8 +124,13 @@ export class UsersController {
       throw new ForbiddenException('User not found');
     }
 
-    if (currentUser.role !== UserRole.ADMIN && currentUser.role !== UserRole.MANAGER) {
-      throw new ForbiddenException('Only admins and managers can cancel invitations');
+    if (
+      currentUser.role !== UserRole.ADMIN &&
+      currentUser.role !== UserRole.MANAGER
+    ) {
+      throw new ForbiddenException(
+        'Only admins and managers can cancel invitations',
+      );
     }
 
     return this.usersService.cancelInvitation(

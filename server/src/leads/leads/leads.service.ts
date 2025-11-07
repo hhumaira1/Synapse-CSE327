@@ -218,4 +218,3 @@ export class LeadsService {
     return { message: 'Lead deleted successfully' };
   }
 }
-

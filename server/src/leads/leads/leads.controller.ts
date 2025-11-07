@@ -89,4 +89,3 @@ export class LeadsController {
     return this.leadsService.remove(user.tenantId, id);
   }
 }
-

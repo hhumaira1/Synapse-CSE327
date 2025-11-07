@@ -15,6 +15,7 @@ import { StagesModule } from './stages/stages.module';
 import { LeadsModule } from './leads/leads.module';
 import { DealsModule } from './deals/deals.module';
 import { AnalyticsModule } from './analytics/analytics.module';
+import { TicketsModule } from './tickets/tickets.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { AnalyticsModule } from './analytics/analytics.module';
     LeadsModule,
     DealsModule,
     AnalyticsModule,
+    TicketsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
