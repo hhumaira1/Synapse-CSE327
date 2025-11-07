@@ -17,6 +17,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.synapse.ui.theme.SynapseTheme
 import com.example.synapse.ui.theme.screens.LandingPage
+import com.example.synapse.ui.theme.screens.OwnerDashboard
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +51,18 @@ fun NavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
         composable("landing") { LandingPage(navController) }
         composable("signin") { /* TODO: SignInScreen(navController) */ }
         composable("signup") { /* TODO: SignUpScreen(navController) */ }
+        composable("owner_dashboard") {
+            OwnerDashboard(
+                isDarkMode = false,
+                onNavigate = { route ->
+                    navController.navigate(route)
+                }
+//                onBack = {
+//                    // Pop back to landing page
+//                    navController.popBackStack()
+//                }
+            )
+        }
         composable ("home") { /* TODO: HomeScreen(navController) */ }
     }
 }

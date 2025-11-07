@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.synapse"
-        minSdk = 23
+        minSdk = 24
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -57,6 +57,31 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
+
     // Jetpack Compose Navigation
     implementation("androidx.navigation:navigation-compose:2.8.0")
+
+    implementation(libs.clerk.android)
+    implementation("com.clerk:clerk-android:1.0.0") // Check latest version
+
+    // Network & API
+    implementation("com.squareup.retrofit2:retrofit:3.0.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:okhttp:5.3.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:5.3.0")
+
+    // DataStore for secure storage
+    implementation("androidx.datastore:datastore-preferences:1.1.7")
+
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
+
+    // Swipe refresh
+    implementation("com.google.accompanist:accompanist-swiperefresh:0.36.0")
+
+    // Animation
+    implementation("androidx.compose.animation:animation:1.9.4")
+
+    implementation("androidx.compose.material:material-icons-extended")
+
 }

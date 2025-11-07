@@ -141,7 +141,7 @@ fun LandingPage(navController: NavController) {
         }
 
         Button(
-            onClick = {},
+            onClick = {navController.navigate("owner_dashboard")},
             colors = ButtonDefaults.buttonColors(containerColor = Purple1),
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier
