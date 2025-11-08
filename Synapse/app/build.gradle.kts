@@ -28,14 +28,17 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
 }
 
@@ -61,8 +64,8 @@ dependencies {
     // Jetpack Compose Navigation
     implementation("androidx.navigation:navigation-compose:2.8.0")
 
-    implementation(libs.clerk.android)
-    implementation("com.clerk:clerk-android:1.0.0") // Check latest version
+    //implementation(libs.clerk.android)
+    //implementation("com.clerk:clerk-android:1.0.0") // Check latest version
 
     // Network & API
     implementation("com.squareup.retrofit2:retrofit:3.0.0")

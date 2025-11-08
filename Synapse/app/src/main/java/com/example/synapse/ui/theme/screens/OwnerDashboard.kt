@@ -1,25 +1,25 @@
 package com.example.synapse.ui.theme.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.HelpOutline
 import androidx.compose.material.icons.automirrored.filled.ShowChart
+import androidx.compose.material.icons.automirrored.filled.TrendingDown
 import androidx.compose.material.icons.automirrored.filled.TrendingUp
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
@@ -29,7 +29,6 @@ import com.example.synapse.ui.theme.*
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.coroutines.delay
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,6 +40,7 @@ fun OwnerDashboard(
     var selectedTab by remember { mutableIntStateOf(0) }
     var showQuickActions by remember { mutableStateOf(false) }
 
+
     // Mock data refresh
     LaunchedEffect(isRefreshing) {
         if (isRefreshing) {
@@ -50,7 +50,11 @@ fun OwnerDashboard(
     }
 
     Scaffold(
-        topBar = { OwnerDashboardTopBar(isDarkMode) },
+        topBar = {
+            OwnerDashboardTopBar(
+                isDarkMode = isDarkMode
+            )
+        },
         floatingActionButton = {
             QuickActionsSpeedDial(
                 expanded = showQuickActions,
@@ -72,9 +76,9 @@ fun OwnerDashboard(
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
             ) {
                 // Critical Alerts Banner
-                item { CriticalAlertsBanner() }
+                //item { CriticalAlertsBanner() }
 
-                // Tab Selector for Different Views
+                // Tab Selector
                 item {
                     DashboardTabSelector(
                         selectedTab = selectedTab,
@@ -89,16 +93,18 @@ fun OwnerDashboard(
                         item { RevenueSnapshot() }
                         item { TeamStatusQuickView() }
                     }
+
                     1 -> { // Sales
                         item { PipelineHealthDetailed() }
-                        item { DealsForecast() }
                         item { TopPerformingDeals() }
                     }
+
                     2 -> { // Team
                         item { TeamPerformanceGrid() }
                         item { ActivityHeatmap() }
                         item { TeamAlerts() }
                     }
+
                     3 -> { // Analytics
                         item { AIInsightsCard() }
                         item { CompetitiveIntelligence() }
@@ -106,7 +112,7 @@ fun OwnerDashboard(
                     }
                 }
 
-                // Recent Activities (Always visible)
+                // Recent Activities
                 item { RecentActivitiesFeed() }
 
                 // Bottom padding for FAB
@@ -118,7 +124,9 @@ fun OwnerDashboard(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OwnerDashboardTopBar(isDarkMode: Boolean) {
+fun OwnerDashboardTopBar(
+    isDarkMode: Boolean
+) {
     TopAppBar(
         title = {
             Column {
@@ -127,94 +135,40 @@ fun OwnerDashboardTopBar(isDarkMode: Boolean) {
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp
                 )
-                Text(
-                    text = "Good Morning, Alex",
-                    fontSize = 12.sp,
-                    color = Color.White.copy(alpha = 0.7f)
-                )
             }
         },
         actions = {
-            // Critical Notifications
-            IconButton(onClick = { /* Navigate to notifications */ }) {
-                Badge(
-                    containerColor = Color.Red,
-                    contentColor = Color.White
+            IconButton(onClick = { }) {
+                BadgedBox(
+                    badge = {
+                        Badge(
+                            containerColor = Color.Red,
+                            contentColor = Color.White
+                        ) {
+                            Text("3", fontSize = 10.sp)
+                        }
+                    }
                 ) {
-                    Text("3", fontSize = 10.sp)
+                    Icon(
+                        Icons.Default.Notifications,
+                        contentDescription = "Urgent Notifications",
+                        tint = Color.White
+                    )
                 }
-                Icon(
-                    Icons.Default.Notifications,
-                    contentDescription = "Urgent Notifications",
-                    tint = Color.White
-                )
             }
-
-            // Search
             IconButton(onClick = { /* Search */ }) {
                 Icon(Icons.Default.Search, "Search", tint = Color.White)
             }
-
-            // Profile
             IconButton(onClick = { /* Profile */ }) {
                 Icon(Icons.Default.AccountCircle, "Profile", tint = Color.White)
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Brush.horizontalGradient(
-                listOf(Purple1, Purple3)
-            ).let { Color(0xFF6366F1) }
+            containerColor = Color(0xFF6366F1)
         )
     )
 }
 
-@Composable
-fun CriticalAlertsBanner() {
-    val alerts = listOf(
-        "⚠️ 3 high-priority deals closing today",
-        "🔥 Pipeline conversion rate down 15%",
-        "📞 12 missed follow-ups from yesterday"
-    )
-
-    if (alerts.isNotEmpty()) {
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = Color(0xFFFFEBEE)
-            )
-        ) {
-            Column(
-                modifier = Modifier.padding(12.dp),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        Icons.Default.Warning,
-                        contentDescription = null,
-                        tint = Color(0xFFC62828),
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Critical Alerts",
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFFC62828),
-                        fontSize = 14.sp
-                    )
-                }
-                alerts.forEach { alert ->
-                    Text(
-                        text = alert,
-                        fontSize = 12.sp,
-                        modifier = Modifier.padding(start = 28.dp)
-                    )
-                }
-            }
-        }
-    }
-}
 
 @Composable
 fun DashboardTabSelector(
@@ -223,9 +177,9 @@ fun DashboardTabSelector(
 ) {
     val tabs = listOf(
         "Overview" to Icons.Default.Home,
-        "Sales" to Icons.Default.ShoppingCart,
-        "Team" to Icons.Default.Person,
-        "Analytics" to Icons.Default.Analytics
+        "Sales" to Icons.AutoMirrored.Filled.ShowChart,
+        "Team" to Icons.Default.Group,
+        "Analytics" to Icons.Default.Assessment
     )
 
     LazyRow(
@@ -261,19 +215,16 @@ fun DashboardTabSelector(
 @Composable
 fun MetricsCardsGrid() {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        // First Row: Revenue & Conversion
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
+        LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             item {
                 AnimatedMetricCard(
                     title = "Today's Revenue",
-                    value = "$8,450",
+                    value = "$$$$",
                     change = "+23.5%",
                     icon = Icons.Default.AttachMoney,
                     trend = "up",
                     target = "$10,000",
-                    backgroundColor = Color(0xFF4CAF50)
+                    backgroundColor = Color(0xFF9A0680)
                 )
             }
             item {
@@ -281,18 +232,15 @@ fun MetricsCardsGrid() {
                     title = "Conversion Rate",
                     value = "32%",
                     change = "-5.2%",
-                    icon = Icons.AutoMirrored.Filled.ShowChart,
+                    icon = Icons.AutoMirrored.Filled.TrendingDown,
                     trend = "down",
                     target = "40%",
-                    backgroundColor = Color(0xFFFF5722)
+                    backgroundColor = Color(0xFF7D5260)
                 )
             }
         }
 
-        // Second Row: Activity Metrics
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
+        LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             item {
                 AnimatedMetricCard(
                     title = "Active Deals",
@@ -309,7 +257,7 @@ fun MetricsCardsGrid() {
                     title = "Open Tickets",
                     value = "12",
                     change = "-2",
-                    icon = Icons.Default.SupportAgent,
+                    icon = Icons.AutoMirrored.Filled.HelpOutline,
                     trend = "up",
                     target = "0",
                     backgroundColor = Color(0xFF2196F3)
@@ -329,30 +277,16 @@ fun AnimatedMetricCard(
     target: String,
     backgroundColor: Color
 ) {
-    var animated by remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        animated = true
-    }
-
     Card(
         modifier = Modifier
             .width(160.dp)
-            .height(140.dp)
-            .animateContentSize(),
+            .height(140.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        listOf(
-                            backgroundColor.copy(alpha = 0.9f),
-                            backgroundColor
-                        )
-                    )
-                )
+                .background(backgroundColor)
         ) {
             Column(
                 modifier = Modifier
@@ -381,10 +315,7 @@ fun AnimatedMetricCard(
                             )
                         },
                         colors = AssistChipDefaults.assistChipColors(
-                            containerColor = if (trend == "up")
-                                Color.White.copy(alpha = 0.3f)
-                            else
-                                Color.Red.copy(alpha = 0.3f),
+                            containerColor = Color.White.copy(alpha = 0.3f),
                             labelColor = Color.White
                         ),
                         modifier = Modifier.height(24.dp)
@@ -404,7 +335,6 @@ fun AnimatedMetricCard(
                         color = Color.White.copy(alpha = 0.8f)
                     )
 
-                    // Progress to target
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -466,23 +396,6 @@ fun TodaysPriorities() {
                 dueTime = "2 hours"
             )
 
-            PriorityTaskItem(
-                title = "Review Team Performance",
-                subtitle = "Weekly sync-up",
-                value = "",
-                priority = "HIGH",
-                icon = Icons.Default.Group,
-                dueTime = "3 hours"
-            )
-
-            PriorityTaskItem(
-                title = "Respond to Critical Tickets",
-                subtitle = "3 urgent customer issues",
-                value = "",
-                priority = "HIGH",
-                icon = Icons.Default.Support,
-                dueTime = "ASAP"
-            )
         }
     }
 }
@@ -498,7 +411,7 @@ fun PriorityTaskItem(
 ) {
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = when(priority) {
+            containerColor = when (priority) {
                 "URGENT" -> Color(0xFFFFEBEE)
                 "HIGH" -> Color(0xFFFFF3E0)
                 else -> Color(0xFFF5F5F5)
@@ -522,7 +435,7 @@ fun PriorityTaskItem(
                         .size(48.dp)
                         .clip(CircleShape)
                         .background(
-                            when(priority) {
+                            when (priority) {
                                 "URGENT" -> Color(0xFFD32F2F)
                                 "HIGH" -> Color(0xFFFF9800)
                                 else -> Color.Gray
@@ -567,7 +480,7 @@ fun PriorityTaskItem(
                     onClick = { },
                     label = { Text(priority, fontSize = 10.sp) },
                     colors = AssistChipDefaults.assistChipColors(
-                        containerColor = when(priority) {
+                        containerColor = when (priority) {
                             "URGENT" -> Color(0xFFD32F2F)
                             "HIGH" -> Color(0xFFFF9800)
                             else -> Color.Gray
@@ -618,8 +531,7 @@ fun RevenueSnapshot() {
                 HorizontalDivider(
                     modifier = Modifier
                         .height(60.dp)
-                        .width(1.dp),
-                    thickness = DividerDefaults.Thickness, color = DividerDefaults.color
+                        .width(1.dp)
                 )
                 RevenueMetric(
                     label = "This Month",
@@ -630,8 +542,7 @@ fun RevenueSnapshot() {
                 HorizontalDivider(
                     modifier = Modifier
                         .height(60.dp)
-                        .width(1.dp),
-                    thickness = DividerDefaults.Thickness, color = DividerDefaults.color
+                        .width(1.dp)
                 )
                 RevenueMetric(
                     label = "Target",
@@ -641,16 +552,14 @@ fun RevenueSnapshot() {
                 )
             }
 
-            // Simple bar chart placeholder
             LinearProgressIndicator(
-            progress = { 0.78f },
-            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(8.dp)
-                                .clip(MaterialTheme.shapes.small),
-            color = Purple1,
-            trackColor = Color.LightGray,
-            strokeCap = ProgressIndicatorDefaults.LinearStrokeCap,
+                progress = { 0.78f },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(8.dp)
+                    .clip(MaterialTheme.shapes.small),
+                color = Purple1,
+                trackColor = Color.LightGray
             )
         }
     }
@@ -806,22 +715,6 @@ fun RecentActivitiesFeed() {
                 time = "2 min ago",
                 iconColor = Color(0xFF4CAF50)
             )
-
-            ActivityFeedItem(
-                icon = Icons.Default.Phone,
-                title = "Call Logged",
-                subtitle = "Jane Smith → XYZ Industries",
-                time = "8 min ago",
-                iconColor = Purple1
-            )
-
-            ActivityFeedItem(
-                icon = Icons.Default.PersonAdd,
-                title = "New Lead Created",
-                subtitle = "Mike Johnson • Tech Solutions Inc.",
-                time = "15 min ago",
-                iconColor = Color(0xFF2196F3)
-            )
         }
     }
 }
@@ -885,7 +778,7 @@ fun QuickActionsSpeedDial(
         Triple("Add Contact", Icons.Default.PersonAdd, "contacts/create"),
         Triple("Log Call", Icons.Default.Phone, "calls/log"),
         Triple("Create Deal", Icons.Default.Business, "deals/create"),
-        Triple("New Ticket", Icons.Default.Support, "tickets/create")
+        Triple("New Ticket", Icons.Default.ConfirmationNumber, "tickets/create")
     )
 
     Column(
@@ -943,8 +836,6 @@ fun QuickActionsSpeedDial(
     }
 }
 
-// Additional tab content composables (Phase 2-3)
-
 @Composable
 fun PipelineHealthDetailed() {
     Card(
@@ -990,110 +881,16 @@ fun PipelineStageBar(
             }
         }
         LinearProgressIndicator(
-        progress = { progress },
-        modifier = Modifier
-                        .fillMaxWidth()
-                        .height(6.dp)
-                        .clip(MaterialTheme.shapes.small),
-        color = Purple1,
-        trackColor = ProgressIndicatorDefaults.linearTrackColor,
-        strokeCap = ProgressIndicatorDefaults.LinearStrokeCap,
-        )
-    }
-}
-
-@Composable
-fun AIInsightsCard() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFF3E5F5)
-        )
-    ) {
-        Column(
+            progress = { progress },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Icon(
-                    Icons.Default.Psychology,
-                    contentDescription = null,
-                    tint = Purple1,
-                    modifier = Modifier.size(24.dp)
-                )
-                Text(
-                    text = "🤖 AI Insights",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-
-            InsightItem(
-                "High win probability: Focus on ABC Corp deal (87% chance)",
-                Color(0xFF4CAF50)
-            )
-            InsightItem(
-                "Risk alert: XYZ deal stalled for 14 days",
-                Color(0xFFFF9800)
-            )
-            InsightItem(
-                "Opportunity: 3 leads ready for follow-up",
-                Purple1
-            )
-        }
-    }
-}
-
-@Composable
-fun InsightItem(text: String, color: Color) {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier
-                .size(6.dp)
-                .clip(CircleShape)
-                .background(color)
+                .height(6.dp)
+                .clip(MaterialTheme.shapes.small),
+            color = Purple1
         )
-        Text(text = text, fontSize = 12.sp)
     }
 }
 
-@Composable
-fun DealsForecast() {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Text(
-                text = "📈 90-Day Forecast",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                ForecastMetric("Best Case", "$520K", Color(0xFF4CAF50))
-                ForecastMetric("Likely", "$380K", Purple1)
-                ForecastMetric("Worst Case", "$240K", Color(0xFFFF5722))
-            }
-        }
-    }
-}
 
 @Composable
 fun ForecastMetric(label: String, value: String, color: Color) {
@@ -1125,8 +922,6 @@ fun TopPerformingDeals() {
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            DealListItem("ABC Corp", "$85,000", "Closing", "95%")
-            DealListItem("Tech Solutions", "$62,000", "Negotiation", "78%")
             DealListItem("Global Industries", "$45,000", "Proposal", "65%")
         }
     }
@@ -1168,9 +963,7 @@ fun TeamPerformanceGrid() {
                 fontWeight = FontWeight.Bold
             )
 
-            TeamMemberPerformance("John Doe", 8, "$145K", "98%")
-            TeamMemberPerformance("Jane Smith", 6, "$98K", "92%")
-            TeamMemberPerformance("Mike Johnson", 10, "$180K", "95%")
+
         }
     }
 }
@@ -1240,7 +1033,11 @@ fun ActivityHeatmap() {
                     .height(120.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = "📊 Heatmap visualization here", color = Color.Gray)
+                Text(
+                    text = "📊 Heatmap visualization coming soon",
+                    color = Color.Gray,
+                    fontSize = 12.sp
+                )
             }
         }
     }
@@ -1263,17 +1060,60 @@ fun TeamAlerts() {
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
-            Text(
-                text = "• John has 3 overdue follow-ups",
-                fontSize = 12.sp,
-                color = Color(0xFFFF5722)
-            )
-            Text(
-                text = "• Jane exceeded quota by 125%",
-                fontSize = 12.sp,
-                color = Color(0xFF4CAF50)
-            )
+
         }
+    }
+}
+
+@Composable
+fun AIInsightsCard() {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFFF3E5F5)
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Icon(
+                    Icons.Default.Lightbulb,
+                    contentDescription = null,
+                    tint = Purple1,
+                    modifier = Modifier.size(24.dp)
+                )
+                Text(
+                    text = "🤖 AI Insights",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+        }
+    }
+}
+
+@Composable
+fun InsightItem(text: String, color: Color) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .size(6.dp)
+                .clip(CircleShape)
+                .background(color)
+        )
+        Text(text = text, fontSize = 12.sp)
     }
 }
 
@@ -1295,7 +1135,7 @@ fun CompetitiveIntelligence() {
             )
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = "Coming in Phase 3: Competitive analysis & market trends",
+                text = "Coming in Phase 2: Competitive analysis & market trends",
                 fontSize = 12.sp,
                 color = Color.Gray
             )
@@ -1321,7 +1161,7 @@ fun TrendAnalysis() {
             )
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = "Coming in Phase 3: Historical performance & predictions",
+                text = "Coming in Phase 2: Historical performance & predictions",
                 fontSize = 12.sp,
                 color = Color.Gray
             )

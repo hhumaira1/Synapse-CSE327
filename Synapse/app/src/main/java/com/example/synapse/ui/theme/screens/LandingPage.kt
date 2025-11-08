@@ -44,11 +44,6 @@ fun LandingPage(navController: NavController) {
             contentScale = ContentScale.Crop
         )
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp)
-        )
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -138,33 +133,36 @@ fun LandingPage(navController: NavController) {
             ) {
                 Text(text = "Sign In", fontSize = 18.sp, fontWeight = FontWeight.Medium)
             }
-        }
 
-        Button(
-            onClick = {navController.navigate("owner_dashboard")},
-            colors = ButtonDefaults.buttonColors(containerColor = Purple1),
-            shape = RoundedCornerShape(16.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(55.dp)
-        ) {
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Continue to Owner Dashboard Button
+            OutlinedButton(
+                onClick = { navController.navigate("owner_dashboard") },
+                colors = ButtonDefaults.outlinedButtonColors(containerColor = Purple1),
+                shape = RoundedCornerShape(10.dp),
+                modifier = Modifier.fillMaxWidth()
+                    .height(55.dp)
+            ) {
+                Text(
+                    text = "Home",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.White
+                )
+            }
+
+
+            Spacer(modifier = Modifier.height(100.dp))
+            // Version info at bottom
             Text(
-                text = "Continue to Home",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Medium,
-                color = Color.White
-            )
-        }
-
-        Spacer(modifier = Modifier.height(100.dp))
-        // Version info at bottom
-        Text(
-            text = "Version 1.0.0",
-            color = Color.Gray,
-            fontSize = 12.sp
+                text = "Version 1.0.0",
+                color = Color.Gray,
+                fontSize = 12.sp
 //                modifier = Modifier
 //                    .align(Alignment.BottomCenter)
 //                    .padding(bottom = 16.dp)
-        )
+            )
+        }
     }
 }

@@ -36,8 +36,10 @@ fun SynapseApp() {
     val navController = rememberNavController()
 
     Scaffold(modifier = Modifier.fillMaxSize()) { paddingValues ->
-        NavGraph(navController = navController,
-            modifier = Modifier.padding(paddingValues))
+        NavGraph(
+            navController = navController,
+            modifier = Modifier.padding(paddingValues)
+        )
     }
 }
 
@@ -49,21 +51,15 @@ fun NavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
         modifier = modifier
     ) {
         composable("landing") { LandingPage(navController) }
-        composable("signin") { /* TODO: SignInScreen(navController) */ }
-        composable("signup") { /* TODO: SignUpScreen(navController) */ }
         composable("owner_dashboard") {
             OwnerDashboard(
                 isDarkMode = false,
                 onNavigate = { route ->
                     navController.navigate(route)
                 }
-//                onBack = {
-//                    // Pop back to landing page
-//                    navController.popBackStack()
-//                }
+
             )
         }
-        composable ("home") { /* TODO: HomeScreen(navController) */ }
     }
 }
 
