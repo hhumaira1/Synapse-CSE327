@@ -1,7 +1,6 @@
-package com.example.synapse.ui.theme.screens
+package com.example.synapse.presentation
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -18,14 +17,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.synapse.ui.theme.Purple1
-import com.example.synapse.ui.theme.Purple2
 import com.example.synapse.ui.theme.Purple3
-import com.example.synapse.ui.theme.Purple4
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import com.example.synapse.R
 
 
 @Composable
@@ -38,7 +36,7 @@ fun LandingPage(navController: NavController) {
         //.background(Purple4)
     ) {
         Image(
-            painter = painterResource(id = com.example.synapse.R.drawable.backgroundlp),
+            painter = painterResource(id = R.drawable.backgroundlp),
             contentDescription = "Background",
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
