@@ -130,4 +130,11 @@ export class AuthController {
     }
     return user;
   }
+
+  // Get all tenants user has access to (internal + portal customer)
+  @Get('my-tenants')
+  @UseGuards(ClerkAuthGuard)
+  async getMyTenants(@CurrentUser('sub') clerkId: string) {
+    return this.authService.getMyTenants(clerkId);
+  }
 }

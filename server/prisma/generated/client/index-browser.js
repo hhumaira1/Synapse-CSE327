@@ -137,6 +137,7 @@ exports.Prisma.UserScalarFieldEnum = {
   email: 'email',
   name: 'name',
   role: 'role',
+  isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -161,9 +162,11 @@ exports.Prisma.LeadScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
   contactId: 'contactId',
+  title: 'title',
   source: 'source',
   status: 'status',
   value: 'value',
+  notes: 'notes',
   convertedAt: 'convertedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -173,6 +176,7 @@ exports.Prisma.PipelineScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
   name: 'name',
+  description: 'description',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -199,6 +203,7 @@ exports.Prisma.DealScalarFieldEnum = {
   value: 'value',
   probability: 'probability',
   expectedCloseDate: 'expectedCloseDate',
+  notes: 'notes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -234,6 +239,18 @@ exports.Prisma.TicketScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   assignedUserId: 'assignedUserId'
+};
+
+exports.Prisma.TicketCommentScalarFieldEnum = {
+  id: 'id',
+  ticketId: 'ticketId',
+  userId: 'userId',
+  portalCustomerId: 'portalCustomerId',
+  content: 'content',
+  authorName: 'authorName',
+  isInternal: 'isInternal',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.IntegrationScalarFieldEnum = {
@@ -272,6 +289,21 @@ exports.Prisma.PortalCustomerScalarFieldEnum = {
   clerkId: 'clerkId',
   email: 'email',
   name: 'name',
+  accessToken: 'accessToken',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.UserInvitationScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  email: 'email',
+  role: 'role',
+  invitedBy: 'invitedBy',
+  token: 'token',
+  expiresAt: 'expiresAt',
+  acceptedAt: 'acceptedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -359,9 +391,11 @@ exports.Prisma.ModelName = {
   Deal: 'Deal',
   Interaction: 'Interaction',
   Ticket: 'Ticket',
+  TicketComment: 'TicketComment',
   Integration: 'Integration',
   CallLog: 'CallLog',
-  PortalCustomer: 'PortalCustomer'
+  PortalCustomer: 'PortalCustomer',
+  UserInvitation: 'UserInvitation'
 };
 
 /**

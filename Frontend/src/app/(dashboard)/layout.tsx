@@ -1,11 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { UserButton } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useUserStatus } from '@/hooks/useUserStatus';
+import { useApiClient } from '@/lib/api';
+import { Button } from '@/components/ui/button';
 import { 
   LayoutDashboard, 
   Users, 
@@ -13,23 +16,44 @@ import {
   DollarSign, 
   Ticket,
   Settings,
-  BarChart3
+  BarChart3,
+  Workflow,
+  Store
 } from 'lucide-react';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Contacts', href: '/dashboard/contacts', icon: Users },
-  { name: 'Leads', href: '/dashboard/leads', icon: TrendingUp },
-  { name: 'Deals', href: '/dashboard/deals', icon: DollarSign },
-  { name: 'Tickets', href: '/dashboard/tickets', icon: Ticket },
-  { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
-  { name: 'Settings', href: '/dashboard/settings', icon: Settings },
+  { name: 'Contacts', href: '/contacts', icon: Users },
+  { name: 'Pipelines', href: '/pipelines', icon: Workflow },
+  { name: 'Leads', href: '/leads', icon: TrendingUp },
+  { name: 'Deals', href: '/deals', icon: DollarSign },
+  { name: 'Tickets', href: '/tickets', icon: Ticket },
+  { name: 'Analytics', href: '/analytics', icon: BarChart3 },
+  { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { isLoaded, isSignedIn, needsOnboarding, userExists, error } = useUserStatus();
+  const apiClient = useApiClient();
+  const { isLoaded, isSignedIn, needsOnboarding, userExists, user, error } = useUserStatus();
+  const [hasPortalAccess, setHasPortalAccess] = useState(false);
+
+  // Check for portal access
+  useEffect(() => {
+    const checkPortalAccess = async () => {
+      if (!isLoaded || !isSignedIn) return;
+      
+      try {
+        const response = await apiClient.get('/portal/customers/my-access');
+        setHasPortalAccess(response.data && response.data.length > 0);
+      } catch {
+        setHasPortalAccess(false);
+      }
+    };
+
+    checkPortalAccess();
+  }, [isLoaded, isSignedIn, apiClient]);
 
   useEffect(() => {
     if (!isLoaded) return; // Wait for everything to load
@@ -118,8 +142,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               }}
             />
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900 truncate">Admin User</p>
-              <p className="text-xs text-gray-500">Internal CRM</p>
+              <p className="text-sm font-medium text-gray-900 truncate">
+                {user && typeof user === 'object' && 'name' in user ? (user as any).name : 'User'}
+              </p>
+              <p className="text-xs text-gray-500">
+                {user && typeof user === 'object' && 'role' in user ? (user as any).role : 'Member'}
+              </p>
             </div>
           </div>
         </div>
@@ -156,6 +184,17 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               {navigation.find(item => pathname === item.href)?.name || 'Dashboard'}
             </h2>
             <div className="flex items-center gap-4">
+              {hasPortalAccess && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => router.push('/select-workspace')}
+                  className="flex items-center gap-2"
+                >
+                  <Store className="h-4 w-4" />
+                  Switch Workspace
+                </Button>
+              )}
               <button className="p-2 rounded-lg hover:bg-gray-100 text-gray-600">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />

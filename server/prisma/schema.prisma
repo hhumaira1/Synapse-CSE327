@@ -80,28 +80,36 @@ model Tenant {
   integrations    Integration[]
   callLogs        CallLog[]
   portalCustomers PortalCustomer[]
+  userInvitations UserInvitation[]
 
   @@map("tenants")
 }
 
 // ==================== INTERNAL CRM USERS ====================
+// ARCHITECTURE: One internal user belongs to ONE tenant only
+// Rationale: Simpler security model, matches 95% of CRM use cases
+// For multi-company access (consultants/contractors), use PortalCustomer instead
 
 model User {
   id        String   @id @default(cuid())
-  tenantId  String
-  clerkId   String   @unique
-  email     String   @unique
+  tenantId  String   // User belongs to ONE tenant (their employer)
+  clerkId   String   @unique // Global unique - one Clerk account
+  email     String   @unique // Global unique - one email = one internal user globally
   name      String?
-  role      UserRole @default(MEMBER)
+  role      UserRole @default(MEMBER) // Role in THIS tenant
+  isActive  Boolean  @default(true) // Soft delete support
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   tenant          Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   interactions    Interaction[]
   ticketsAssigned Ticket[]      @relation("TicketAssignedUser")
+  ticketComments  TicketComment[] @relation("TicketComments")
+  invitations     UserInvitation[] // Invitations sent to users
 
   @@unique([tenantId, clerkId])
   @@index([tenantId])
+  @@index([email]) // Fast lookup for global uniqueness check
   @@map("users")
 }
 
@@ -139,9 +147,11 @@ model Lead {
   id          String     @id @default(cuid())
   tenantId    String
   contactId   String?
+  title       String
   source      String
   status      LeadStatus @default(NEW)
   value       Decimal?
+  notes       String?    @db.Text
   convertedAt DateTime?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
@@ -157,12 +167,13 @@ model Lead {
 }
 
 model Pipeline {
-  id        String   @id @default(cuid())
-  tenantId  String
-  name      String
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  tenantId    String
+  name        String
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   tenant Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   stages Stage[]
@@ -200,6 +211,7 @@ model Deal {
   value             Decimal?
   probability       Decimal? // 0.0 to 1.0
   expectedCloseDate DateTime?
+  notes             String?    @db.Text
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 
@@ -267,10 +279,11 @@ model Ticket {
   assignedUserId            String?
 
   tenant         Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  contact        Contact         @relation(fields: [contactId], references: [id], onDelete: Restrict)
+  contact        Contact         @relation(fields: [contactId], references: [id], onDelete: Cascade)
   portalCustomer PortalCustomer? @relation(fields: [portalCustomerId], references: [id], onDelete: SetNull)
   deal           Deal?           @relation(fields: [dealId], references: [id], onDelete: SetNull)
   assignedUser   User?           @relation("TicketAssignedUser", fields: [assignedUserId], references: [id], onDelete: SetNull)
+  comments       TicketComment[]
 
   @@unique([tenantId, externalId, externalSystem])
   @@index([tenantId])
@@ -281,6 +294,27 @@ model Ticket {
   @@index([status])
   @@index([priority])
   @@map("tickets")
+}
+
+model TicketComment {
+  id               String   @id @default(cuid())
+  ticketId         String
+  userId           String?
+  portalCustomerId String?
+  content          String
+  authorName       String?  // Name of the person who commented (from Clerk)
+  isInternal       Boolean  @default(true) // true = internal user, false = portal customer
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  ticket         Ticket          @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  user           User?           @relation("TicketComments", fields: [userId], references: [id], onDelete: Restrict)
+  portalCustomer PortalCustomer? @relation(fields: [portalCustomerId], references: [id], onDelete: Restrict)
+
+  @@index([ticketId])
+  @@index([userId])
+  @@index([portalCustomerId])
+  @@map("ticket_comments")
 }
 
 // ==================== INTEGRATIONS ====================
@@ -334,23 +368,52 @@ model CallLog {
 // ==================== PORTAL CUSTOMERS ====================
 
 model PortalCustomer {
-  id        String   @id @default(cuid())
-  tenantId  String
-  contactId String?
-  clerkId   String?  // Nullable for invitation flow, filled on first login
-  email     String
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  tenantId    String
+  contactId   String?
+  clerkId     String?  // Nullable for invitation flow, filled on first login
+  email       String
+  name        String?
+  accessToken String?  @unique // Token for initial portal access invitation
+  isActive    Boolean  @default(true) // Can deactivate portal access
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  tenant  Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  contact Contact? @relation(fields: [contactId], references: [id], onDelete: SetNull)
-  tickets Ticket[]
+  tenant         Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  contact        Contact?        @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  tickets        Ticket[]
+  ticketComments TicketComment[]
 
-  @@unique([tenantId, clerkId])  // One user can belong to multiple tenants
+  @@unique([tenantId, clerkId]) // One user can belong to multiple tenants
   @@unique([tenantId, email])    // Prevent duplicate emails per tenant
   @@index([clerkId])              // Fast lookup of all user's tenants
   @@index([tenantId])
   @@index([contactId])
+  @@index([accessToken])
   @@map("portal_customers")
+}
+
+// ==================== USER INVITATIONS ====================
+
+model UserInvitation {
+  id         String    @id @default(cuid())
+  tenantId   String
+  email      String
+  role       UserRole  @default(MEMBER)
+  invitedBy  String    // User ID who sent the invitation
+  token      String    @unique // Unique invitation token
+  expiresAt  DateTime
+  acceptedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  tenant       Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  invitedByUser User   @relation(fields: [invitedBy], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, email]) // One pending invitation per email per tenant
+  @@index([tenantId])
+  @@index([email])
+  @@index([token])
+  @@index([expiresAt])
+  @@map("user_invitations")
 }   
