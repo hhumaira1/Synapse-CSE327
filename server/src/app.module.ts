@@ -18,6 +18,8 @@ import { AnalyticsModule } from './analytics/analytics.module';
 import { TicketsModule } from './tickets/tickets.module';
 import { TwilioModule } from './twilio/twilio.module';
 import { WebRTCModule } from './webrtc/webrtc.module';
+import { OsticketModule } from './osticket/osticket.module';
+import { JiraModule } from './jira/jira.module';
 
 @Module({
   imports: [
@@ -38,6 +40,8 @@ import { WebRTCModule } from './webrtc/webrtc.module';
     DealsModule,
     AnalyticsModule,
     TicketsModule,
+    OsticketModule,
+    JiraModule,
     TwilioModule,
     WebRTCModule,
   ],

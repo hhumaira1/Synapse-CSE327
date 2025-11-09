@@ -2,6 +2,7 @@ import {
   IsString,
   IsEnum,
   IsOptional,
+  IsBoolean,
   MinLength,
   MaxLength,
 } from 'class-validator';
@@ -38,4 +39,8 @@ export class CreateTicketDto {
   @IsOptional()
   @IsString({ message: 'Assigned User ID must be a valid string' })
   assignedUserId?: string;
+
+  @IsOptional()
+  @IsBoolean({ message: 'Submitted by portal customer must be a boolean' })
+  submittedByPortalCustomer?: boolean;
 }

@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Users, Bell, Shield, CreditCard } from "lucide-react";
+import { Users, Bell, Shield, CreditCard, Plug } from "lucide-react";
 import TeamInvitationsSection from "@/components/settings/TeamInvitationsSection";
+import OsTicketSettings from "@/components/settings/OsTicketSettings";
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("team");
@@ -20,10 +21,14 @@ export default function SettingsPage() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid">
+          <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid">
             <TabsTrigger value="team" className="flex items-center gap-2">
               <Users className="h-4 w-4" />
               <span className="hidden sm:inline">Team</span>
+            </TabsTrigger>
+            <TabsTrigger value="integrations" className="flex items-center gap-2">
+              <Plug className="h-4 w-4" />
+              <span className="hidden sm:inline">Integrations</span>
             </TabsTrigger>
             <TabsTrigger value="notifications" className="flex items-center gap-2">
               <Bell className="h-4 w-4" />
@@ -41,6 +46,10 @@ export default function SettingsPage() {
 
           <TabsContent value="team" className="space-y-6">
             <TeamInvitationsSection />
+          </TabsContent>
+
+          <TabsContent value="integrations" className="space-y-6">
+            <OsTicketSettings />
           </TabsContent>
 
           <TabsContent value="notifications" className="space-y-6">

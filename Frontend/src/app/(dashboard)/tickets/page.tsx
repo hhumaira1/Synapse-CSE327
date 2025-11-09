@@ -17,6 +17,8 @@ interface Ticket {
   status: "OPEN" | "IN_PROGRESS" | "RESOLVED" | "CLOSED";
   priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
   source: string;
+  externalSystem?: string | null;
+  externalId?: string | null;
   contact: {
     id: string;
     firstName: string;

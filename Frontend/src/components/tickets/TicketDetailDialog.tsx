@@ -54,6 +54,8 @@ interface Ticket {
   status: string;
   priority: string;
   source: string;
+  externalSystem?: string | null;
+  externalId?: string | null;
   createdAt: string;
   contact: {
     id: string;
@@ -190,12 +192,34 @@ export function TicketDetailDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            {ticket.title}
-            {ticket.priority === "URGENT" && (
-              <AlertCircle className="h-5 w-5 text-red-500" />
+          <div className="space-y-2">
+            <DialogTitle className="flex items-center gap-2">
+              {ticket.title}
+              {ticket.priority === "URGENT" && (
+                <AlertCircle className="h-5 w-5 text-red-500" />
+              )}
+            </DialogTitle>
+            {ticket.externalSystem === "osticket" && (
+              <div className="flex items-center gap-2">
+                <Badge variant="outline" className="bg-purple-100 text-purple-700 border-purple-200">
+                  🎫 osTicket #{ticket.externalId}
+                </Badge>
+                {ticket.externalId && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-6 text-xs"
+                    onClick={() => {
+                      // Open osTicket in new tab - will be configured from settings
+                      toast("Configure osTicket URL in Settings → Integrations");
+                    }}
+                  >
+                    View in osTicket →
+                  </Button>
+                )}
+              </div>
             )}
-          </DialogTitle>
+          </div>
         </DialogHeader>
 
         <div className="space-y-6">

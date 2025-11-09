@@ -43,10 +43,12 @@ export function CreateTicketDialog({
 }: CreateTicketDialogProps) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [priority, setPriority] = useState<string>("MEDIUM");
-  const [source, setSource] = useState<string>("INTERNAL");
+  const [priority, setPriority] = useState<"LOW" | "MEDIUM" | "HIGH" | "URGENT">("MEDIUM");
+  const [source, setSource] = useState<"INTERNAL" | "PORTAL" | "EMAIL" | "PHONE" | "API">("INTERNAL");
   const [contactId, setContactId] = useState<string>("");
   const [loading, setLoading] = useState(false);
+
+  const MAX_DESCRIPTION_LENGTH = 500;
 
   const { data: contacts = [] } = useQuery({
     queryKey: ["contacts"],
@@ -129,11 +131,23 @@ export function CreateTicketDialog({
             <Textarea
               id="description"
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value.length <= MAX_DESCRIPTION_LENGTH) {
+                  setDescription(value);
+                }
+              }}
               placeholder="Detailed description of the issue..."
               rows={4}
               minLength={10}
+              maxLength={MAX_DESCRIPTION_LENGTH}
             />
+            <p className="text-xs text-muted-foreground">
+              {description.length}/{MAX_DESCRIPTION_LENGTH} characters
+              {description.length >= MAX_DESCRIPTION_LENGTH && (
+                <span className="text-red-500 ml-2">Maximum length reached</span>
+              )}
+            </p>
           </div>
 
           {/* Contact */}
@@ -158,7 +172,10 @@ export function CreateTicketDialog({
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="priority">Priority</Label>
-              <Select value={priority} onValueChange={setPriority}>
+              <Select 
+                value={priority} 
+                onValueChange={(value) => setPriority(value as "LOW" | "MEDIUM" | "HIGH" | "URGENT")}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -173,7 +190,10 @@ export function CreateTicketDialog({
 
             <div className="space-y-2">
               <Label htmlFor="source">Source</Label>
-              <Select value={source} onValueChange={setSource}>
+              <Select 
+                value={source} 
+                onValueChange={(value) => setSource(value as "INTERNAL" | "PORTAL" | "EMAIL" | "PHONE" | "API")}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>

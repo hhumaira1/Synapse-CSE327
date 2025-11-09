@@ -17,6 +17,8 @@ interface PortalTicket {
   description: string | null;
   status: "OPEN" | "IN_PROGRESS" | "RESOLVED" | "CLOSED";
   priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
+  externalSystem?: string | null;
+  externalId?: string | null;
   createdAt: string;
   _count?: {
     comments: number;
@@ -141,7 +143,7 @@ export default function PortalTicketsPage() {
                       </p>
                     )}
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     <Badge
                       className={`${getStatusColor(ticket.status)} text-white`}
                     >
@@ -152,6 +154,14 @@ export default function PortalTicketsPage() {
                     >
                       {ticket.priority}
                     </Badge>
+                    {ticket.externalSystem === "osticket" && (
+                      <Badge
+                        variant="outline"
+                        className="bg-purple-100 text-purple-700 border-purple-200"
+                      >
+                        🎫 #{ticket.externalId}
+                      </Badge>
+                    )}
                   </div>
                 </div>
 

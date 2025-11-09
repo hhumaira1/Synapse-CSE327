@@ -57,3 +57,75 @@ export function useApiClient() {
   
   return apiClient;
 }
+
+// ============================================
+// osTicket Integration API Methods
+// ============================================
+
+export interface OsTicketConfig {
+  baseUrl: string;
+  apiKey: string;
+  syncExistingTickets?: boolean;
+}
+
+export interface OsTicketStatus {
+  isConfigured: boolean;
+  isEnabled: boolean;
+  baseUrl?: string;
+  lastSyncedAt?: string;
+  ticketCount?: number;
+}
+
+export interface OsTicketTestResult {
+  success: boolean;
+  message: string;
+}
+
+export const osTicketApi = {
+  // Setup osTicket integration (Admin only)
+  setup: async (config: OsTicketConfig) => {
+    const response = await apiClient.post<{ message: string; integration: any }>(
+      '/osticket/setup',
+      config
+    );
+    return response.data;
+  },
+
+  // Test osTicket connection
+  testConnection: async (baseUrl: string, apiKey: string) => {
+    const response = await apiClient.post<OsTicketTestResult>('/osticket/test', {
+      baseUrl,
+      apiKey,
+    });
+    return response.data;
+  },
+
+  // Get osTicket integration status
+  getStatus: async () => {
+    const response = await apiClient.get<OsTicketStatus>('/osticket/status');
+    return response.data;
+  },
+
+  // Manually sync a specific ticket
+  syncTicket: async (ticketId: string, force: boolean = false) => {
+    const response = await apiClient.post<{ message: string; ticket: any }>(
+      `/osticket/sync/${ticketId}`,
+      { force }
+    );
+    return response.data;
+  },
+
+  // Sync all tickets from osTicket (Admin only)
+  syncAll: async () => {
+    const response = await apiClient.post<{ message: string; synced: number }>(
+      '/osticket/sync-all'
+    );
+    return response.data;
+  },
+
+  // Disable osTicket integration
+  disable: async () => {
+    const response = await apiClient.post<{ message: string }>('/osticket/disable');
+    return response.data;
+  },
+};

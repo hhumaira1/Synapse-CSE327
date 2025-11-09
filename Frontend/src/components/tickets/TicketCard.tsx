@@ -11,6 +11,8 @@ interface Ticket {
   description: string | null;
   priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
   source: string;
+  externalSystem?: string | null;
+  externalId?: string | null;
   contact: {
     firstName: string;
     lastName: string;
@@ -56,15 +58,25 @@ export function TicketCard({ ticket, onClick }: TicketCardProps) {
       <div className="space-y-3">
         {/* Priority Badge */}
         <div className="flex items-start justify-between gap-2">
-          <Badge
-            variant="outline"
-            className={PRIORITY_STYLES[ticket.priority]}
-          >
-            {ticket.priority === "URGENT" && (
-              <AlertCircle className="h-3 w-3 mr-1" />
+          <div className="flex gap-2">
+            <Badge
+              variant="outline"
+              className={PRIORITY_STYLES[ticket.priority]}
+            >
+              {ticket.priority === "URGENT" && (
+                <AlertCircle className="h-3 w-3 mr-1" />
+              )}
+              {ticket.priority}
+            </Badge>
+            {ticket.externalSystem === "osticket" && (
+              <Badge
+                variant="outline"
+                className="bg-purple-100 text-purple-700 border-purple-200"
+              >
+                osTicket #{ticket.externalId}
+              </Badge>
             )}
-            {ticket.priority}
-          </Badge>
+          </div>
         </div>
 
         {/* Title */}

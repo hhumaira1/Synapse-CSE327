@@ -33,6 +33,8 @@ export function CreatePortalTicketDialog({
   const queryClient = useQueryClient();
   const portalApiClient = usePortalApiClient();
 
+  const MAX_DESCRIPTION_LENGTH = 500;
+
   useEffect(() => {
     if (open) {
       setTitle("");
@@ -109,14 +111,23 @@ export function CreatePortalTicketDialog({
             <Textarea
               id="description"
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value.length <= MAX_DESCRIPTION_LENGTH) {
+                  setDescription(value);
+                }
+              }}
               placeholder="Please provide as much detail as possible about your issue..."
               rows={6}
               required
               minLength={10}
+              maxLength={MAX_DESCRIPTION_LENGTH}
             />
             <p className="text-xs text-muted-foreground">
-              Minimum 10 characters. Include steps to reproduce the issue if applicable.
+              {description.length}/{MAX_DESCRIPTION_LENGTH} characters - Minimum 10 characters
+              {description.length >= MAX_DESCRIPTION_LENGTH && (
+                <span className="text-red-500 ml-2">Maximum length reached</span>
+              )}
             </p>
           </div>
 
