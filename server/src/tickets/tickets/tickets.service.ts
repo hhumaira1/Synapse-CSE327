@@ -10,9 +10,27 @@ export class TicketsService {
   constructor(private prisma: PrismaService) {}
 
   async create(tenantId: string, createTicketDto: CreateTicketDto) {
+    // If portalCustomerId is not provided, try to find it via contactId
+    let portalCustomerId = createTicketDto.portalCustomerId;
+    
+    if (!portalCustomerId && createTicketDto.contactId) {
+      // Find portal customer linked to this contact
+      const portalCustomer = await this.prisma.portalCustomer.findFirst({
+        where: {
+          contactId: createTicketDto.contactId,
+          tenantId,
+        },
+      });
+      
+      if (portalCustomer) {
+        portalCustomerId = portalCustomer.id;
+      }
+    }
+
     return this.prisma.ticket.create({
       data: {
         ...createTicketDto,
+        portalCustomerId, // Auto-linked if found
         tenantId,
         status: TicketStatus.OPEN,
       },

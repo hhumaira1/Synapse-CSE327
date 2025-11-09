@@ -269,15 +269,22 @@ exports.Prisma.IntegrationScalarFieldEnum = {
 exports.Prisma.CallLogScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
+  userId: 'userId',
   contactId: 'contactId',
   dealId: 'dealId',
+  direction: 'direction',
   fromNumber: 'fromNumber',
   toNumber: 'toNumber',
+  status: 'status',
   duration: 'duration',
   outcome: 'outcome',
   recordingUrl: 'recordingUrl',
+  recordingSid: 'recordingSid',
+  twilioCallSid: 'twilioCallSid',
   transcription: 'transcription',
   summary: 'summary',
+  startedAt: 'startedAt',
+  endedAt: 'endedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -379,6 +386,11 @@ exports.TicketSource = exports.$Enums.TicketSource = {
   PORTAL: 'PORTAL',
   EMAIL: 'EMAIL',
   API: 'API'
+};
+
+exports.CallDirection = exports.$Enums.CallDirection = {
+  INBOUND: 'INBOUND',
+  OUTBOUND: 'OUTBOUND'
 };
 
 exports.Prisma.ModelName = {

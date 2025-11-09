@@ -36,7 +36,7 @@ export default function PipelinesPage() {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
 
   // Fetch pipelines with React Query caching
-  const { data: pipelines = [], isLoading, refetch } = useQuery({
+  const { data: pipelines = [], isLoading, refetch, error } = useQuery({
     queryKey: ['pipelines'],
     queryFn: async () => {
       const response = await apiClient.get<Pipeline[]>('/pipelines');
@@ -45,12 +45,14 @@ export default function PipelinesPage() {
     enabled: userExists, // Only fetch when user exists
     staleTime: 60 * 1000, // Cache for 1 minute
     refetchOnWindowFocus: false,
-    onError: (error: unknown) => {
-      console.error('Error fetching pipelines:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Failed to load pipelines';
-      toast.error(errorMessage);
-    },
   });
+
+  // Handle errors in component (React Query v5)
+  if (error) {
+    console.error('Error fetching pipelines:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to load pipelines';
+    toast.error(errorMessage);
+  }
 
   const handlePipelineCreated = () => {
     refetch();

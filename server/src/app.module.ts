@@ -16,6 +16,8 @@ import { LeadsModule } from './leads/leads.module';
 import { DealsModule } from './deals/deals.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { TicketsModule } from './tickets/tickets.module';
+import { TwilioModule } from './twilio/twilio.module';
+import { WebRTCModule } from './webrtc/webrtc.module';
 
 @Module({
   imports: [
@@ -36,6 +38,8 @@ import { TicketsModule } from './tickets/tickets.module';
     DealsModule,
     AnalyticsModule,
     TicketsModule,
+    TwilioModule,
+    WebRTCModule,
   ],
   controllers: [AppController],
   providers: [AppService],

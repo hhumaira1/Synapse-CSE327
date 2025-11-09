@@ -106,6 +106,7 @@ model User {
   ticketsAssigned Ticket[]         @relation("TicketAssignedUser")
   ticketComments  TicketComment[]  @relation("TicketComments")
   invitations     UserInvitation[] // Invitations sent to users
+  callLogs        CallLog[] // Call logs made by this user
 
   @@unique([tenantId, clerkId])
   @@index([tenantId])
@@ -340,28 +341,43 @@ model Integration {
 
 // ==================== CALL LOGS ====================
 
+enum CallDirection {
+  INBOUND
+  OUTBOUND
+}
+
 model CallLog {
-  id            String   @id @default(cuid())
+  id            String        @id @default(cuid())
   tenantId      String
-  contactId     String
+  userId        String?
+  contactId     String?
   dealId        String?
+  direction     CallDirection @default(OUTBOUND)
   fromNumber    String
   toNumber      String
+  status        String        @default("INITIATED") // INITIATED, RINGING, ANSWERED, COMPLETED, FAILED
   duration      Int? // seconds
   outcome       String? // completed, missed, voicemail
   recordingUrl  String?
+  recordingSid  String? // Twilio recording SID
+  twilioCallSid String?       @unique // Twilio call SID
   transcription String?
   summary       String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  startedAt     DateTime? // When call was answered
+  endedAt       DateTime? // When call ended
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 
-  tenant  Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  contact Contact @relation(fields: [contactId], references: [id], onDelete: Restrict)
-  deal    Deal?   @relation(fields: [dealId], references: [id], onDelete: SetNull)
+  tenant  Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user    User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  contact Contact? @relation(fields: [contactId], references: [id], onDelete: Restrict)
+  deal    Deal?    @relation(fields: [dealId], references: [id], onDelete: SetNull)
 
   @@index([tenantId])
+  @@index([userId])
   @@index([contactId])
   @@index([dealId])
+  @@index([twilioCallSid])
   @@map("call_logs")
 }
 

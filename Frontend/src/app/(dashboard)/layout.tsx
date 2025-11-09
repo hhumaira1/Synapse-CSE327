@@ -9,6 +9,7 @@ import { usePathname } from 'next/navigation';
 import { useUserStatus } from '@/hooks/useUserStatus';
 import { useApiClient } from '@/lib/api';
 import { Button } from '@/components/ui/button';
+import { Toaster } from 'react-hot-toast';
 import { 
   LayoutDashboard, 
   Users, 
@@ -18,7 +19,8 @@ import {
   Settings,
   BarChart3,
   Workflow,
-  Store
+  Store,
+  Phone
 } from 'lucide-react';
 
 const navigation = [
@@ -28,6 +30,7 @@ const navigation = [
   { name: 'Leads', href: '/leads', icon: TrendingUp },
   { name: 'Deals', href: '/deals', icon: DollarSign },
   { name: 'Tickets', href: '/tickets', icon: Ticket },
+  { name: 'Calls', href: '/calls', icon: Phone },
   { name: 'Analytics', href: '/analytics', icon: BarChart3 },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
@@ -121,6 +124,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
+      <Toaster position="top-right" />
+      
       {/* Sidebar */}
       <div className="w-64 bg-white shadow-lg border-r border-gray-200 flex flex-col">
         <div className="p-6 border-b border-gray-200">

@@ -19,6 +19,11 @@ import {
 } from "lucide-react";
 import { useApiClient } from "@/lib/api";
 import { CustomerPortalInviteButton } from "@/components/portal/CustomerPortalInviteButton";
+import { CallButton } from "@/components/voice/CallButton";
+import { useVoiceCall } from "@/hooks/useVoiceCall";
+import { useUserData } from "@/hooks/useUserData";
+import { ActiveCall } from "@/components/voice/ActiveCall";
+import { IncomingCall } from "@/components/voice/IncomingCall";
 import {
   Dialog,
   DialogContent,
@@ -31,6 +36,7 @@ import {
 import { useUserStatus } from "@/hooks/useUserStatus";
 import toast from 'react-hot-toast';
 import { confirmDelete } from '@/lib/sweetalert';
+import { useUser } from '@clerk/nextjs';
 
 interface Contact {
   id: string;
@@ -76,12 +82,14 @@ interface CreateContactForm {
 export default function ContactsPage() {
   const apiClient = useApiClient();
   const { user: currentUser } = useUserStatus();
+  const { user: clerkUser } = useUser();
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [createLoading, setCreateLoading] = useState(false);
   const [editingContact, setEditingContact] = useState<Contact | null>(null);
+  const [currentCallContact, setCurrentCallContact] = useState<{ name: string; phone: string } | null>(null);
   const [createForm, setCreateForm] = useState<CreateContactForm>({
     firstName: "",
     lastName: "",
@@ -91,6 +99,26 @@ export default function ContactsPage() {
     jobTitle: "",
     notes: "",
   });
+
+  // Initialize voice calling hook
+  const { userData } = useUserData();
+  const { 
+    initiateCall, 
+    endCall, 
+    acceptCall, 
+    rejectCall,
+    toggleMute, 
+    toggleSpeaker,
+    callState, 
+    duration, 
+    isMuted, 
+    isSpeakerOn,
+    incomingCall 
+  } = useVoiceCall(
+    userData?.id || '',
+    userData?.tenantId || '',
+    'tenant_member'
+  );
 
   // Check user role permissions
   const canEdit = currentUser && typeof currentUser === 'object' && 'role' in currentUser && 
@@ -537,6 +565,19 @@ export default function ContactsPage() {
                     )}
                     
                     <div className="flex items-center gap-1">
+                      {/* Call Button */}
+                      <CallButton
+                        phoneNumber={contact.phone}
+                        contactId={contact.id}
+                        contactName={`${contact.firstName} ${contact.lastName}`}
+                        onCall={(phone, id, name) => {
+                          setCurrentCallContact({ name: name || '', phone: phone || '' });
+                          initiateCall(phone, id, name);
+                        }}
+                        variant="ghost"
+                        size="sm"
+                      />
+                      
                       {canEdit && (
                         <Button 
                           variant="ghost" 
@@ -695,6 +736,36 @@ export default function ContactsPage() {
             </form>
           </DialogContent>
         </Dialog>
+      )}
+
+      {/* Incoming Call Modal */}
+      {incomingCall && (
+        <IncomingCall
+          callerName={incomingCall.callerName}
+          callerPhone={incomingCall.contactPhone}
+          onAccept={acceptCall}
+          onReject={rejectCall}
+        />
+      )}
+
+      {/* Active Call Widget (bottom-right) */}
+      {callState !== 'idle' && !incomingCall && (
+        <div className="fixed bottom-6 right-6 z-50">
+          <ActiveCall
+            callState={callState}
+            duration={duration}
+            contactName={currentCallContact?.name || ''}
+            contactNumber={currentCallContact?.phone || ''}
+            isMuted={isMuted}
+            isSpeakerOn={isSpeakerOn}
+            onEndCall={() => {
+              endCall();
+              setCurrentCallContact(null);
+            }}
+            onToggleMute={toggleMute}
+            onToggleSpeaker={toggleSpeaker}
+          />
+        </div>
       )}
     </div>
   );
