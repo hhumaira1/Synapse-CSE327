@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@clerk/nextjs";
+import { useUser } from "@/hooks/useUser";
 import { useApiClient } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -25,7 +25,7 @@ interface WorkspaceOption {
 
 export default function SelectWorkspacePage() {
   const router = useRouter();
-  const { isLoaded, isSignedIn } = useAuth();
+  const { isSignedIn, isLoading } = useUser();
   const apiClient = useApiClient();
 
   const [loading, setLoading] = useState(true);
@@ -86,20 +86,20 @@ export default function SelectWorkspacePage() {
 
   useEffect(() => {
     const checkAccess = async () => {
-      if (isLoaded && !isSignedIn) {
-        router.push("/sign-in?redirect_url=/select-workspace");
+      if (!isLoading && !isSignedIn) {
+        router.push("/auth/signin?redirect_url=/select-workspace");
         return;
       }
 
-      if (isLoaded && isSignedIn) {
+      if (!isLoading && isSignedIn) {
         await fetchWorkspaceOptions();
       }
     };
 
     checkAccess();
-  }, [isLoaded, isSignedIn, router, fetchWorkspaceOptions]);
+  }, [isLoading, isSignedIn, router, fetchWorkspaceOptions]);
 
-  if (!isLoaded || loading) {
+  if (isLoading || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />

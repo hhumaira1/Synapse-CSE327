@@ -1,21 +1,21 @@
-'use client';
+"use client";
 
-import { ReactNode, useEffect } from 'react';
-import { useAuth } from '@clerk/nextjs';
-import { useRouter } from 'next/navigation';
+import { ReactNode, useEffect } from "react";
+import { useUser } from "@/hooks/useUser";
+import { useRouter } from "next/navigation";
 
 export default function OnboardLayout({ children }: { children: ReactNode }) {
-  const { isLoaded, isSignedIn } = useAuth();
+  const { isSignedIn, isLoading } = useUser();
   const router = useRouter();
 
   useEffect(() => {
-    if (isLoaded && !isSignedIn) {
+    if (!isLoading && !isSignedIn) {
       // Redirect to sign-in if not authenticated
-      router.push('/sign-in');
+      router.push("/auth/signin");
     }
-  }, [isLoaded, isSignedIn, router]);
+  }, [isLoading, isSignedIn, router]);
 
-  if (!isLoaded || !isSignedIn) {
+  if (isLoading || !isSignedIn) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">

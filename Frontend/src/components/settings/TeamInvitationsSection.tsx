@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useUser } from "@clerk/nextjs";
+import { useUser } from "@/hooks/useUser";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -359,7 +359,7 @@ export default function TeamInvitationsSection() {
                     </Badge>
                     {/* Deactivate button only for ADMIN and MANAGER, and not for current user */}
                     {canManageTeam && 
-                     member.email !== user?.primaryEmailAddress?.emailAddress && (
+                     member.email !== user?.email && (
                       <Button
                         variant="ghost"
                         size="sm"

@@ -3,12 +3,13 @@ import { PortalCustomersService } from './services/portal-customers/portal-custo
 import { PortalCustomersController } from './controllers/portal-customers/portal-customers.controller';
 import { DatabaseModule } from 'src/database/database.module';
 import { AuthModule } from 'src/auth/auth.module';
+import { SupabaseAuthModule } from 'src/supabase-auth/supabase-auth.module';
 import { TicketsController } from './tickets/tickets.controller';
 import { TicketsModule } from 'src/tickets/tickets.module';
 import { PortalAuthModule } from './auth/portal-auth.module';
 
 @Module({
-  imports: [DatabaseModule, AuthModule, TicketsModule, PortalAuthModule],
+  imports: [DatabaseModule, AuthModule, SupabaseAuthModule, TicketsModule, PortalAuthModule],
   providers: [PortalCustomersService],
   controllers: [PortalCustomersController, TicketsController],
   exports: [PortalCustomersService],

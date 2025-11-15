@@ -13,10 +13,10 @@ export class PortalAuthService {
   constructor(private readonly prisma: PrismaService) {}
 
   /**
-   * Links a new Clerk user (clerkId) to a pre-invited PortalCustomer
+   * Links a new Supabase user (supabaseUserId) to a pre-invited PortalCustomer
    * record based on their email and the tenant they were invited to.
    */
-  async syncPortalCustomer(clerkId: string, email: string, tenantId: string) {
+  async syncPortalCustomer(supabaseUserId: string, email: string, tenantId: string) {
     const portalCustomer = await this.prisma.portalCustomer.findUnique({
       where: {
         tenantId_email: {
@@ -35,17 +35,17 @@ export class PortalAuthService {
       );
     }
 
-    if (portalCustomer.clerkId && portalCustomer.clerkId !== clerkId) {
+    if (portalCustomer.supabaseUserId && portalCustomer.supabaseUserId !== supabaseUserId) {
       this.logger.warn(
-        `Failed sync: Email ${email} already linked to a different Clerk account.`,
+        `Failed sync: Email ${email} already linked to a different Supabase account.`,
       );
       throw new ForbiddenException(
         'This email is already linked to another user.',
       );
     }
 
-    if (portalCustomer.clerkId === clerkId) {
-      this.logger.log(`User ${clerkId} already synced. Returning details.`);
+    if (portalCustomer.supabaseUserId === supabaseUserId) {
+      this.logger.log(`User ${supabaseUserId} already synced. Returning details.`);
       return portalCustomer; // Already synced, just log in
     }
 
@@ -55,27 +55,27 @@ export class PortalAuthService {
         id: portalCustomer.id,
       },
       data: {
-        clerkId: clerkId, // <-- The critical link
+        supabaseUserId: supabaseUserId, // <-- The critical link
       },
     });
 
     this.logger.log(
-      `Successfully synced clerkId ${clerkId} to portalCustomer ${updatedCustomer.id}`,
+      `Successfully synced supabaseUserId ${supabaseUserId} to portalCustomer ${updatedCustomer.id}`,
     );
     return updatedCustomer;
   }
 
   /**
-   * Gets all portal accounts associated with a single clerkId.
+   * Gets all portal accounts associated with a single supabaseUserId.
    * A customer might be a portal user for multiple tenants.
    */
-  async getPortalAccounts(clerkId: string) {
-    if (!clerkId) {
+  async getPortalAccounts(supabaseUserId: string) {
+    if (!supabaseUserId) {
       throw new NotFoundException('User not found');
     }
 
     const accounts = await this.prisma.portalCustomer.findMany({
-      where: { clerkId },
+      where: { supabaseUserId },
       include: {
         tenant: {
           select: {
@@ -88,7 +88,7 @@ export class PortalAuthService {
     });
 
     if (!accounts || accounts.length === 0) {
-      this.logger.warn(`No portal accounts found for clerkId ${clerkId}`);
+      this.logger.warn(`No portal accounts found for supabaseUserId ${supabaseUserId}`);
       throw new NotFoundException('No portal accounts found for this user.');
     }
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { useAuth } from '@clerk/nextjs';
+import { useUser } from '@/hooks/useUser';
 import { useApiClient } from '@/lib/api';
 
 export interface UserStatus {
@@ -14,7 +14,8 @@ export interface UserStatus {
 }
 
 export function useUserStatus(): UserStatus {
-  const { isLoaded: authLoaded, isSignedIn } = useAuth();
+  const { user: authUser, isLoading: authLoading, isSignedIn } = useUser();
+  const authLoaded = !authLoading;
   const apiClient = useApiClient();
 
   const { 
@@ -31,10 +32,15 @@ export function useUserStatus(): UserStatus {
       try {
         console.log('useUserStatus - Checking user status...');
         const response = await apiClient.get('/auth/me');
-        console.log('useUserStatus - User exists in database:', response.data);
+        console.log('useUserStatus - Full response:', response.data);
+        
+        // Extract dbUser from response (backend returns { supabaseUser, dbUser })
+        const dbUser = response.data.dbUser || response.data;
+        console.log('useUserStatus - Extracted dbUser:', dbUser);
+        
         return { 
           exists: true, 
-          user: response.data,
+          user: dbUser, // Return only dbUser which has role, tenantId, etc.
           needsOnboarding: false 
         };
       } catch (error: unknown) {

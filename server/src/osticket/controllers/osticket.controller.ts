@@ -8,9 +8,9 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import { ClerkAuthGuard } from '../../clerk/guards/clerk-auth/clerk-auth.guard';
-import { CurrentUser } from '../../common/decorators/current-user/current-user.decorator';
-import { AuthService } from '../../auth/services/auth/auth.service';
+import { SupabaseAuthGuard } from 'src/supabase-auth/guards/supabase-auth/supabase-auth.guard';
+import { CurrentUser } from 'src/supabase-auth/decorators/current-user.decorator';
+import { AuthService } from 'src/auth/auth.service';
 import { OsTicketApiService } from '../services/osticket-api.service';
 import { TicketSyncService } from '../services/ticket-sync.service';
 import { PrismaService } from '../../database/prisma/prisma.service';
@@ -21,7 +21,7 @@ import {
 import { SyncTicketDto } from '../dto/sync-ticket.dto';
 
 @Controller('osticket')
-@UseGuards(ClerkAuthGuard)
+@UseGuards(SupabaseAuthGuard)
 export class OsTicketController {
   constructor(
     private readonly authService: AuthService,
@@ -37,9 +37,9 @@ export class OsTicketController {
   @Post('setup')
   async setup(
     @Body() setupDto: SetupOsTicketDto,
-    @CurrentUser('sub') clerkId: string,
+    @CurrentUser('id') supabaseUserId: string,
   ) {
-    const user = await this.authService.getUserDetails(clerkId);
+    const user = await this.authService.getUserBySupabaseId(supabaseUserId);
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
 
     // Only ADMIN can setup integrations
@@ -116,9 +116,9 @@ export class OsTicketController {
   @Post('test')
   async testConnection(
     @Body() testDto: TestOsTicketConnectionDto,
-    @CurrentUser('sub') clerkId: string,
+    @CurrentUser('id') supabaseUserId: string,
   ) {
-    const user = await this.authService.getUserDetails(clerkId);
+    const user = await this.authService.getUserBySupabaseId(supabaseUserId);
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
 
     this.osTicketApi.initialize({
@@ -142,8 +142,8 @@ export class OsTicketController {
    * GET /api/osticket/status
    */
   @Get('status')
-  async getStatus(@CurrentUser('sub') clerkId: string) {
-    const user = await this.authService.getUserDetails(clerkId);
+  async getStatus(@CurrentUser('id') supabaseUserId: string) {
+    const user = await this.authService.getUserBySupabaseId(supabaseUserId);
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
 
     const integration = await this.prisma.integration.findFirst({
@@ -180,9 +180,9 @@ export class OsTicketController {
   async syncTicket(
     @Param('ticketId') ticketId: string,
     @Body() syncDto: SyncTicketDto,
-    @CurrentUser('sub') clerkId: string,
+    @CurrentUser('id') supabaseUserId: string,
   ) {
-    const user = await this.authService.getUserDetails(clerkId);
+    const user = await this.authService.getUserBySupabaseId(supabaseUserId);
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
 
     const result = await this.ticketSync.syncToOsTicket(
@@ -206,8 +206,8 @@ export class OsTicketController {
    * POST /api/osticket/sync-all
    */
   @Post('sync-all')
-  async syncAllTickets(@CurrentUser('sub') clerkId: string) {
-    const user = await this.authService.getUserDetails(clerkId);
+  async syncAllTickets(@CurrentUser('id') supabaseUserId: string) {
+    const user = await this.authService.getUserBySupabaseId(supabaseUserId);
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
 
     // Only ADMIN can do bulk sync
@@ -228,8 +228,8 @@ export class OsTicketController {
    * POST /api/osticket/disable
    */
   @Post('disable')
-  async disable(@CurrentUser('sub') clerkId: string) {
-    const user = await this.authService.getUserDetails(clerkId);
+  async disable(@CurrentUser('id') supabaseUserId: string) {
+    const user = await this.authService.getUserBySupabaseId(supabaseUserId);
     if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
 
     // Only ADMIN can disable

@@ -2,12 +2,12 @@
 'use client';
 
 import { ReactNode, useEffect, useState } from 'react';
-import { UserButton } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useUserStatus } from '@/hooks/useUserStatus';
 import { useApiClient } from '@/lib/api';
+import { useUser, useAuth } from '@/hooks/useUser';
 import { Button } from '@/components/ui/button';
 import { Toaster } from 'react-hot-toast';
 import { 
@@ -20,7 +20,9 @@ import {
   BarChart3,
   Workflow,
   Store,
-  Phone
+  Phone,
+  LogOut,
+  User as UserIcon
 } from 'lucide-react';
 
 const navigation = [
@@ -40,50 +42,68 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
   const apiClient = useApiClient();
   const { isLoaded, isSignedIn, needsOnboarding, userExists, user, error } = useUserStatus();
+  const { user: supabaseUser } = useUser();
+  const { signOut } = useAuth();
   const [hasPortalAccess, setHasPortalAccess] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
-  // Check for portal access
+  const handleSignOut = async () => {
+    await signOut();
+    router.push('/');
+  };
+
+  // Check authentication and route accordingly
   useEffect(() => {
-    const checkPortalAccess = async () => {
-      if (!isLoaded || !isSignedIn) return;
+    const checkAccessAndRoute = async () => {
+      if (!isLoaded) return;
+
+      if (!isSignedIn) {
+        router.push('/sign-in');
+        return;
+      }
       
       try {
-        const response = await apiClient.get('/portal/customers/my-access');
-        setHasPortalAccess(response.data && response.data.length > 0);
-      } catch {
-        setHasPortalAccess(false);
+        // Fetch all accessible tenants (internal + portal)
+        const response = await apiClient.get('/users/my-tenants');
+        const tenants = response.data;
+        
+        if (!tenants || tenants.length === 0) {
+          // No access at all - needs onboarding
+          console.log('No tenant access, redirecting to onboarding...');
+          router.push('/onboard');
+          return;
+        }
+        
+        // Check access types
+        const hasInternal = tenants.some((t: { type: string }) => t.type === 'internal');
+        const hasPortal = tenants.some((t: { type: string }) => t.type === 'customer');
+        
+        setHasPortalAccess(hasPortal);
+        
+        // If trying to access dashboard but only has portal access
+        if (!hasInternal && hasPortal) {
+          console.log('Portal-only customer accessing dashboard, redirecting to portal...');
+          router.push('/portal/dashboard');
+          return;
+        }
+        
+        // User has internal access - allow dashboard access
+        // (If they have both internal + portal, they stay on dashboard)
+        
+      } catch (error) {
+        console.error('Error checking tenant access:', error);
+        // If error and user doesn't exist, go to onboarding
+        if (needsOnboarding && !userExists) {
+          router.push('/onboard');
+        }
       }
     };
 
-    checkPortalAccess();
-  }, [isLoaded, isSignedIn, apiClient]);
-
-  useEffect(() => {
-    if (!isLoaded) return; // Wait for everything to load
-
-    if (!isSignedIn) {
-      // Not signed in, redirect to sign-in page
-      router.push('/sign-in');
-      return;
-    }
-
-    if (needsOnboarding) {
-      // User is signed in but needs onboarding
-      console.log('User needs onboarding, redirecting...');
-      router.push('/onboard');
-      return;
-    }
-
-    if (error) {
-      // Handle API errors
-      console.error('User status check failed:', error);
-      // Could redirect to error page or show error message
-    }
-
-  }, [isLoaded, isSignedIn, needsOnboarding, userExists, error, router]);
+    checkAccessAndRoute();
+  }, [isLoaded, isSignedIn, needsOnboarding, userExists, apiClient, router]);
 
   // Show loading state while checking authentication and user status
-  if (!isLoaded || !isSignedIn || needsOnboarding) {
+  if (!isLoaded || !isSignedIn) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
@@ -91,9 +111,20 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           <p className="mt-4 text-gray-600">
             {!isLoaded ? 'Loading...' : 
              !isSignedIn ? 'Redirecting to sign in...' : 
-             needsOnboarding ? 'Setting up your workspace...' : 
              'Loading dashboard...'}
           </p>
+        </div>
+      </div>
+    );
+  }
+
+  // User has no internal CRM access - redirect handled in useEffect
+  if (needsOnboarding && !userExists) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent"></div>
+          <p className="mt-4 text-gray-600">Checking access...</p>
         </div>
       </div>
     );
@@ -136,25 +167,40 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         </div>
 
         {/* User Profile Section */}
-        <div className="p-4 border-b border-gray-200 bg-white">
-          <div className="flex items-center gap-3 px-2">
-            <UserButton 
-              afterSignOutUrl="/"
-              appearance={{
-                elements: {
-                  avatarBox: 'h-10 w-10'
-                }
-              }}
-            />
+        <div className="p-4 border-b border-gray-200 bg-white relative">
+          <div 
+            className="flex items-center gap-3 px-2 cursor-pointer hover:bg-gray-50 rounded-lg transition-colors p-2"
+            onClick={() => setShowUserMenu(!showUserMenu)}
+          >
+            <div className="h-10 w-10 rounded-full bg-linear-to-r from-blue-600 to-indigo-600 flex items-center justify-center text-white font-semibold">
+              {(supabaseUser?.user_metadata?.firstName?.[0] || supabaseUser?.email?.[0] || 'U').toUpperCase()}
+            </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-gray-900 truncate">
-                {user && typeof user === 'object' && 'name' in user ? (user as any).name : 'User'}
+                {supabaseUser?.user_metadata?.firstName && supabaseUser?.user_metadata?.lastName 
+                  ? `${supabaseUser.user_metadata.firstName} ${supabaseUser.user_metadata.lastName}`
+                  : supabaseUser?.email?.split('@')[0] || 'User'}
               </p>
               <p className="text-xs text-gray-500">
                 {user && typeof user === 'object' && 'role' in user ? (user as any).role : 'Member'}
               </p>
             </div>
           </div>
+
+          {/* Dropdown Menu */}
+          {showUserMenu && (
+            <div className="absolute top-full left-4 right-4 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+              <div className="p-2">
+                <button
+                  onClick={handleSignOut}
+                  className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Sign Out
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         <nav className="flex-1 mt-6 px-3">

@@ -5,10 +5,10 @@ import { TwilioController } from './twilio/twilio.controller';
 import { VoiceService } from './voice/voice.service';
 import { DatabaseModule } from '../database/database.module';
 import { AuthModule } from '../auth/auth.module';
-import { ClerkModule } from '../clerk/clerk.module';
+import { SupabaseAuthModule } from '../supabase-auth/supabase-auth.module';
 
 @Module({
-  imports: [ConfigModule, DatabaseModule, AuthModule, ClerkModule],
+  imports: [ConfigModule, DatabaseModule, AuthModule, SupabaseAuthModule],
   providers: [TwilioService, VoiceService],
   controllers: [TwilioController],
   exports: [TwilioService, VoiceService],

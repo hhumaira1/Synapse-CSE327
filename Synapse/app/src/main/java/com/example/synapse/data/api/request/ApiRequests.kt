@@ -1,0 +1,131 @@
+package com.example.synapse.data.api.request
+
+data class OnboardRequest(
+    val workspaceName: String,
+    val workspaceType: String
+)
+
+data class CreateContactRequest(
+    val firstName: String,
+    val lastName: String,
+    val email: String?,
+    val phone: String?,
+    val company: String?,
+    val jobTitle: String?,
+    val address: String?,
+    val city: String?,
+    val country: String?,
+    val linkedInUrl: String?,
+    val website: String?,
+    val notes: String?,
+    val tags: List<String>?
+)
+
+data class UpdateContactRequest(
+    val firstName: String?,
+    val lastName: String?,
+    val email: String?,
+    val phone: String?,
+    val company: String?,
+    val jobTitle: String?,
+    val address: String?,
+    val city: String?,
+    val country: String?,
+    val linkedInUrl: String?,
+    val website: String?,
+    val notes: String?,
+    val tags: List<String>?
+)
+
+data class CreateLeadRequest(
+    val title: String,
+    val contactId: String,
+    val value: Double?,
+    val status: String,
+    val source: String?,
+    val notes: String?
+)
+
+data class UpdateLeadRequest(
+    val title: String?,
+    val contactId: String?,
+    val value: Double?,
+    val status: String?,
+    val source: String?,
+    val notes: String?
+)
+
+data class CreatePipelineRequest(
+    val name: String,
+    val stages: List<CreateStageRequest>
+)
+
+data class CreateStageRequest(
+    val name: String,
+    val order: Int
+)
+
+data class UpdatePipelineRequest(
+    val name: String?,
+    val stages: List<UpdateStageRequest>?
+)
+
+data class UpdateStageRequest(
+    val id: String?,
+    val name: String,
+    val order: Int
+)
+
+data class CreateDealRequest(
+    val title: String,
+    val contactId: String,
+    val pipelineId: String,
+    val stageId: String,
+    val value: Double,
+    val probability: Int?,
+    val expectedCloseDate: String?,
+    val notes: String?
+)
+
+data class UpdateDealRequest(
+    val title: String?,
+    val contactId: String?,
+    val stageId: String?,
+    val value: Double?,
+    val probability: Int?,
+    val expectedCloseDate: String?,
+    val notes: String?,
+    val status: String?
+)
+
+data class CreateTicketRequest(
+    val title: String,
+    val description: String,
+    val priority: String,
+    val source: String,
+    val contactId: String?,
+    val dealId: String?
+)
+
+data class UpdateTicketRequest(
+    val title: String?,
+    val description: String?,
+    val status: String?,
+    val priority: String?,
+    val contactId: String?,
+    val dealId: String?
+)
+
+data class AddCommentRequest(
+    val content: String
+)
+
+data class CreateInteractionRequest(
+    val type: String,
+    val subject: String?,
+    val description: String,
+    val contactId: String?,
+    val leadId: String?,
+    val dealId: String?,
+    val metadata: Map<String, Any>?
+)

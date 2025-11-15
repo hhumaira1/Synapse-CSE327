@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth, UserButton, useUser } from '@clerk/nextjs';
+import { useUser, useAuth } from '@/hooks/useUser';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -43,13 +43,15 @@ interface PortalAccess {
 
 export default function PortalDashboardPage() {
   const router = useRouter();
-  const { isLoaded, isSignedIn } = useAuth();
+  const { user, isSignedIn, isLoading } = useUser();
+  const { signOut } = useAuth();
   const { isLoaded: userStatusLoaded, userExists } = useUserStatus();
   const apiClient = useApiClient();
   
   const [loading, setLoading] = useState(true);
   const [portalAccess, setPortalAccess] = useState<PortalAccess[]>([]);
   const [hasWorkspace, setHasWorkspace] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
   // Voice calling state (for portal customers receiving calls)
   const [incomingCallData, setIncomingCallData] = useState<{
@@ -142,15 +144,15 @@ export default function PortalDashboardPage() {
   }, [apiClient]);
 
   useEffect(() => {
-    if (isLoaded && !isSignedIn) {
-      router.push('/sign-in?redirect_url=/portal/dashboard');
+    if (!isLoading && !isSignedIn) {
+      router.push('/auth/signin?redirect_url=/portal/dashboard');
       return;
     }
 
-    if (isLoaded && isSignedIn) {
+    if (!isLoading && isSignedIn) {
       fetchPortalAccess();
     }
-  }, [isLoaded, isSignedIn, router, fetchPortalAccess]);
+  }, [isLoading, isSignedIn, router, fetchPortalAccess]);
 
   // Check if user has workspace
   useEffect(() => {
@@ -159,7 +161,7 @@ export default function PortalDashboardPage() {
     }
   }, [userStatusLoaded, userExists]);
 
-  if (!isLoaded || loading || !userStatusLoaded) {
+  if (isLoading || loading || !userStatusLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
@@ -215,7 +217,41 @@ export default function PortalDashboardPage() {
                 </Button>
               )}
               
-              <UserButton afterSignOutUrl="/" />
+              {/* Custom User Menu */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  className="h-10 w-10 rounded-full bg-linear-to-r from-indigo-600 to-purple-600 flex items-center justify-center text-white font-semibold text-sm hover:shadow-lg transition-shadow"
+                >
+                  {(user?.user_metadata?.firstName?.[0] || user?.email?.[0] || 'U').toUpperCase()}
+                </button>
+
+                {showUserMenu && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
+                    <div className="p-2">
+                      <div className="px-4 py-2 border-b border-gray-100">
+                        <p className="text-sm font-medium text-gray-900 truncate">
+                          {user?.user_metadata?.firstName && user?.user_metadata?.lastName 
+                            ? `${user.user_metadata.firstName} ${user.user_metadata.lastName}`
+                            : user?.email?.split('@')[0] || 'User'}
+                        </p>
+                        <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+                      </div>
+                      <button
+                        onClick={async () => {
+                          await signOut();
+                          router.push('/');
+                          setShowUserMenu(false);
+                        }}
+                        className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors mt-2"
+                      >
+                        <ArrowLeft className="h-4 w-4" />
+                        Sign Out
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

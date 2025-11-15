@@ -21,7 +21,7 @@ interface PortalCustomer {
   id: string;
   isActive: boolean;
   accessToken: string;
-  clerkId?: string | null;
+  supabaseUserId?: string | null;
   createdAt: string;
   contact: {
     id: string;
@@ -61,7 +61,7 @@ export default function PortalCustomersPage() {
           id: string;
           isActive: boolean;
           accessToken: string;
-          clerkId?: string | null;
+          supabaseUserId?: string | null;
           createdAt: string;
         }>;
       }>;
@@ -114,7 +114,7 @@ export default function PortalCustomersPage() {
   });
 
   const getStatus = (customer: PortalCustomer) => {
-    if (customer.clerkId) {
+    if (customer.supabaseUserId) {
       return {
         text: 'Active',
         icon: CheckCircle,
@@ -140,8 +140,8 @@ export default function PortalCustomersPage() {
 
   const stats = {
     total: portalCustomers.length,
-    active: portalCustomers.filter(pc => pc.clerkId).length,
-    pending: portalCustomers.filter(pc => pc.isActive && !pc.clerkId).length,
+    active: portalCustomers.filter(pc => pc.supabaseUserId).length,
+    pending: portalCustomers.filter(pc => pc.isActive && !pc.supabaseUserId).length,
     inactive: portalCustomers.filter(pc => !pc.isActive).length,
   };
 
@@ -304,7 +304,7 @@ export default function PortalCustomersPage() {
                             <span>
                               Invited: {new Date(customer.createdAt).toLocaleDateString()}
                             </span>
-                            {customer.clerkId && (
+                            {customer.supabaseUserId && (
                               <span className="text-green-600 font-medium">
                                 ✓ User has joined the portal
                               </span>

@@ -6,7 +6,6 @@ import {
   Logger,
 } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma/prisma.service';
-import { ClerkService } from 'src/clerk/clerk/clerk.service';
 import { EmailService } from 'src/common/services/email/email.service';
 import { UserRole } from 'prisma/generated/client';
 import { randomBytes } from 'crypto';
@@ -17,7 +16,6 @@ export class UsersService {
 
   constructor(
     private readonly prisma: PrismaService,
-    private readonly clerkService: ClerkService,
     private readonly emailService: EmailService,
   ) {}
 
@@ -142,7 +140,13 @@ export class UsersService {
   /**
    * Accept employee invitation and create User record
    */
-  async acceptEmployeeInvitation(token: string, clerkId: string) {
+  async acceptEmployeeInvitation(
+    token: string,
+    supabaseUserId: string,
+    email: string,
+    firstName: string,
+    lastName: string,
+  ) {
     // 1. Find invitation
     const invitation = await this.prisma.userInvitation.findUnique({
       where: { token },
@@ -165,14 +169,7 @@ export class UsersService {
       throw new BadRequestException('This invitation has expired');
     }
 
-    // 4. Get user details from Clerk
-    const clerkUser = await this.clerkService.client.users.getUser(clerkId);
-    const email =
-      clerkUser.emailAddresses.find(
-        (e) => e.id === clerkUser.primaryEmailAddressId,
-      )?.emailAddress || invitation.email;
-
-    // 5. Verify email matches invitation
+    // 4. Verify email matches invitation
     if (email.toLowerCase() !== invitation.email.toLowerCase()) {
       throw new BadRequestException(
         'The email address you signed up with does not match the invitation',
@@ -191,11 +188,10 @@ export class UsersService {
     const user = await this.prisma.user.create({
       data: {
         tenantId: invitation.tenantId,
-        clerkId,
+        supabaseUserId,
         email: email.toLowerCase(),
-        name:
-          [clerkUser.firstName, clerkUser.lastName].filter(Boolean).join(' ') ||
-          email.split('@')[0],
+        firstName: firstName || email.split('@')[0],
+        lastName: lastName || '',
         role: invitation.role,
         isActive: true,
       },
@@ -219,7 +215,8 @@ export class UsersService {
       user: {
         id: user.id,
         email: user.email,
-        name: user.name,
+        firstName: user.firstName,
+        lastName: user.lastName,
         role: user.role,
         tenant: {
           id: user.tenant.id,
@@ -232,16 +229,16 @@ export class UsersService {
   /**
    * Get all tenants accessible to a user (internal + customer portals)
    */
-  async getUserTenants(clerkId: string) {
+  async getUserTenants(supabaseUserId: string) {
     // 1. Find internal user access
     const internalUser = await this.prisma.user.findUnique({
-      where: { clerkId },
+      where: { supabaseUserId },
       include: { tenant: true },
     });
 
     // 2. Find customer portal access
     const portalAccess = await this.prisma.portalCustomer.findMany({
-      where: { clerkId },
+      where: { supabaseUserId },
       include: { tenant: true },
     });
 

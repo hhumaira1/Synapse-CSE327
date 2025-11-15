@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react";
-import { useAuth } from "@clerk/nextjs";
+import { useUser, useAuth } from "@/hooks/useUser";
 import { Navbar, Footer } from "@/components/layout";
 import {
   HeroSection,
@@ -13,7 +13,8 @@ import {
 } from "@/components/landing";
 
 export default function Home() {
-  const { getToken, isSignedIn } = useAuth();
+  const { getToken } = useAuth();
+  const { isSignedIn } = useUser();
   const [apiState, setApiState] = useState<
     | { status: "idle" }
     | { status: "loading" }

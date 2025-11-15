@@ -36,7 +36,7 @@ import {
 import { useUserStatus } from "@/hooks/useUserStatus";
 import toast from 'react-hot-toast';
 import { confirmDelete } from '@/lib/sweetalert';
-import { useUser } from '@clerk/nextjs';
+import { useUser } from '@/hooks/useUser';
 
 interface Contact {
   id: string;
@@ -52,7 +52,7 @@ interface Contact {
     id: string;
     isActive: boolean;
     accessToken: string;
-    clerkId?: string | null;
+    supabaseUserId?: string | null;
   }>;
   deals: Array<{
     id: string;
@@ -120,11 +120,12 @@ export default function ContactsPage() {
     'tenant_member'
   );
 
-  // Check user role permissions
-  const canEdit = currentUser && typeof currentUser === 'object' && 'role' in currentUser && 
-    (currentUser.role === 'ADMIN' || currentUser.role === 'MANAGER');
+  // Role-based permissions:
+  // - All roles (ADMIN, MANAGER, MEMBER) can create and edit contacts
+  // - Only ADMIN and MANAGER can delete contacts
+  const canEdit = true; // All roles can edit contacts
   const canDelete = currentUser && typeof currentUser === 'object' && 'role' in currentUser && 
-    currentUser.role === 'ADMIN';
+    (currentUser.role === 'ADMIN' || currentUser.role === 'MANAGER');
 
   const fetchContacts = useCallback(async () => {
     try {
@@ -208,10 +209,10 @@ export default function ContactsPage() {
   const getPortalStatus = (contact: Contact) => {
     const portalAccess = contact.portalCustomers?.[0];
     if (!portalAccess) return null;
-    // Only show Active if customer has accepted (clerkId exists means they've signed up)
-    if (portalAccess.isActive && portalAccess.clerkId) {
+    // Only show Active if customer has accepted (supabaseUserId exists means they've signed up)
+    if (portalAccess.isActive && portalAccess.supabaseUserId) {
       return "Active";
-    } else if (portalAccess.isActive && !portalAccess.clerkId) {
+    } else if (portalAccess.isActive && !portalAccess.supabaseUserId) {
       return "Pending";
     } else {
       return "Inactive";
@@ -742,7 +743,7 @@ export default function ContactsPage() {
       {incomingCall && (
         <IncomingCall
           callerName={incomingCall.callerName}
-          callerPhone={incomingCall.contactPhone}
+          contactPhone={incomingCall.contactPhone}
           onAccept={acceptCall}
           onReject={rejectCall}
         />

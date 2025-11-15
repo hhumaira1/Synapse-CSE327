@@ -14,12 +14,12 @@ import { DealsService } from './deals.service';
 import { CreateDealDto } from '../dto/create-deal.dto';
 import { UpdateDealDto } from '../dto/update-deal.dto';
 import { MoveStageDto } from '../dto/move-stage.dto';
-import { ClerkAuthGuard } from '../../clerk/guards/clerk-auth/clerk-auth.guard';
-import { CurrentUser } from '../../common/decorators/current-user/current-user.decorator';
-import { AuthService } from '../../auth/services/auth/auth.service';
+import { SupabaseAuthGuard } from '../../supabase-auth/guards/supabase-auth/supabase-auth.guard';
+import { CurrentUser } from '../../supabase-auth/decorators/current-user.decorator';
+import { AuthService } from '../../auth/auth.service';
 
 @Controller('deals')
-@UseGuards(ClerkAuthGuard)
+@UseGuards(SupabaseAuthGuard)
 export class DealsController {
   constructor(
     private readonly dealsService: DealsService,
@@ -28,22 +28,22 @@ export class DealsController {
 
   @Post()
   async create(
-    @CurrentUser('sub') clerkId: string,
+    @CurrentUser('id') supabaseUserId: string,
     @Body() createDealDto: CreateDealDto,
   ) {
-    const user = await this.authService.getUserDetails(clerkId);
+    const user = await this.authService.getUserBySupabaseId(supabaseUserId);
     if (!user) throw new ForbiddenException('User not found');
     return this.dealsService.create(user.tenantId, createDealDto);
   }
 
   @Get()
   async findAll(
-    @CurrentUser('sub') clerkId: string,
+    @CurrentUser('id') supabaseUserId: string,
     @Query('stageId') stageId?: string,
     @Query('pipelineId') pipelineId?: string,
     @Query('contactId') contactId?: string,
   ) {
-    const user = await this.authService.getUserDetails(clerkId);
+    const user = await this.authService.getUserBySupabaseId(supabaseUserId);
     if (!user) throw new ForbiddenException('User not found');
     return this.dealsService.findAll(user.tenantId, {
       stageId,
@@ -54,48 +54,49 @@ export class DealsController {
 
   @Get('stats/:pipelineId')
   async getStats(
-    @CurrentUser('sub') clerkId: string,
+    @CurrentUser('id') supabaseUserId: string,
     @Param('pipelineId') pipelineId: string,
   ) {
-    const user = await this.authService.getUserDetails(clerkId);
+    const user = await this.authService.getUserBySupabaseId(supabaseUserId);
     if (!user) throw new ForbiddenException('User not found');
     return this.dealsService.getStatsByPipeline(user.tenantId, pipelineId);
   }
 
   @Get(':id')
-  async findOne(@CurrentUser('sub') clerkId: string, @Param('id') id: string) {
-    const user = await this.authService.getUserDetails(clerkId);
+  async findOne(@CurrentUser('id') supabaseUserId: string, @Param('id') id: string) {
+    const user = await this.authService.getUserBySupabaseId(supabaseUserId);
     if (!user) throw new ForbiddenException('User not found');
     return this.dealsService.findOne(user.tenantId, id);
   }
 
   @Patch(':id/move')
   async moveStage(
-    @CurrentUser('sub') clerkId: string,
+    @CurrentUser('id') supabaseUserId: string,
     @Param('id') id: string,
     @Body() moveStageDto: MoveStageDto,
   ) {
-    const user = await this.authService.getUserDetails(clerkId);
+    const user = await this.authService.getUserBySupabaseId(supabaseUserId);
     if (!user) throw new ForbiddenException('User not found');
     return this.dealsService.moveStage(user.tenantId, id, moveStageDto);
   }
 
   @Patch(':id')
   async update(
-    @CurrentUser('sub') clerkId: string,
+    @CurrentUser('id') supabaseUserId: string,
     @Param('id') id: string,
     @Body() updateDealDto: UpdateDealDto,
   ) {
-    const user = await this.authService.getUserDetails(clerkId);
+    const user = await this.authService.getUserBySupabaseId(supabaseUserId);
     if (!user) throw new ForbiddenException('User not found');
     return this.dealsService.update(user.tenantId, id, updateDealDto);
   }
 
   @Delete(':id')
-  async remove(@CurrentUser('sub') clerkId: string, @Param('id') id: string) {
-    const user = await this.authService.getUserDetails(clerkId);
+  async remove(@CurrentUser('id') supabaseUserId: string, @Param('id') id: string) {
+    const user = await this.authService.getUserBySupabaseId(supabaseUserId);
     if (!user) throw new ForbiddenException('User not found');
     return this.dealsService.remove(user.tenantId, id);
   }
 }
+
 

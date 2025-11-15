@@ -4,31 +4,34 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useApiClient } from '@/lib/api';
-import { useUser } from '@clerk/nextjs';
+import { useUser } from '@/hooks/useUser';
 import { useUserStatus } from '@/hooks/useUserStatus';
 
 export default function OnboardPage() {
   const router = useRouter();
-  const { user, isLoaded } = useUser();
+  const { user, isLoading } = useUser();
   const apiClient = useApiClient();
   const queryClient = useQueryClient();
   const [tenantName, setTenantName] = useState('');
   const userStatus = useUserStatus();
 
-  // Redirect to dashboard if user already exists and doesn't need onboarding
+  // Redirect to dashboard if user already has internal CRM workspace
+  // Allow portal customers to create their own CRM workspace
   useEffect(() => {
     console.log('OnboardPage - User status changed:', {
       isLoaded: userStatus.isLoaded,
       userExists: userStatus.userExists,
       needsOnboarding: userStatus.needsOnboarding,
-      error: userStatus.error
+      error: userStatus.error,
+      user: userStatus.user
     });
 
+    // Only redirect if user has internal workspace (not just portal access)
     if (userStatus.isLoaded && userStatus.userExists && !userStatus.needsOnboarding) {
-      console.log('User already exists, redirecting to dashboard...');
+      console.log('User has internal workspace, redirecting to dashboard...');
       router.push('/dashboard');
     }
-  }, [userStatus.isLoaded, userStatus.userExists, userStatus.needsOnboarding, userStatus.error, router]);
+  }, [userStatus.isLoaded, userStatus.userExists, userStatus.needsOnboarding, userStatus.error, userStatus.user, router]);
 
   const mutation = useMutation({
     mutationFn: async (data: { tenantName: string }) => {
@@ -75,13 +78,13 @@ export default function OnboardPage() {
     mutation.mutate({ tenantName });
   };
 
-  if (!isLoaded || !user || !userStatus.isLoaded) {
+  if (isLoading || !user || !userStatus.isLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent"></div>
           <p className="mt-4 text-lg text-gray-600">
-            {!isLoaded ? 'Loading user...' : 
+            {isLoading ? 'Loading user...' : 
              !userStatus.isLoaded ? 'Checking account status...' : 
              'Loading...'}
           </p>

@@ -1,9 +1,19 @@
-import { Injectable, NotFoundException, Logger, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  Logger,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { PrismaService } from '../../database/prisma/prisma.service';
 import { CreateTicketDto } from '../dto/create-ticket.dto';
 import { UpdateTicketDto } from '../dto/update-ticket.dto';
 import { AddCommentDto } from '../dto/add-comment.dto';
-import { TicketStatus, TicketPriority, TicketSource } from 'prisma/generated/client';
+import {
+  TicketStatus,
+  TicketPriority,
+  TicketSource,
+} from 'prisma/generated/client';
 import { JiraApiService } from '../../jira/services/jira-api.service';
 import {
   CreateJiraIssueRequest,
@@ -162,7 +172,8 @@ Phone: ${contact.phone || 'N/A'}`;
         source: createTicketDto.source || TicketSource.API,
         externalId: jiraResponse.key, // Jira issue key (e.g., "KAN-123")
         externalSystem: 'jira',
-        submittedByPortalCustomer: createTicketDto.submittedByPortalCustomer || false,
+        submittedByPortalCustomer:
+          createTicketDto.submittedByPortalCustomer || false,
       },
       include: {
         contact: true,
@@ -256,8 +267,12 @@ Phone: ${contact.phone || 'N/A'}`;
         await this.prisma.ticket.update({
           where: { id },
           data: {
-            status: JIRA_TO_INTERNAL_STATUS[jiraIssue.fields.status.name] as TicketStatus,
-            priority: JIRA_TO_INTERNAL_PRIORITY[jiraIssue.fields.priority?.name || 'Medium'] as TicketPriority,
+            status: JIRA_TO_INTERNAL_STATUS[
+              jiraIssue.fields.status.name
+            ] as TicketStatus,
+            priority: JIRA_TO_INTERNAL_PRIORITY[
+              jiraIssue.fields.priority?.name || 'Medium'
+            ] as TicketPriority,
           },
         });
       } catch (error) {
@@ -294,7 +309,8 @@ Phone: ${contact.phone || 'N/A'}`;
     try {
       // Handle status change via transition
       if (updateTicketDto.status) {
-        const statusName = STATUS_MAP[updateTicketDto.status as keyof typeof STATUS_MAP];
+        const statusName =
+          STATUS_MAP[updateTicketDto.status as keyof typeof STATUS_MAP];
         await this.jiraApi.transitionIssue(ticket.externalId, statusName);
       }
 
@@ -302,7 +318,9 @@ Phone: ${contact.phone || 'N/A'}`;
       const updateFields: any = {};
       if (updateTicketDto.priority) {
         updateFields.priority = {
-          name: PRIORITY_MAP[updateTicketDto.priority as keyof typeof PRIORITY_MAP],
+          name: PRIORITY_MAP[
+            updateTicketDto.priority as keyof typeof PRIORITY_MAP
+          ],
         };
       }
 
@@ -350,20 +368,13 @@ Phone: ${contact.phone || 'N/A'}`;
       // Initialize Jira API
       await this.initializeJira(tenantId);
 
-      // Close issue in Jira (transition to Done status - Jira's standard closed state)
+      // Close issue in Jira (transition to Closed status)
       try {
-        // Try "Done" first (standard Jira workflow), then fall back to "Closed"
-        try {
-          await this.jiraApi.transitionIssue(ticket.externalId, 'Done');
-          this.logger.log(`Transitioned issue to Done in Jira: ${ticket.externalId}`);
-        } catch (doneError) {
-          // If "Done" doesn't work, try "Closed"
-          await this.jiraApi.transitionIssue(ticket.externalId, 'Closed');
-          this.logger.log(`Transitioned issue to Closed in Jira: ${ticket.externalId}`);
-        }
+        await this.jiraApi.transitionIssue(ticket.externalId, 'Closed');
+        this.logger.log(`Closed issue in Jira: ${ticket.externalId}`);
       } catch (error) {
-        this.logger.warn('Failed to transition issue in Jira (will still delete from cache):', error);
-        // Continue to delete cache anyway - don't block deletion if Jira transition fails
+        this.logger.warn('Failed to close issue in Jira:', error);
+        // Continue to delete cache anyway
       }
     }
 
@@ -402,10 +413,10 @@ Phone: ${contact.phone || 'N/A'}`;
     await this.initializeJira(tenantId);
 
     // Add comment to Jira FIRST (primary system)
-    const commentText = authorName 
-      ? `${authorName}: ${addCommentDto.content}` 
+    const commentText = authorName
+      ? `${authorName}: ${addCommentDto.content}`
       : addCommentDto.content;
-    
+
     try {
       await this.jiraApi.addComment(ticket.externalId, commentText);
     } catch (error) {
@@ -548,9 +559,15 @@ Phone: ${contact.phone || 'N/A'}`;
               where: { id: cachedTicket.id },
               data: {
                 title: jiraIssue.fields.summary,
-                description: jiraIssue.fields.description?.content?.[0]?.content?.[0]?.text || '',
-                status: JIRA_TO_INTERNAL_STATUS[jiraIssue.fields.status.name] as TicketStatus,
-                priority: JIRA_TO_INTERNAL_PRIORITY[jiraIssue.fields.priority?.name || 'Medium'] as TicketPriority,
+                description:
+                  jiraIssue.fields.description?.content?.[0]?.content?.[0]
+                    ?.text || '',
+                status: JIRA_TO_INTERNAL_STATUS[
+                  jiraIssue.fields.status.name
+                ] as TicketStatus,
+                priority: JIRA_TO_INTERNAL_PRIORITY[
+                  jiraIssue.fields.priority?.name || 'Medium'
+                ] as TicketPriority,
               },
             });
           }
@@ -559,7 +576,8 @@ Phone: ${contact.phone || 'N/A'}`;
 
           results.synced++;
         } catch (error) {
-          const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+          const errorMsg =
+            error instanceof Error ? error.message : 'Unknown error';
           results.errors.push(`Issue ${jiraIssue.key}: ${errorMsg}`);
         }
       }

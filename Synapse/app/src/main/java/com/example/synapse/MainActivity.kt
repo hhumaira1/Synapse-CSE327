@@ -18,7 +18,9 @@ import com.example.synapse.presentation.contacts.CreateContact
 //import com.example.synapse.ui.theme.screens.CreateDeal
 import com.example.synapse.presentation.LandingPage
 import com.example.synapse.presentation.dashboard.OwnerDashboard
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

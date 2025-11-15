@@ -4,10 +4,10 @@ import { OsTicketApiService } from './services/osticket-api.service';
 import { TicketSyncService } from './services/ticket-sync.service';
 import { DatabaseModule } from '../database/database.module';
 import { AuthModule } from '../auth/auth.module';
-import { ClerkModule } from '../clerk/clerk.module';
+import { SupabaseAuthModule } from '../supabase-auth/supabase-auth.module';
 
 @Module({
-  imports: [DatabaseModule, AuthModule, ClerkModule],
+  imports: [DatabaseModule, AuthModule, SupabaseAuthModule],
   controllers: [OsTicketController],
   providers: [OsTicketApiService, TicketSyncService],
   exports: [OsTicketApiService, TicketSyncService],

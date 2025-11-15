@@ -6,12 +6,12 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { AnalyticsService } from './analytics.service';
-import { ClerkAuthGuard } from 'src/clerk/guards/clerk-auth/clerk-auth.guard';
-import { CurrentUser } from 'src/common/decorators/current-user/current-user.decorator';
-import { AuthService } from 'src/auth/services/auth/auth.service';
+import { SupabaseAuthGuard } from '../../supabase-auth/guards/supabase-auth/supabase-auth.guard';
+import { CurrentUser } from '../../supabase-auth/decorators/current-user.decorator';
+import { AuthService } from '../../auth/auth.service';
 
 @Controller('analytics')
-@UseGuards(ClerkAuthGuard)
+@UseGuards(SupabaseAuthGuard)
 export class AnalyticsController {
   constructor(
     private readonly analyticsService: AnalyticsService,
@@ -23,8 +23,8 @@ export class AnalyticsController {
    * GET /analytics/dashboard
    */
   @Get('dashboard')
-  async getDashboard(@CurrentUser('sub') clerkId: string) {
-    const user = await this.authService.getUserDetails(clerkId);
+  async getDashboard(@CurrentUser('id') supabaseUserId: string) {
+    const user = await this.authService.getUserBySupabaseId(supabaseUserId);
     if (!user) {
       throw new BadRequestException('User not found');
     }
@@ -37,8 +37,8 @@ export class AnalyticsController {
    * GET /analytics/revenue
    */
   @Get('revenue')
-  async getRevenueMetrics(@CurrentUser('sub') clerkId: string) {
-    const user = await this.authService.getUserDetails(clerkId);
+  async getRevenueMetrics(@CurrentUser('id') supabaseUserId: string) {
+    const user = await this.authService.getUserBySupabaseId(supabaseUserId);
     if (!user) {
       throw new BadRequestException('User not found');
     }
@@ -51,8 +51,8 @@ export class AnalyticsController {
    * GET /analytics/win-loss
    */
   @Get('win-loss')
-  async getWinLossMetrics(@CurrentUser('sub') clerkId: string) {
-    const user = await this.authService.getUserDetails(clerkId);
+  async getWinLossMetrics(@CurrentUser('id') supabaseUserId: string) {
+    const user = await this.authService.getUserBySupabaseId(supabaseUserId);
     if (!user) {
       throw new BadRequestException('User not found');
     }
@@ -65,8 +65,8 @@ export class AnalyticsController {
    * GET /analytics/conversion
    */
   @Get('conversion')
-  async getConversionMetrics(@CurrentUser('sub') clerkId: string) {
-    const user = await this.authService.getUserDetails(clerkId);
+  async getConversionMetrics(@CurrentUser('id') supabaseUserId: string) {
+    const user = await this.authService.getUserBySupabaseId(supabaseUserId);
     if (!user) {
       throw new BadRequestException('User not found');
     }
@@ -79,8 +79,8 @@ export class AnalyticsController {
    * GET /analytics/velocity
    */
   @Get('velocity')
-  async getSalesVelocity(@CurrentUser('sub') clerkId: string) {
-    const user = await this.authService.getUserDetails(clerkId);
+  async getSalesVelocity(@CurrentUser('id') supabaseUserId: string) {
+    const user = await this.authService.getUserBySupabaseId(supabaseUserId);
     if (!user) {
       throw new BadRequestException('User not found');
     }
@@ -93,8 +93,8 @@ export class AnalyticsController {
    * GET /analytics/pipeline-health
    */
   @Get('pipeline-health')
-  async getPipelineHealth(@CurrentUser('sub') clerkId: string) {
-    const user = await this.authService.getUserDetails(clerkId);
+  async getPipelineHealth(@CurrentUser('id') supabaseUserId: string) {
+    const user = await this.authService.getUserBySupabaseId(supabaseUserId);
     if (!user) {
       throw new BadRequestException('User not found');
     }
@@ -107,8 +107,8 @@ export class AnalyticsController {
    * GET /analytics/top-performers
    */
   @Get('top-performers')
-  async getTopPerformers(@CurrentUser('sub') clerkId: string) {
-    const user = await this.authService.getUserDetails(clerkId);
+  async getTopPerformers(@CurrentUser('id') supabaseUserId: string) {
+    const user = await this.authService.getUserBySupabaseId(supabaseUserId);
     if (!user) {
       throw new BadRequestException('User not found');
     }
@@ -122,10 +122,10 @@ export class AnalyticsController {
    */
   @Get('forecast')
   async getRevenueForecast(
-    @CurrentUser('sub') clerkId: string,
+    @CurrentUser('id') supabaseUserId: string,
     @Query('period') period?: string,
   ) {
-    const user = await this.authService.getUserDetails(clerkId);
+    const user = await this.authService.getUserBySupabaseId(supabaseUserId);
     if (!user) {
       throw new BadRequestException('User not found');
     }
@@ -139,8 +139,8 @@ export class AnalyticsController {
    * GET /analytics/time-series
    */
   @Get('time-series')
-  async getTimeSeriesData(@CurrentUser('sub') clerkId: string) {
-    const user = await this.authService.getUserDetails(clerkId);
+  async getTimeSeriesData(@CurrentUser('id') supabaseUserId: string) {
+    const user = await this.authService.getUserBySupabaseId(supabaseUserId);
     if (!user) {
       throw new BadRequestException('User not found');
     }
@@ -148,3 +148,4 @@ export class AnalyticsController {
     return this.analyticsService.getTimeSeriesData(user.tenantId);
   }
 }
+

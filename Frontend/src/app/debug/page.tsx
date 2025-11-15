@@ -1,12 +1,11 @@
 'use client';
 
 import { useUserStatus } from '@/hooks/useUserStatus';
-import { useAuth, useUser } from '@clerk/nextjs';
+import { useUser } from '@/hooks/useUser';
 
 export default function DebugPage() {
   const userStatus = useUserStatus();
-  const auth = useAuth();
-  const { user } = useUser();
+  const { user, isSignedIn, isLoading } = useUser();
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -14,15 +13,15 @@ export default function DebugPage() {
         <h1 className="text-3xl font-bold mb-8">Debug User Status</h1>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Clerk Auth Status */}
+          {/* Supabase Auth Status */}
           <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-semibold mb-4">Clerk Auth Status</h2>
+            <h2 className="text-xl font-semibold mb-4">Supabase Auth Status</h2>
             <div className="space-y-2">
-              <p><strong>isLoaded:</strong> {auth.isLoaded ? 'true' : 'false'}</p>
-              <p><strong>isSignedIn:</strong> {auth.isSignedIn ? 'true' : 'false'}</p>
-              <p><strong>userId:</strong> {auth.userId || 'null'}</p>
+              <p><strong>isLoading:</strong> {isLoading ? 'true' : 'false'}</p>
+              <p><strong>isSignedIn:</strong> {isSignedIn ? 'true' : 'false'}</p>
+              <p><strong>userId:</strong> {user?.id || 'null'}</p>
               <p><strong>user.id:</strong> {user?.id || 'null'}</p>
-              <p><strong>user.email:</strong> {user?.primaryEmailAddress?.emailAddress || 'null'}</p>
+              <p><strong>user.email:</strong> {user?.email || 'null'}</p>
             </div>
           </div>
 

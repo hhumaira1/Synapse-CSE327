@@ -3,9 +3,10 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
+import { useUser } from "@/hooks/useUser";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import {
   CheckCircle2,
   XCircle,
@@ -18,7 +19,7 @@ import { useApiClient } from "@/lib/api";
 function AcceptPortalInviteContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { isLoaded, isSignedIn } = useUser();
+  const { isSignedIn, isLoading } = useUser();
   const apiClient = useApiClient(); // Use the hook to get authenticated client
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -32,12 +33,13 @@ function AcceptPortalInviteContent() {
   }, [searchParams]);
 
   useEffect(() => {
-    if (token && isLoaded && isSignedIn) {
+    if (token && !isLoading && isSignedIn) {
       acceptInvitation();
-    } else if (isLoaded && !isSignedIn && token) {
+    } else if (!isLoading && !isSignedIn && token) {
       setLoading(false);
     }
-  }, [token, isLoaded, isSignedIn]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token, isLoading, isSignedIn]);
 
   const acceptInvitation = async () => {
     if (!token) return;
@@ -46,13 +48,13 @@ function AcceptPortalInviteContent() {
       setAccepting(true);
       setError(null);
 
-      const response = await apiClient.post(
+      await apiClient.post(
         `/portal/customers/link/${token}`
       );
 
       setSuccess(true);
       setTimeout(() => {
-        router.push("/portal");
+        router.push("/portal/dashboard");
       }, 2000);
     } catch (err: any) {
       console.error("Error accepting portal invitation:", err);
@@ -66,9 +68,9 @@ function AcceptPortalInviteContent() {
     }
   };
 
-  if (!isLoaded || loading) {
+  if (isLoading || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-cyan-50">
+      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-50 to-cyan-50">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin text-blue-600 mx-auto mb-4" />
           <p className="text-gray-600">Verifying portal access...</p>
@@ -123,16 +125,13 @@ function AcceptPortalInviteContent() {
           </div>
 
           <div className="space-y-4">
-            <Button
-              className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700"
-              onClick={() =>
-                router.push(
-                  `/sign-in?redirect_url=/portal/accept-invite?token=${token}`
-                )
-              }
-            >
-              Sign In to Access Portal
-            </Button>
+            <Link href={`/auth/signin?redirect_url=/portal/accept-invite?token=${token}`}>
+              <Button
+                className="w-full bg-linear-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700"
+              >
+                Sign In to Access Portal
+              </Button>
+            </Link>
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
@@ -150,7 +149,7 @@ function AcceptPortalInviteContent() {
               className="w-full"
               onClick={() =>
                 router.push(
-                  `/sign-up?redirect_url=/portal/accept-invite?token=${token}`
+                  `/auth/signup?redirect_url=/portal/accept-invite?token=${token}`
                 )
               }
             >

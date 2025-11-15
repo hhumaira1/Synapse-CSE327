@@ -20,6 +20,7 @@ enum UserRole {
 enum TenantType {
   ORGANIZATION
   PERSONAL
+  BUSINESS // Added for Supabase migration compatibility
 }
 
 enum LeadStatus {
@@ -65,6 +66,7 @@ model Tenant {
   id        String     @id @default(cuid())
   name      String
   slug      String     @unique
+  domain    String? // Optional domain for tenant
   type      TenantType @default(ORGANIZATION)
   settings  Json?
   createdAt DateTime   @default(now())
@@ -91,15 +93,17 @@ model Tenant {
 // For multi-company access (consultants/contractors), use PortalCustomer instead
 
 model User {
-  id        String   @id @default(cuid())
-  tenantId  String   // User belongs to ONE tenant (their employer)
-  clerkId   String   @unique // Global unique - one Clerk account
-  email     String   @unique // Global unique - one email = one internal user globally
-  name      String?
-  role      UserRole @default(MEMBER) // Role in THIS tenant
-  isActive  Boolean  @default(true) // Soft delete support
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              String   @id @default(cuid())
+  tenantId        String   // User belongs to ONE tenant (their employer)
+  supabaseUserId  String   @unique @map("supabase_user_id") // Supabase Auth user ID
+  email           String   @unique // Global unique - one email = one internal user globally
+  firstName       String?  @map("first_name")
+  lastName        String?  @map("last_name")
+  name            String?  // Deprecated - use firstName/lastName
+  role            UserRole @default(MEMBER) // Role in THIS tenant
+  isActive        Boolean  @default(true) // Soft delete support
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   tenant          Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   interactions    Interaction[]
@@ -108,7 +112,7 @@ model User {
   invitations     UserInvitation[] // Invitations sent to users
   callLogs        CallLog[]     // Call logs made by this user
 
-  @@unique([tenantId, clerkId])
+  @@unique([tenantId, supabaseUserId])
   @@index([tenantId])
   @@index([email]) // Fast lookup for global uniqueness check
   @@map("users")
@@ -384,25 +388,25 @@ model CallLog {
 // ==================== PORTAL CUSTOMERS ====================
 
 model PortalCustomer {
-  id          String   @id @default(cuid())
-  tenantId    String
-  contactId   String?
-  clerkId     String?  // Nullable for invitation flow, filled on first login
-  email       String
-  name        String?
-  accessToken String?  @unique // Token for initial portal access invitation
-  isActive    Boolean  @default(true) // Can deactivate portal access
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             String   @id @default(cuid())
+  tenantId       String
+  contactId      String?
+  supabaseUserId String?  // Nullable for invitation flow, filled on first login
+  email          String
+  name           String?
+  accessToken    String?  @unique // Token for initial portal access invitation
+  isActive       Boolean  @default(true) // Can deactivate portal access
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   tenant         Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   contact        Contact?        @relation(fields: [contactId], references: [id], onDelete: SetNull)
   tickets        Ticket[]
   ticketComments TicketComment[]
 
-  @@unique([tenantId, clerkId]) // One user can belong to multiple tenants
-  @@unique([tenantId, email])    // Prevent duplicate emails per tenant
-  @@index([clerkId])              // Fast lookup of all user's tenants
+  @@unique([tenantId, supabaseUserId]) // One user can belong to multiple tenants
+  @@unique([tenantId, email])          // Prevent duplicate emails per tenant
+  @@index([supabaseUserId])            // Fast lookup of all user's tenants
   @@index([tenantId])
   @@index([contactId])
   @@index([accessToken])

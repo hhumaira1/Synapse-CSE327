@@ -5,6 +5,7 @@ import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import { ClerkModule } from './clerk/clerk.module';
 import { AuthModule } from './auth/auth.module';
+import { SupabaseAuthModule } from './supabase-auth/supabase-auth.module';
 import { PortalAuthModule } from './portal/auth/portal-auth.module';
 import { UsersModule } from './users/users.module';
 import { CommonModule } from './common/common.module';
@@ -28,6 +29,7 @@ import { JiraModule } from './jira/jira.module';
     }),
     CommonModule,
     DatabaseModule,
+    SupabaseAuthModule,
     ClerkModule,
     AuthModule,
     PortalAuthModule,

@@ -81,7 +81,7 @@ export class PortalCustomersService {
     // 3. Generate access token for portal invitation
     const accessToken = randomBytes(32).toString('hex');
 
-    // 4. Create portal customer record (without clerkId initially)
+    // 4. Create portal customer record (without supabaseUserId initially)
     const portalCustomer = await this.prisma.portalCustomer.create({
       data: {
         tenantId,
@@ -132,9 +132,9 @@ export class PortalCustomersService {
   }
 
   /**
-   * Link Clerk account to portal customer after they accept invitation
+   * Link Supabase account to portal customer after they accept invitation
    */
-  async linkClerkToPortalCustomer(accessToken: string, clerkId: string) {
+  async linkSupabaseToPortalCustomer(accessToken: string, supabaseUserId: string) {
     // Find portal customer by access token
     const portalCustomer = await this.prisma.portalCustomer.findFirst({
       where: {
@@ -151,18 +151,18 @@ export class PortalCustomersService {
       throw new NotFoundException('Invalid or expired portal access token');
     }
 
-    // Check if already linked to a Clerk account
-    if (portalCustomer.clerkId) {
+    // Check if already linked to a Supabase account
+    if (portalCustomer.supabaseUserId) {
       throw new BadRequestException(
         'This portal access is already linked to an account',
       );
     }
 
-    // Update with Clerk ID
+    // Update with Supabase ID
     const updated = await this.prisma.portalCustomer.update({
       where: { id: portalCustomer.id },
       data: {
-        clerkId,
+        supabaseUserId,
         accessToken: null, // Clear token after successful linking
       },
       include: {
@@ -172,7 +172,7 @@ export class PortalCustomersService {
     });
 
     this.logger.log(
-      `Portal customer ${portalCustomer.id} linked to Clerk account ${clerkId}`,
+      `Portal customer ${portalCustomer.id} linked to Supabase account ${supabaseUserId}`,
     );
 
     const contactName = updated.contact
@@ -219,11 +219,11 @@ export class PortalCustomersService {
   }
 
   /**
-   * Get portal customer by Clerk ID
+   * Get portal customer by Supabase ID
    */
-  async getPortalCustomerByClerkId(clerkId: string, tenantId?: string) {
+  async getPortalCustomerBySupabaseId(supabaseUserId: string, tenantId?: string) {
     const where: any = {
-      clerkId,
+      supabaseUserId,
       isActive: true,
     };
 

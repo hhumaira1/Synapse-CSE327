@@ -6,32 +6,31 @@ import {
 } from '@nestjs/common';
 import { UserRole } from 'prisma/generated/client/wasm';
 import { PrismaService } from 'src/database/prisma/prisma.service';
-import { ClerkService } from 'src/clerk/clerk/clerk.service';
 
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
 
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly clerkService: ClerkService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-  // Sync Clerk user with our database (ONE tenant only)
+  // Sync Supabase user with our database (ONE tenant only)
   async syncUserWithDatabase(
-    clerkId: string,
+    supabaseUserId: string,
     email: string,
-    name: string,
+    firstName: string,
+    lastName: string,
     tenantId?: string,
   ) {
     let user = await this.prisma.user.findUnique({
-      where: { clerkId },
+      where: { supabaseUserId },
       include: { tenant: true },
     });
 
     if (!user) {
       if (!tenantId) {
-        this.logger.warn(`No tenantId provided for new user: ${clerkId}`);
+        this.logger.warn(
+          `No tenantId provided for new user: ${supabaseUserId}`,
+        );
         throw new BadRequestException('Tenant ID required for new users');
       }
 
@@ -49,9 +48,10 @@ export class AuthService {
 
       user = await this.prisma.user.create({
         data: {
-          clerkId,
+          supabaseUserId,
           email,
-          name,
+          firstName,
+          lastName,
           tenantId,
           role: UserRole.MEMBER,
         },
@@ -66,9 +66,10 @@ export class AuthService {
 
   // Create initial tenant and admin user
   async createInitialUserAndTenant(
-    clerkId: string,
+    supabaseUserId: string,
     email: string,
-    name: string,
+    firstName: string,
+    lastName: string,
     tenantName: string,
   ) {
     // Check if this email is already an internal user
@@ -98,9 +99,10 @@ export class AuthService {
 
     const user = await this.prisma.user.create({
       data: {
-        clerkId,
+        supabaseUserId,
         email,
-        name,
+        firstName,
+        lastName,
         tenantId: tenant.id,
         role: UserRole.ADMIN,
       },
@@ -112,25 +114,30 @@ export class AuthService {
   }
 
   // Fetch user details along with tenant info
-  async getUserDetails(clerkId: string) {
+  async getUserDetails(supabaseUserId: string) {
     const user = await this.prisma.user.findUnique({
-      where: { clerkId },
+      where: { supabaseUserId },
       include: { tenant: true },
     });
     return user;
   }
 
+  // Fetch user by Supabase ID (alias for getUserDetails)
+  async getUserBySupabaseId(supabaseUserId: string) {
+    return this.getUserDetails(supabaseUserId);
+  }
+
   // Get all tenants user can access (internal + portal customer)
-  async getMyTenants(clerkId: string) {
+  async getMyTenants(supabaseUserId: string) {
     // Get internal user tenant (if exists)
     const internalUser = await this.prisma.user.findUnique({
-      where: { clerkId },
+      where: { supabaseUserId },
       include: { tenant: true },
     });
 
     // Get portal customer access (can be multiple)
     const portalAccess = await this.prisma.portalCustomer.findMany({
-      where: { clerkId, isActive: true },
+      where: { supabaseUserId, isActive: true },
       include: { tenant: true },
     });
 
@@ -148,16 +155,5 @@ export class AuthService {
         portalCustomerId: p.id,
       })),
     };
-  }
-
-  // Fetch complete user data from Clerk API
-  async getClerkUser(clerkId: string) {
-    try {
-      const user = await this.clerkService.client.users.getUser(clerkId);
-      return user;
-    } catch (error) {
-      this.logger.error(`Failed to fetch Clerk user ${clerkId}:`, error);
-      throw new BadRequestException('Failed to fetch user details from Clerk');
-    }
   }
 }

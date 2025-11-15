@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -36,6 +38,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
@@ -61,18 +64,24 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
-
     // Jetpack Compose Navigation
     implementation("androidx.navigation:navigation-compose:2.8.0")
 
-    //implementation(libs.clerk.android)
-    //implementation("com.clerk:clerk-android:1.0.0") // Check latest version
-
     // Network & API
-    implementation("com.squareup.retrofit2:retrofit:3.0.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.squareup.okhttp3:okhttp:5.3.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:5.3.0")
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    // Dependency Injection - Hilt
+    implementation ("com.google.dagger:hilt-android:2.57")
+    kapt ("com.google.dagger:hilt-compiler:2.57")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
+    // Room Database
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
 
     // DataStore for secure storage
     implementation("androidx.datastore:datastore-preferences:1.1.7")
@@ -80,12 +89,20 @@ dependencies {
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 
+    // ViewModel & LiveData
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
+
+    // Image Loading - Coil
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
     // Swipe refresh
     implementation("com.google.accompanist:accompanist-swiperefresh:0.36.0")
 
     // Animation
     implementation("androidx.compose.animation:animation:1.9.4")
 
+    // Material Icons Extended
     implementation("androidx.compose.material:material-icons-extended")
 
 }

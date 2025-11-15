@@ -34,7 +34,7 @@
     "@nestjs/websockets": "^11.1.8",
     "@prisma/client": "^6.19.0",
     "@radix-ui/react-alert-dialog": "^1.1.15",
-    "@supabase/supabase-js": "^2.78.0",
+    "@supabase/supabase-js": "^2.81.1",
     "@twilio/voice-sdk": "^2.16.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",

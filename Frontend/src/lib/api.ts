@@ -1,7 +1,7 @@
 'use client';
 
 import axios from 'axios';
-import { useAuth } from '@clerk/nextjs';
+import { createClient } from './supabase/client';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001/api';
 
@@ -16,7 +16,7 @@ export const apiClient = axios.create({
 // Global flag to prevent multiple interceptor setup
 let interceptorSetup = false;
 
-// Request interceptor to add Clerk token
+// Request interceptor to add Supabase token
 export function setupApiInterceptor(getToken: () => Promise<string | null>) {
   if (interceptorSetup) return; // Prevent duplicate setup
   
@@ -47,8 +47,15 @@ export function setupApiInterceptor(getToken: () => Promise<string | null>) {
 }
 
 // Hook to get API client with authentication
+// Hook to get API client with authentication
 export function useApiClient() {
-  const { getToken } = useAuth();
+  const supabase = createClient();
+  
+  // Get Supabase session token
+  const getToken = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    return session?.access_token || null;
+  };
   
   // Set up interceptor when hook is used
   if (typeof window !== 'undefined') {

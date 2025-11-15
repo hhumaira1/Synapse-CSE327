@@ -1,7 +1,7 @@
 'use client';
 
 import axios from 'axios';
-import { useAuth } from '@clerk/nextjs';
+import { createClient } from '@/lib/supabase/client';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3001/api';
 
@@ -16,7 +16,7 @@ export const portalApiClient = axios.create({
 // Global flag to prevent multiple interceptor setup
 let portalInterceptorSetup = false;
 
-// Request interceptor to add Clerk token
+// Request interceptor to add Supabase token
 export function setupPortalApiInterceptor(getToken: () => Promise<string | null>) {
   if (portalInterceptorSetup) return; // Prevent duplicate setup
   
@@ -62,7 +62,12 @@ portalApiClient.interceptors.response.use(
 
 // Hook to get Portal API client with authentication
 export function usePortalApiClient() {
-  const { getToken } = useAuth();
+  const supabase = createClient();
+  
+  const getToken = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    return session?.access_token || null;
+  };
   
   // Set up interceptor when hook is used
   if (typeof window !== 'undefined') {

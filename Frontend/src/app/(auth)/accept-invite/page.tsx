@@ -3,7 +3,7 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useUser, useSignUp } from "@clerk/nextjs";
+import { useUser } from "@/hooks/useUser";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,11 +26,9 @@ interface InvitationDetails {
 function AcceptInviteContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { isLoaded, isSignedIn, user } = useUser();
-  const { signUp } = useSignUp();
+  const { isSignedIn, isLoading } = useUser();
   const apiClient = useApiClient(); // Use the hook to get authenticated client
   const [token, setToken] = useState<string | null>(null);
-  const [invitation, setInvitation] = useState<InvitationDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [accepting, setAccepting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,10 +40,11 @@ function AcceptInviteContent() {
   }, [searchParams]);
 
   useEffect(() => {
-    if (token && isLoaded && isSignedIn) {
+    if (token && !isLoading && isSignedIn) {
       acceptInvitation();
     }
-  }, [token, isLoaded, isSignedIn]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token, isLoading, isSignedIn]);
 
   const acceptInvitation = async () => {
     if (!token) return;
@@ -54,12 +53,15 @@ function AcceptInviteContent() {
       setAccepting(true);
       setError(null);
 
-      const response = await apiClient.post(`/users/accept-invite/${token}`);
+      await apiClient.post(`/users/accept-invite/${token}`);
 
       setSuccess(true);
+      
+      // Wait a moment for backend to complete, then redirect to dashboard
+      // The user just joined a team, so they should have exactly 1 internal workspace
       setTimeout(() => {
-        router.push("/select-tenant");
-      }, 2000);
+        router.push("/dashboard");
+      }, 1500);
     } catch (err: any) {
       console.error("Error accepting invitation:", err);
       setError(
@@ -72,9 +74,9 @@ function AcceptInviteContent() {
     }
   };
 
-  if (!isLoaded || loading) {
+  if (isLoading || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-gray-50 to-gray-100">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin text-indigo-600 mx-auto mb-4" />
           <p className="text-gray-600">Verifying invitation...</p>

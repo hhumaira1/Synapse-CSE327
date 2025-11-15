@@ -11,9 +11,9 @@ import {
 } from '@nestjs/common';
 import { TwilioService } from './twilio.service';
 import { VoiceService } from '../voice/voice.service';
-import { ClerkAuthGuard } from '../../clerk/guards/clerk-auth/clerk-auth.guard';
-import { CurrentUser } from '../../common/decorators/current-user/current-user.decorator';
-import { AuthService } from '../../auth/services/auth/auth.service';
+import { SupabaseAuthGuard } from 'src/supabase-auth/guards/supabase-auth/supabase-auth.guard';
+import { CurrentUser } from 'src/supabase-auth/decorators/current-user.decorator';
+import { AuthService } from 'src/auth/auth.service';
 
 interface TwilioWebhookBody {
   CallSid: string;
@@ -38,10 +38,10 @@ export class TwilioController {
    * POST /api/twilio/access-token
    */
   @Post('access-token')
-  @UseGuards(ClerkAuthGuard)
-  async getAccessToken(@CurrentUser('sub') clerkId: string) {
+  @UseGuards(SupabaseAuthGuard)
+  async getAccessToken(@CurrentUser('id') supabaseUserId: string) {
     try {
-      const user = await this.authService.getUserDetails(clerkId);
+      const user = await this.authService.getUserBySupabaseId(supabaseUserId);
       if (!user) {
         throw new BadRequestException('User not found');
       }
@@ -65,10 +65,10 @@ export class TwilioController {
    * POST /api/twilio/make-call
    */
   @Post('make-call')
-  @UseGuards(ClerkAuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   async makeCall(
     @Body() body: { to: string; contactId?: string },
-    @CurrentUser('sub') clerkId: string,
+    @CurrentUser('id') supabaseUserId: string,
   ) {
     try {
       let { to, contactId } = body;
@@ -101,7 +101,7 @@ export class TwilioController {
         );
       }
 
-      const user = await this.authService.getUserDetails(clerkId);
+      const user = await this.authService.getUserBySupabaseId(supabaseUserId);
       if (!user) {
         throw new BadRequestException('User not found');
       }
@@ -201,9 +201,9 @@ export class TwilioController {
    * GET /api/twilio/call-logs
    */
   @Get('call-logs')
-  @UseGuards(ClerkAuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   async getCallLogs(
-    @CurrentUser('sub') clerkId: string,
+    @CurrentUser('id') supabaseUserId: string,
     @Query('userId') userId?: string,
     @Query('contactId') contactId?: string,
     @Query('direction') direction?: string,
@@ -212,7 +212,7 @@ export class TwilioController {
     @Query('endDate') endDate?: string,
   ) {
     try {
-      const user = await this.authService.getUserDetails(clerkId);
+      const user = await this.authService.getUserBySupabaseId(supabaseUserId);
       if (!user) {
         throw new BadRequestException('User not found');
       }
@@ -261,13 +261,13 @@ export class TwilioController {
    * GET /api/twilio/call-logs/:id
    */
   @Get('call-logs/:id')
-  @UseGuards(ClerkAuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   async getCallLog(
-    @CurrentUser('sub') clerkId: string,
+    @CurrentUser('id') supabaseUserId: string,
     @Param('id') id: string,
   ) {
     try {
-      const user = await this.authService.getUserDetails(clerkId);
+      const user = await this.authService.getUserBySupabaseId(supabaseUserId);
       if (!user) {
         throw new BadRequestException('User not found');
       }
@@ -283,3 +283,5 @@ export class TwilioController {
     }
   }
 }
+
+

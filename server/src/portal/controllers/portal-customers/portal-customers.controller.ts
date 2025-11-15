@@ -12,13 +12,13 @@ import {
 } from '@nestjs/common';
 import { PortalCustomersService } from '../../services/portal-customers/portal-customers.service';
 import { InviteCustomerDto } from '../../dto/invite-customer.dto';
-import { ClerkAuthGuard } from 'src/clerk/guards/clerk-auth/clerk-auth.guard';
-import { CurrentUser } from 'src/common/decorators/current-user/current-user.decorator';
-import { AuthService } from 'src/auth/services/auth/auth.service';
+import { SupabaseAuthGuard } from 'src/supabase-auth/guards/supabase-auth/supabase-auth.guard';
+import { CurrentUser } from 'src/supabase-auth/decorators/current-user.decorator';
+import { AuthService } from 'src/auth/auth.service';
 import { UserRole } from 'prisma/generated/client';
 
 @Controller('portal/customers')
-@UseGuards(ClerkAuthGuard)
+@UseGuards(SupabaseAuthGuard)
 export class PortalCustomersController {
   constructor(
     private readonly portalCustomersService: PortalCustomersService,
@@ -41,7 +41,7 @@ export class PortalCustomersController {
     return {
       id: portalCustomer.id,
       isActive: portalCustomer.isActive,
-      alreadyAccepted: !!portalCustomer.clerkId,
+      alreadyAccepted: !!portalCustomer.supabaseUserId,
       contact: {
         firstName: portalCustomer.contact.firstName,
         lastName: portalCustomer.contact.lastName,
@@ -58,10 +58,10 @@ export class PortalCustomersController {
    */
   @Post('invite')
   async inviteCustomer(
-    @CurrentUser('sub') clerkId: string,
+    @CurrentUser('id') supabaseUserId: string,
     @Body() inviteCustomerDto: InviteCustomerDto,
   ) {
-    const currentUser = await this.authService.getUserDetails(clerkId);
+    const currentUser = await this.authService.getUserBySupabaseId(supabaseUserId);
 
     if (!currentUser) {
       throw new ForbiddenException('User not found');
@@ -85,27 +85,27 @@ export class PortalCustomersController {
   }
 
   /**
-   * Link portal access token to Clerk account (used during customer sign-up)
+   * Link portal access token to Supabase account (used during customer sign-up)
    * This endpoint is called when customer clicks invitation link and signs up
    */
   @Post('link/:accessToken')
   async linkPortalAccess(
     @Param('accessToken') accessToken: string,
-    @CurrentUser('sub') clerkId: string,
+    @CurrentUser('id') supabaseUserId: string,
   ) {
-    return this.portalCustomersService.linkClerkToPortalCustomer(
+    return this.portalCustomersService.linkSupabaseToPortalCustomer(
       accessToken,
-      clerkId,
+      supabaseUserId,
     );
   }
 
   /**
-   * Get portal customers where current user is the customer (by Clerk ID)
+   * Get portal customers where current user is the customer (by Supabase ID)
    * Used in customer portal dashboard
    */
   @Get('my-access')
-  async getMyPortalAccess(@CurrentUser('sub') clerkId: string) {
-    return this.portalCustomersService.getPortalCustomerByClerkId(clerkId);
+  async getMyPortalAccess(@CurrentUser('id') supabaseUserId: string) {
+    return this.portalCustomersService.getPortalCustomerBySupabaseId(supabaseUserId);
   }
 
   /**
@@ -113,10 +113,10 @@ export class PortalCustomersController {
    */
   @Get()
   async getPortalCustomers(
-    @CurrentUser('sub') clerkId: string,
-    @Query('activeOnly') activeOnly?: string,
+    @CurrentUser('id') supabaseUserId: string,
+    @Query('active') activeOnly?: string,
   ) {
-    const currentUser = await this.authService.getUserDetails(clerkId);
+    const currentUser = await this.authService.getUserBySupabaseId(supabaseUserId);
 
     if (!currentUser) {
       throw new ForbiddenException('User not found');
@@ -133,10 +133,10 @@ export class PortalCustomersController {
    */
   @Delete(':id')
   async deactivatePortalAccess(
-    @CurrentUser('sub') clerkId: string,
+    @CurrentUser('id') supabaseUserId: string,
     @Param('id') portalCustomerId: string,
   ) {
-    const currentUser = await this.authService.getUserDetails(clerkId);
+    const currentUser = await this.authService.getUserBySupabaseId(supabaseUserId);
 
     if (!currentUser) {
       throw new ForbiddenException('User not found');

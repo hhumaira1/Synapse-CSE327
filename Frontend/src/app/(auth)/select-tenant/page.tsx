@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
+import { useUser, useAuth } from "@/hooks/useUser";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -21,29 +21,35 @@ interface TenantAccess {
 
 export default function SelectTenantPage() {
   const router = useRouter();
-  const { isLoaded, isSignedIn } = useUser();
+  const { isSignedIn, isLoading } = useUser();
+  const { getToken } = useAuth();
   const [tenants, setTenants] = useState<TenantAccess[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!isLoaded) return;
+  const selectTenant = useCallback((tenant: TenantAccess) => {
+    // Store selected tenant in localStorage
+    localStorage.setItem("selectedTenantId", tenant.id);
+    localStorage.setItem("selectedTenantName", tenant.name);
+    localStorage.setItem("selectedTenantType", tenant.type);
+    localStorage.setItem("selectedTenantRole", tenant.role);
 
-    if (!isSignedIn) {
-      router.push("/sign-in");
-      return;
+    // Redirect based on tenant type
+    if (tenant.type === "internal") {
+      router.push("/dashboard");
+    } else {
+      router.push("/portal");
     }
+  }, [router]);
 
-    fetchTenants();
-  }, [isLoaded, isSignedIn, router]);
-
-  const fetchTenants = async () => {
+  const fetchTenants = useCallback(async () => {
     try {
+      const token = await getToken();
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/my-tenants`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/users/my-tenants`,
         {
           headers: {
-            Authorization: `Bearer ${await (window as any).Clerk.session.getToken()}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -54,33 +60,16 @@ export default function SelectTenantPage() {
 
       const data = await response.json();
       
-      // Transform new API response structure to TenantAccess[]
-      const tenantsList: TenantAccess[] = [];
-      
-      // Add internal access if exists
-      if (data.internalAccess) {
-        tenantsList.push({
-          id: data.internalAccess.tenant.id,
-          name: data.internalAccess.tenant.name,
-          slug: data.internalAccess.tenant.slug,
-          type: "internal",
-          role: data.internalAccess.role,
-        });
-      }
-      
-      // Add portal customer access
-      if (data.portalAccess && data.portalAccess.length > 0) {
-        data.portalAccess.forEach((portal: any) => {
-          tenantsList.push({
-            id: portal.tenant.id,
-            name: portal.tenant.name,
-            slug: portal.tenant.slug,
-            type: "customer",
-            role: "CUSTOMER",
-            portalCustomerId: portal.portalCustomerId,
-          });
-        });
-      }
+      // Backend returns array of tenants directly
+      const tenantsList: TenantAccess[] = data.map((tenant: any) => ({
+        id: tenant.id,
+        name: tenant.name,
+        slug: tenant.slug,
+        type: tenant.type,
+        role: tenant.role,
+        userId: tenant.userId,
+        portalCustomerId: tenant.portalCustomerId,
+      }));
       
       setTenants(tenantsList);
 
@@ -96,22 +85,18 @@ export default function SelectTenantPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [getToken, selectTenant]);
 
-  const selectTenant = (tenant: TenantAccess) => {
-    // Store selected tenant in localStorage
-    localStorage.setItem("selectedTenantId", tenant.id);
-    localStorage.setItem("selectedTenantName", tenant.name);
-    localStorage.setItem("selectedTenantType", tenant.type);
-    localStorage.setItem("selectedTenantRole", tenant.role);
+  useEffect(() => {
+    if (isLoading) return;
 
-    // Redirect based on tenant type
-    if (tenant.type === "internal") {
-      router.push("/dashboard");
-    } else {
-      router.push("/portal");
+    if (!isSignedIn) {
+      router.push("/auth/signin");
+      return;
     }
-  };
+
+    fetchTenants();
+  }, [isLoading, isSignedIn, router, fetchTenants]);
 
   const getRoleBadgeVariant = (role: string) => {
     switch (role) {
@@ -140,9 +125,9 @@ export default function SelectTenantPage() {
     }
   };
 
-  if (!isLoaded || loading) {
+  if (isLoading || loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-gray-50 to-gray-100">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin text-indigo-600 mx-auto mb-4" />
           <p className="text-gray-600">Loading workspaces...</p>
@@ -152,10 +137,10 @@ export default function SelectTenantPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-gray-50 to-gray-100 p-4">
       <div className="w-full max-w-4xl">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
+          <h1 className="text-3xl font-bold bg-linear-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
             Select Workspace
           </h1>
           <p className="text-gray-600">
@@ -181,8 +166,8 @@ export default function SelectTenantPage() {
                   <div
                     className={`p-3 rounded-lg ${
                       tenant.type === "internal"
-                        ? "bg-gradient-to-br from-indigo-500 to-purple-500"
-                        : "bg-gradient-to-br from-blue-500 to-cyan-500"
+                        ? "bg-linear-to-br from-indigo-500 to-purple-500"
+                        : "bg-linear-to-br from-blue-500 to-cyan-500"
                     }`}
                   >
                     <Building2 className="h-6 w-6 text-white" />
@@ -209,7 +194,7 @@ export default function SelectTenantPage() {
               </div>
 
               <Button
-                className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+                className="w-full bg-linear-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
                 onClick={() => selectTenant(tenant)}
               >
                 Access Workspace

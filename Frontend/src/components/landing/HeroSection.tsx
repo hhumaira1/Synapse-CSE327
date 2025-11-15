@@ -2,10 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { SignedIn, SignedOut, SignUpButton } from "@clerk/nextjs";
+import { useUser } from "@/hooks/useUser";
 import { ArrowRight, Sparkles, CheckCircle, Play } from "lucide-react";
+import Link from "next/link";
 
 export function HeroSection() {
+  const { isSignedIn } = useUser();
+  
   return (
     <section className="relative container mx-auto px-6 py-20 md:py-32 overflow-hidden">
       {/* Animated background gradient orbs */}
@@ -30,25 +33,24 @@ export function HeroSection() {
         </p>
         
         <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <SignedOut>
-            <SignUpButton mode="modal">
+          {!isSignedIn ? (
+            <Link href="/auth/signup">
               <Button size="lg" className="group w-full bg-linear-to-r from-[#6366f1] via-[#8b5cf6] to-[#a855f7] hover:from-[#5558e3] hover:via-[#7c4fe5] hover:to-[#9848e8] sm:w-auto shadow-2xl shadow-[#6366f1]/50 px-8 py-6 text-lg font-semibold">
                 Start Free Trial
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Button>
-            </SignUpButton>
-          </SignedOut>
-          
-          <SignedIn>
-            <Button 
-              size="lg" 
-              className="group w-full bg-linear-to-r from-[#6366f1] via-[#8b5cf6] to-[#a855f7] hover:from-[#5558e3] hover:via-[#7c4fe5] hover:to-[#9848e8] sm:w-auto shadow-2xl shadow-[#6366f1]/50 px-8 py-6 text-lg font-semibold"
-              onClick={() => window.location.href = '/dashboard'}
-            >
-              Go to Dashboard
-              <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-            </Button>
-          </SignedIn>
+            </Link>
+          ) : (
+            <Link href="/dashboard">
+              <Button 
+                size="lg" 
+                className="group w-full bg-linear-to-r from-[#6366f1] via-[#8b5cf6] to-[#a855f7] hover:from-[#5558e3] hover:via-[#7c4fe5] hover:to-[#9848e8] sm:w-auto shadow-2xl shadow-[#6366f1]/50 px-8 py-6 text-lg font-semibold"
+              >
+                Go to Dashboard
+                <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+              </Button>
+            </Link>
+          )}
           
           <Button size="lg" variant="outline" className="group w-full border-2 border-[#6366f1] text-[#6366f1] hover:bg-[#6366f1] hover:text-white sm:w-auto px-8 py-6 text-lg font-semibold transition-all duration-300">
             <Play className="mr-2 h-5 w-5 transition-transform group-hover:scale-110" />

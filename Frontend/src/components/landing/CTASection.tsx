@@ -2,10 +2,13 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { SignedIn, SignedOut, SignUpButton } from "@clerk/nextjs";
+import { useUser } from "@/hooks/useUser";
 import { ArrowRight, CheckCircle } from "lucide-react";
+import Link from "next/link";
 
 export function CTASection() {
+  const { isSignedIn } = useUser();
+  
   return (
     <section className="container mx-auto px-6 py-24">
       <Card className="relative overflow-hidden border-none bg-linear-to-r from-[#6366f1] via-[#8b5cf6] to-[#a855f7] shadow-2xl shadow-[#6366f1]/30">
@@ -18,24 +21,24 @@ export function CTASection() {
             Join thousands of teams already using SynapseCRM to close more deals and grow faster.
           </p>
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <SignedOut>
-              <SignUpButton mode="modal">
+            {!isSignedIn ? (
+              <Link href="/auth/signup">
                 <Button size="lg" className="bg-white text-[#6366f1] hover:bg-white/90 font-semibold px-8 py-6 shadow-xl">
                   Start Your Free Trial
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
-              </SignUpButton>
-            </SignedOut>
-            <SignedIn>
-              <Button 
-                size="lg" 
-                className="bg-white text-[#6366f1] hover:bg-white/90 font-semibold px-8 py-6 shadow-xl"
-                onClick={() => window.location.href = '/dashboard'}
-              >
-                Go to Dashboard
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </SignedIn>
+              </Link>
+            ) : (
+              <Link href="/dashboard">
+                <Button 
+                  size="lg" 
+                  className="bg-white text-[#6366f1] hover:bg-white/90 font-semibold px-8 py-6 shadow-xl"
+                >
+                  Go to Dashboard
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
+            )}
             <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white/10 font-semibold px-8 py-6">
               Schedule a Demo
             </Button>

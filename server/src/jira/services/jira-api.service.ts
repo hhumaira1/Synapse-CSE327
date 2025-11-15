@@ -111,15 +111,12 @@ export class JiraApiService {
     }
 
     try {
-      this.logger.log(
-        `Creating Jira issue: ${request.fields.summary}`,
-      );
+      this.logger.log(`Creating Jira issue: ${request.fields.summary}`);
 
-      const response =
-        await this.axiosInstance.post<CreateJiraIssueResponse>(
-          '/issue',
-          request,
-        );
+      const response = await this.axiosInstance.post<CreateJiraIssueResponse>(
+        '/issue',
+        request,
+      );
 
       this.logger.log(`Jira issue created: ${response.data.key}`);
       return response.data;
@@ -209,24 +206,16 @@ export class JiraApiService {
         transitions: JiraTransition[];
       }>(`/issue/${issueKey}/transitions`);
 
-      const availableTransitions = transitionsResponse.data.transitions;
-
       // Find the transition that matches the target status
-      const transition = availableTransitions.find(
+      const transition = transitionsResponse.data.transitions.find(
         (t) => t.to.name.toLowerCase() === statusName.toLowerCase(),
       );
 
       if (!transition) {
-        const availableStatuses = availableTransitions
-          .map((t) => t.to.name)
-          .join(', ');
         this.logger.warn(
-          `Transition to "${statusName}" not available for ${issueKey}. Available: ${availableStatuses}`,
+          `Transition to "${statusName}" not available for ${issueKey}`,
         );
-        throw new HttpException(
-          `Status "${statusName}" is not available. Available transitions: ${availableStatuses}`,
-          HttpStatus.BAD_REQUEST,
-        );
+        return;
       }
 
       // Execute transition
@@ -254,10 +243,7 @@ export class JiraApiService {
   /**
    * Add comment to issue
    */
-  async addComment(
-    issueKey: string,
-    comment: string,
-  ): Promise<void> {
+  async addComment(issueKey: string, comment: string): Promise<void> {
     if (!this.axiosInstance) {
       throw new HttpException(
         'Jira API not initialized',
@@ -284,10 +270,7 @@ export class JiraApiService {
         },
       };
 
-      await this.axiosInstance.post(
-        `/issue/${issueKey}/comment`,
-        request,
-      );
+      await this.axiosInstance.post(`/issue/${issueKey}/comment`, request);
 
       this.logger.log(`Comment added to Jira issue ${issueKey}`);
     } catch (error: any) {

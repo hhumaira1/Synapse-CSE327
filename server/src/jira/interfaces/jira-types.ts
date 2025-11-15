@@ -129,6 +129,6 @@ export const JIRA_TO_INTERNAL_STATUS: Record<string, string> = {
   'To Do': 'OPEN',
   'In Progress': 'IN_PROGRESS',
   Resolved: 'RESOLVED',
-  Done: 'CLOSED', // Changed: Done maps to CLOSED (completed tickets)
+  Done: 'RESOLVED',
   Closed: 'CLOSED',
 };

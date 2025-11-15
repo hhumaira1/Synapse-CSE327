@@ -11,13 +11,13 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { InviteUserDto } from './dto/invite-user.dto';
-import { ClerkAuthGuard } from 'src/clerk/guards/clerk-auth/clerk-auth.guard';
-import { CurrentUser } from 'src/common/decorators/current-user/current-user.decorator';
-import { AuthService } from 'src/auth/services/auth/auth.service';
+import { SupabaseAuthGuard } from 'src/supabase-auth/guards/supabase-auth/supabase-auth.guard';
+import { CurrentUser } from 'src/supabase-auth/decorators/current-user.decorator';
+import { AuthService } from 'src/auth/auth.service';
 import { UserRole } from 'prisma/generated/client';
 
 @Controller('users')
-@UseGuards(ClerkAuthGuard)
+@UseGuards(SupabaseAuthGuard)
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
@@ -30,11 +30,11 @@ export class UsersController {
    */
   @Post('invite')
   async inviteEmployee(
-    @CurrentUser('sub') clerkId: string,
+    @CurrentUser('id') supabaseUserId: string,
     @Body() inviteUserDto: InviteUserDto,
   ) {
     // Get current user's details
-    const currentUser = await this.authService.getUserDetails(clerkId);
+    const currentUser = await this.authService.getUserBySupabaseId(supabaseUserId);
 
     if (!currentUser) {
       throw new ForbiddenException('User not found');
@@ -66,17 +66,37 @@ export class UsersController {
   @Post('accept-invite/:token')
   async acceptInvitation(
     @Param('token') token: string,
-    @CurrentUser('sub') clerkId: string,
+    @CurrentUser() user: any,
   ) {
-    return this.usersService.acceptEmployeeInvitation(token, clerkId);
+    // Extract user details from Supabase user object
+    const supabaseUserId = user.id;
+    const email = user.email;
+    const firstName = user.user_metadata?.firstName || user.user_metadata?.first_name || '';
+    const lastName = user.user_metadata?.lastName || user.user_metadata?.last_name || '';
+
+    return this.usersService.acceptEmployeeInvitation(
+      token,
+      supabaseUserId,
+      email,
+      firstName,
+      lastName,
+    );
+  }
+
+  /**
+   * Get all tenants accessible to current user
+   */
+  @Get('my-tenants')
+  async getMyTenants(@CurrentUser('id') supabaseUserId: string) {
+    return this.usersService.getUserTenants(supabaseUserId);
   }
 
   /**
    * Get all users in current tenant
    */
   @Get()
-  async getTenantUsers(@CurrentUser('sub') clerkId: string) {
-    const currentUser = await this.authService.getUserDetails(clerkId);
+  async getTenantUsers(@CurrentUser('id') supabaseUserId: string) {
+    const currentUser = await this.authService.getUserBySupabaseId(supabaseUserId);
 
     if (!currentUser) {
       throw new ForbiddenException('User not found');
@@ -90,8 +110,8 @@ export class UsersController {
    * ADMIN and MANAGER can view
    */
   @Get('invitations/pending')
-  async getPendingInvitations(@CurrentUser('sub') clerkId: string) {
-    const currentUser = await this.authService.getUserDetails(clerkId);
+  async getPendingInvitations(@CurrentUser('id') supabaseUserId: string) {
+    const currentUser = await this.authService.getUserBySupabaseId(supabaseUserId);
 
     if (!currentUser) {
       throw new ForbiddenException('User not found');
@@ -115,10 +135,10 @@ export class UsersController {
    */
   @Delete('invitations/:id')
   async cancelInvitation(
-    @CurrentUser('sub') clerkId: string,
+    @CurrentUser('id') supabaseUserId: string,
     @Param('id') invitationId: string,
   ) {
-    const currentUser = await this.authService.getUserDetails(clerkId);
+    const currentUser = await this.authService.getUserBySupabaseId(supabaseUserId);
 
     if (!currentUser) {
       throw new ForbiddenException('User not found');
@@ -145,11 +165,11 @@ export class UsersController {
    */
   @Patch(':id/role')
   async updateUserRole(
-    @CurrentUser('sub') clerkId: string,
+    @CurrentUser('id') supabaseUserId: string,
     @Param('id') userId: string,
     @Body('role') newRole: UserRole,
   ) {
-    const currentUser = await this.authService.getUserDetails(clerkId);
+    const currentUser = await this.authService.getUserBySupabaseId(supabaseUserId);
 
     if (!currentUser) {
       throw new ForbiddenException('User not found');
@@ -172,10 +192,10 @@ export class UsersController {
    */
   @Delete(':id')
   async deactivateUser(
-    @CurrentUser('sub') clerkId: string,
+    @CurrentUser('id') supabaseUserId: string,
     @Param('id') userId: string,
   ) {
-    const currentUser = await this.authService.getUserDetails(clerkId);
+    const currentUser = await this.authService.getUserBySupabaseId(supabaseUserId);
 
     if (!currentUser) {
       throw new ForbiddenException('User not found');
@@ -188,3 +208,5 @@ export class UsersController {
     return this.usersService.deactivateUser(currentUser.tenantId, userId);
   }
 }
+
+

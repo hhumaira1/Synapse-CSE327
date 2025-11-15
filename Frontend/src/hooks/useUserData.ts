@@ -2,19 +2,21 @@
 
 import { useState, useEffect } from 'react';
 import { useApiClient } from '@/lib/api';
-import { useAuth } from '@clerk/nextjs';
+import { useUser } from '@/hooks/useUser';
 
 interface UserData {
   id: string;
-  clerkId: string;
+  supabaseUserId: string;
   tenantId: string;
-  name: string | null;
+  firstName: string | null;
+  lastName: string | null;
   email: string;
   role: string;
 }
 
 export function useUserData() {
-  const { isLoaded, isSignedIn } = useAuth();
+  const { user: authUser, isLoading: authLoading, isSignedIn } = useUser();
+  const isLoaded = !authLoading;
   const apiClient = useApiClient();
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);

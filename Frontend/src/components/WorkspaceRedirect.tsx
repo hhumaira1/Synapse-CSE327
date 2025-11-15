@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { useAuth } from '@clerk/nextjs';
+import { useUser } from '@/hooks/useUser';
 import { useApiClient } from '@/lib/api';
 
 /**
@@ -14,14 +14,14 @@ import { useApiClient } from '@/lib/api';
 export function WorkspaceRedirect() {
   const router = useRouter();
   const pathname = usePathname();
-  const { isLoaded, isSignedIn } = useAuth();
+  const { isSignedIn, isLoading } = useUser();
   const apiClient = useApiClient();
   const [checked, setChecked] = useState(false);
 
   useEffect(() => {
     const checkWorkspaceAccess = async () => {
       // Only run once, when auth is loaded
-      if (!isLoaded || !isSignedIn || checked) return;
+      if (isLoading || !isSignedIn || checked) return;
 
       // Only redirect if user is going directly to a dashboard from sign-in
       // Check if this is likely a direct navigation (not from workspace selector)
@@ -65,7 +65,7 @@ export function WorkspaceRedirect() {
     };
 
     checkWorkspaceAccess();
-  }, [isLoaded, isSignedIn, pathname, checked, router, apiClient]);
+  }, [isLoading, isSignedIn, pathname, checked, router, apiClient]);
 
   // This component doesn't render anything
   return null;

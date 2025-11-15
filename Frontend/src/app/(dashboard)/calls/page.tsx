@@ -1,6 +1,6 @@
 "use client";
 
-import { useUser } from '@clerk/nextjs';
+import { useUser } from '@/hooks/useUser';
 import { Phone } from 'lucide-react';
 import { useVoiceCall } from '@/hooks/useVoiceCall';
 import { useUserData } from '@/hooks/useUserData';

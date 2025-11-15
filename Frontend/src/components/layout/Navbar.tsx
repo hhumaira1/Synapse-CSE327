@@ -2,56 +2,24 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
-import { Sparkles, Menu, X, LayoutDashboard } from "lucide-react";
+import { useUser, useAuth } from "@/hooks/useUser";
+import { Sparkles, Menu, X, LayoutDashboard, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useUserStatus } from "@/hooks/useUserStatus";
+import Link from "next/link";
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isCheckingAccess, setIsCheckingAccess] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const router = useRouter();
-  const { isLoaded, userExists } = useUserStatus();
+  const { isLoaded } = useUserStatus();
+  const { user, isSignedIn } = useUser();
+  const { signOut } = useAuth();
 
-  const handleDashboardClick = async () => {
-    setIsCheckingAccess(true);
-    
-    try {
-      // Get Clerk token
-      const clerk = (window as { Clerk?: { session?: { getToken: () => Promise<string> } } }).Clerk;
-      const token = await clerk?.session?.getToken();
-      
-      // Check if user has portal access
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/portal/customers/my-access`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      const hasPortalAccess = response.ok && (await response.json()).length > 0;
-
-      // Route based on access type
-      if (userExists && hasPortalAccess) {
-        // Has both - route to workspace selector
-        router.push('/select-workspace');
-      } else if (userExists) {
-        // Only has workspace
-        router.push('/dashboard');
-      } else if (hasPortalAccess) {
-        // Only has portal access
-        router.push('/portal/dashboard');
-      } else {
-        // No access - needs onboarding
-        router.push('/onboard');
-      }
-    } catch (error) {
-      console.error('Error checking access:', error);
-      // Default to onboarding on error
-      router.push('/onboard');
-    } finally {
-      setIsCheckingAccess(false);
-      setIsMenuOpen(false);
-    }
+  const handleDashboardClick = () => {
+    // Simply navigate - the dashboard layout will handle routing based on access
+    router.push('/dashboard');
+    setIsMenuOpen(false);
   };
 
   const navigationLinks = [
@@ -88,41 +56,69 @@ export function Navbar() {
           ))}
 
           {/* Authentication Section */}
-          <SignedOut>
-            <SignInButton mode="modal">
-              <Button variant="outline" size="sm" className="border-[#6366f1]/30 text-[#1e293b] hover:bg-[#6366f1]/10 dark:text-white font-semibold">
-                Sign In
+          {!isSignedIn ? (
+            <>
+              <Link href="/auth/signin">
+                <Button variant="outline" size="sm" className="border-[#6366f1]/30 text-[#1e293b] hover:bg-[#6366f1]/10 dark:text-white font-semibold">
+                  Sign In
+                </Button>
+              </Link>
+              <Link href="/auth/signup">
+                <Button size="sm" className="bg-linear-to-r from-[#6366f1] to-[#a855f7] hover:from-[#5558e3] hover:to-[#9848e8] shadow-lg shadow-[#6366f1]/30 font-semibold">
+                  Get Started
+                </Button>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Button
+                onClick={handleDashboardClick}
+                disabled={!isLoaded}
+                variant="outline"
+                size="sm"
+                className="border-[#6366f1]/30 text-[#1e293b] hover:bg-[#6366f1]/10 dark:text-white font-semibold gap-2"
+              >
+                <LayoutDashboard className="h-4 w-4" />
+                Dashboard
               </Button>
-            </SignInButton>
-            <SignUpButton mode="modal">
-              <Button size="sm" className="bg-linear-to-r from-[#6366f1] to-[#a855f7] hover:from-[#5558e3] hover:to-[#9848e8] shadow-lg shadow-[#6366f1]/30 font-semibold">
-                Get Started
-              </Button>
-            </SignUpButton>
-          </SignedOut>
+              
+              {/* Custom User Button */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  className="h-8 w-8 rounded-full bg-linear-to-r from-[#6366f1] to-[#a855f7] flex items-center justify-center text-white font-semibold text-sm hover:shadow-lg transition-shadow"
+                >
+                  {(user?.user_metadata?.firstName?.[0] || user?.email?.[0] || 'U').toUpperCase()}
+                </button>
 
-          <SignedIn>
-            <Button
-              onClick={handleDashboardClick}
-              disabled={!isLoaded || isCheckingAccess}
-              variant="outline"
-              size="sm"
-              className="border-[#6366f1]/30 text-[#1e293b] hover:bg-[#6366f1]/10 dark:text-white font-semibold gap-2"
-            >
-              <LayoutDashboard className="h-4 w-4" />
-              {isCheckingAccess ? 'Loading...' : 'Dashboard'}
-            </Button>
-            <UserButton
-              afterSignOutUrl="/"
-              appearance={{
-                elements: {
-                  avatarBox: "h-8 w-8",
-                  userButtonPopoverCard: "shadow-xl border border-gray-200",
-                  userButtonPopoverActions: "gap-2",
-                }
-              }}
-            />
-          </SignedIn>
+                {showUserMenu && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
+                    <div className="p-2">
+                      <div className="px-4 py-2 border-b border-gray-100">
+                        <p className="text-sm font-medium text-gray-900 truncate">
+                          {user?.user_metadata?.firstName && user?.user_metadata?.lastName 
+                            ? `${user.user_metadata.firstName} ${user.user_metadata.lastName}`
+                            : user?.email?.split('@')[0] || 'User'}
+                        </p>
+                        <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+                      </div>
+                      <button
+                        onClick={async () => {
+                          await signOut();
+                          router.push('/');
+                          setShowUserMenu(false);
+                        }}
+                        className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors mt-2"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        Sign Out
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -151,46 +147,59 @@ export function Navbar() {
               ))}
 
               {/* Mobile Authentication Section */}
-              <SignedOut>
+              {!isSignedIn ? (
                 <div className="flex gap-2 pt-2">
-                  <SignInButton mode="modal">
-                    <Button variant="outline" className="flex-1 border-[#6366f1]/30 text-[#1e293b] dark:text-white">
+                  <Link href="/auth/signin" className="flex-1">
+                    <Button variant="outline" className="w-full border-[#6366f1]/30 text-[#1e293b] dark:text-white">
                       Sign In
                     </Button>
-                  </SignInButton>
-                  <SignUpButton mode="modal">
-                    <Button className="flex-1 bg-linear-to-r from-[#6366f1] to-[#a855f7]">
+                  </Link>
+                  <Link href="/auth/signup" className="flex-1">
+                    <Button className="w-full bg-linear-to-r from-[#6366f1] to-[#a855f7]">
                       Get Started
                     </Button>
-                  </SignUpButton>
+                  </Link>
                 </div>
-              </SignedOut>
-
-              <SignedIn>
+              ) : (
                 <div className="flex flex-col gap-2 pt-2">
                   <Button
                     onClick={handleDashboardClick}
-                    disabled={!isLoaded || isCheckingAccess}
+                    disabled={!isLoaded}
                     variant="outline"
                     className="w-full border-[#6366f1]/30 text-[#1e293b] dark:text-white gap-2"
                   >
                     <LayoutDashboard className="h-4 w-4" />
-                    {isCheckingAccess ? 'Loading...' : 'Dashboard'}
+                    Dashboard
                   </Button>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-[#64748b] dark:text-[#94a3b8]">Signed in</span>
-                    <UserButton
-                      afterSignOutUrl="/"
-                      appearance={{
-                        elements: {
-                          avatarBox: "h-8 w-8",
-                          userButtonPopoverCard: "shadow-xl border border-gray-200",
-                        }
+                  <div className="flex items-center justify-between p-2 border border-gray-200 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="h-8 w-8 rounded-full bg-linear-to-r from-[#6366f1] to-[#a855f7] flex items-center justify-center text-white font-semibold text-sm">
+                        {(user?.user_metadata?.firstName?.[0] || user?.email?.[0] || 'U').toUpperCase()}
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-900 truncate">
+                          {user?.user_metadata?.firstName && user?.user_metadata?.lastName 
+                            ? `${user.user_metadata.firstName} ${user.user_metadata.lastName}`
+                            : user?.email?.split('@')[0] || 'User'}
+                        </p>
+                        <p className="text-xs text-gray-500">Signed in</p>
+                      </div>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={async () => {
+                        await signOut();
+                        router.push('/');
+                        setIsMenuOpen(false);
                       }}
-                    />
+                      className="text-red-600 hover:bg-red-50 border-red-200"
+                    >
+                      <LogOut className="h-4 w-4" />
+                    </Button>
                   </div>
                 </div>
-              </SignedIn>
+              )}
             </div>
           </div>
         </div>

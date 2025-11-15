@@ -70,9 +70,10 @@ export interface Tenant {
 export interface User {
   id: string;
   tenantId: string;
-  clerkId: string;
+  supabaseUserId: string;
   email: string;
-  name?: string;
+  firstName?: string;
+  lastName?: string;
   role: UserRole;
   createdAt: Date;
   updatedAt: Date;
@@ -239,9 +240,11 @@ export interface PortalCustomer {
   id: string;
   tenantId: string;
   contactId?: string;
-  clerkId?: string;
+  supabaseUserId?: string;
   email: string;
   name?: string;
+  accessToken?: string;
+  isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
   tenant?: Tenant;

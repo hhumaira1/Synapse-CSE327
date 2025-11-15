@@ -2,9 +2,9 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useApiClient } from "@/lib/api";
-import { useUser } from "@clerk/nextjs";
+import { useUser } from "@/hooks/useUser";
 import { useRouter } from "next/navigation";
-import { LeadStatus, TicketStatus, type Lead, type Ticket } from "@/types/prisma";
+import { LeadStatus, TicketStatus, type Lead, type Ticket, type Contact } from "@/types/prisma";
 import {
   Users,
   TrendingUp,
@@ -54,6 +54,23 @@ export default function DashboardPage() {
           openDeals: 0,
           pendingTickets: 0,
         };
+      }
+    },
+  });
+
+  // Fetch recent contacts
+  const { data: recentContacts } = useQuery({
+    queryKey: ["recent-contacts"],
+    queryFn: async () => {
+      try {
+        const response = await apiClient.get("/contacts");
+        // Get the 3 most recent contacts
+        return Array.isArray(response.data) 
+          ? response.data.slice(0, 3) 
+          : [];
+      } catch (error) {
+        console.error("Failed to fetch recent contacts:", error);
+        return [];
       }
     },
   });
@@ -110,7 +127,7 @@ export default function DashboardPage() {
       {/* Welcome Section */}
       <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Welcome back, {user?.firstName || "User"}! 👋
+          Welcome back, {user?.user_metadata?.firstName || user?.email?.split('@')[0] || "User"}! 👋
         </h1>
         <p className="text-gray-600">
           Here&#39;s what&#39;s happening with your business today.
@@ -161,24 +178,31 @@ export default function DashboardPage() {
             Recent Contacts
           </h3>
           <div className="space-y-3">
-            {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition"
-              >
-                <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-semibold">
-                  JD
+            {recentContacts && recentContacts.length > 0 ? (
+              recentContacts.map((contact: Contact) => (
+                <div
+                  key={contact.id}
+                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition cursor-pointer"
+                  onClick={() => router.push(`/contacts/${contact.id}`)}
+                >
+                  <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-semibold">
+                    {contact.firstName?.[0] || ""}{contact.lastName?.[0] || ""}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-gray-900">
+                      {contact.firstName} {contact.lastName}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {contact.email || contact.phone || "No contact info"}
+                    </p>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-900">
-                    Contact {i}
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    contact{i}@example.com
-                  </p>
-                </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="text-sm text-gray-500 text-center py-4">
+                No contacts yet
+              </p>
+            )}
           </div>
         </div>
 

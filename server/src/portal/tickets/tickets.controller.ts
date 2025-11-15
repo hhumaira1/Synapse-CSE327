@@ -10,24 +10,22 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { TicketsService } from '../../tickets/tickets/tickets.service';
-import { ClerkAuthGuard } from '../../clerk/guards/clerk-auth/clerk-auth.guard';
-import { CurrentUser } from '../../common/decorators/current-user/current-user.decorator';
+import { SupabaseAuthGuard } from '../../supabase-auth/guards/supabase-auth/supabase-auth.guard';
+import { CurrentUser } from '../../supabase-auth/decorators/current-user.decorator';
 import { PortalAuthService } from '../auth/services/portal-auth/portal-auth.service';
-import { ClerkService } from '../../clerk/clerk/clerk.service';
 
 @Controller('portal/tickets')
-@UseGuards(ClerkAuthGuard)
+@UseGuards(SupabaseAuthGuard)
 export class TicketsController {
   constructor(
     private readonly ticketsService: TicketsService,
     private readonly portalAuthService: PortalAuthService,
-    private readonly clerkService: ClerkService,
   ) {}
 
   @Post()
   async createTicket(
     @Body() body: { title: string; description: string; tenantId?: string },
-    @CurrentUser('sub') clerkId: string,
+    @CurrentUser('id') supabaseUserId: string,
   ) {
     if (!body.title || !body.description) {
       throw new BadRequestException('Title and description are required');
@@ -35,7 +33,7 @@ export class TicketsController {
 
     // Get portal customer account for this tenant
     const portalAccounts =
-      await this.portalAuthService.getPortalAccounts(clerkId);
+      await this.portalAuthService.getPortalAccounts(supabaseUserId);
 
     // Use provided tenantId or first account's tenant
     const tenantId = body.tenantId || portalAccounts[0]?.tenantId;
@@ -69,12 +67,12 @@ export class TicketsController {
 
   @Get()
   async getMyTickets(
-    @CurrentUser('sub') clerkId: string,
+    @CurrentUser('id') supabaseUserId: string,
     @Query('tenantId') tenantId?: string,
   ) {
     // Get portal customer account(s)
     const portalAccounts =
-      await this.portalAuthService.getPortalAccounts(clerkId);
+      await this.portalAuthService.getPortalAccounts(supabaseUserId);
 
     // Use provided tenantId or first account's tenant
     const selectedTenantId = tenantId || portalAccounts[0]?.tenantId;
@@ -98,12 +96,12 @@ export class TicketsController {
   @Get(':id')
   async getTicketDetail(
     @Param('id') ticketId: string,
-    @CurrentUser('sub') clerkId: string,
+    @CurrentUser('id') supabaseUserId: string,
     @Query('tenantId') tenantId?: string,
   ) {
     // Get portal customer account(s)
     const portalAccounts =
-      await this.portalAuthService.getPortalAccounts(clerkId);
+      await this.portalAuthService.getPortalAccounts(supabaseUserId);
 
     // Use provided tenantId or first account's tenant
     const selectedTenantId = tenantId || portalAccounts[0]?.tenantId;
@@ -136,7 +134,7 @@ export class TicketsController {
   async addComment(
     @Param('id') ticketId: string,
     @Body() body: { content: string; tenantId?: string },
-    @CurrentUser('sub') clerkId: string,
+    @CurrentUser('id') supabaseUserId: string,
   ) {
     if (!body.content) {
       throw new BadRequestException('Comment content is required');
@@ -144,7 +142,7 @@ export class TicketsController {
 
     // Get portal customer account(s)
     const portalAccounts =
-      await this.portalAuthService.getPortalAccounts(clerkId);
+      await this.portalAuthService.getPortalAccounts(supabaseUserId);
 
     // Use provided tenantId or first account's tenant
     const selectedTenantId = body.tenantId || portalAccounts[0]?.tenantId;
@@ -169,23 +167,8 @@ export class TicketsController {
       throw new UnauthorizedException('Access denied to this ticket');
     }
 
-    // Get user name from Clerk
-    let authorName = portalCustomer.name || portalCustomer.email;
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const clerkUser: any =
-        await this.clerkService.client.users.getUser(clerkId);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      const firstName = (clerkUser?.firstName as string) || '';
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      const lastName = (clerkUser?.lastName as string) || '';
-      const fullName = `${firstName} ${lastName}`.trim();
-      if (fullName) {
-        authorName = fullName;
-      }
-    } catch {
-      // If Clerk fetch fails, use portal customer name/email
-    }
+    // Get user name from portal customer data
+    const authorName = portalCustomer.name || portalCustomer.email;
 
     // Use the new portal comment method
     return this.ticketsService.addPortalComment(

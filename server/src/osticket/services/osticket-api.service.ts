@@ -46,7 +46,9 @@ export class OsTicketApiService {
   initialize(config: OsTicketConfig) {
     this.config = config;
     this.axiosInstance = axios.create({
-      baseURL: config.baseUrl.endsWith('/api') ? config.baseUrl : `${config.baseUrl}/api`,
+      baseURL: config.baseUrl.endsWith('/api')
+        ? config.baseUrl
+        : `${config.baseUrl}/api`,
       headers: {
         'X-API-Key': config.apiKey,
         'Content-Type': 'application/json',

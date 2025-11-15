@@ -2,12 +2,13 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useAuth } from '@clerk/nextjs';
+import { useUser } from '@/hooks/useUser';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Loader2, CheckCircle, XCircle, Building } from 'lucide-react';
 import { useApiClient } from '@/lib/api';
 import toast from 'react-hot-toast';
+import Link from 'next/link';
 
 interface InvitationDetails {
   id: string;
@@ -26,7 +27,7 @@ interface InvitationDetails {
 function AcceptInvitationContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { isLoaded, isSignedIn, userId } = useAuth();
+  const { user, isSignedIn, isLoading } = useUser();
   const apiClient = useApiClient();
   
   const [loading, setLoading] = useState(true);
@@ -35,6 +36,7 @@ function AcceptInvitationContent() {
   const [error, setError] = useState<string | null>(null);
   
   const token = searchParams?.get('token');
+  const userId = user?.id;
 
   // Fetch invitation details
   useEffect(() => {
@@ -91,7 +93,7 @@ function AcceptInvitationContent() {
   // Auto-accept if user is signed in
   useEffect(() => {
     const autoAccept = async () => {
-      if (!isLoaded || !token || !invitation || accepting || error) return;
+      if (isLoading || !token || !invitation || accepting || error) return;
       
       if (isSignedIn && userId && invitation.isActive && !invitation.alreadyAccepted) {
         await handleAccept();
@@ -100,7 +102,7 @@ function AcceptInvitationContent() {
 
     autoAccept();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoaded, isSignedIn, userId, invitation, token, accepting, error]);
+  }, [isLoading, isSignedIn, userId, invitation, token, accepting, error]);
 
   if (loading) {
     return (
@@ -194,19 +196,21 @@ function AcceptInvitationContent() {
                 <p className="text-sm text-gray-600 text-center mb-4">
                   Please sign in or create an account to access the portal
                 </p>
-                <Button
-                  onClick={() => router.push(`/sign-in?redirect_url=/portal/accept?token=${token}`)}
-                  className="w-full bg-linear-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
-                >
-                  Sign In to Accept
-                </Button>
-                <Button
-                  onClick={() => router.push(`/sign-up?redirect_url=/portal/accept?token=${token}`)}
-                  variant="outline"
-                  className="w-full"
-                >
-                  Create Account
-                </Button>
+                <Link href={`/auth/signin?redirect_url=/portal/accept?token=${token}`}>
+                  <Button
+                    className="w-full bg-linear-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
+                  >
+                    Sign In to Accept
+                  </Button>
+                </Link>
+                <Link href={`/auth/signup?redirect_url=/portal/accept?token=${token}`}>
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                  >
+                    Create Account
+                  </Button>
+                </Link>
               </>
             ) : (
               <Button

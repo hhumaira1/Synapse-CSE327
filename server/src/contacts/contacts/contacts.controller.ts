@@ -11,12 +11,13 @@ import {
 } from '@nestjs/common';
 import { ContactsService } from './contacts.service';
 import { CreateContactDto } from '../dto/create-contact.dto';
-import { ClerkAuthGuard } from 'src/clerk/guards/clerk-auth/clerk-auth.guard';
-import { CurrentUser } from 'src/common/decorators/current-user/current-user.decorator';
-import { AuthService } from 'src/auth/services/auth/auth.service';
+import { SupabaseAuthGuard } from 'src/supabase-auth/guards/supabase-auth/supabase-auth.guard';
+import { CurrentUser } from 'src/supabase-auth/decorators/current-user.decorator';
+import { AuthService } from 'src/auth/auth.service';
+import { UserRole } from 'prisma/generated/client';
 
 @Controller('contacts')
-@UseGuards(ClerkAuthGuard)
+@UseGuards(SupabaseAuthGuard)
 export class ContactsController {
   constructor(
     private readonly contactsService: ContactsService,
@@ -25,10 +26,11 @@ export class ContactsController {
 
   @Post()
   async create(
-    @CurrentUser('sub') clerkId: string,
+    @CurrentUser('id') supabaseUserId: string,
     @Body() createContactDto: CreateContactDto,
   ) {
-    const currentUser = await this.authService.getUserDetails(clerkId);
+    const currentUser =
+      await this.authService.getUserBySupabaseId(supabaseUserId);
 
     if (!currentUser) {
       throw new ForbiddenException('User not found');
@@ -38,8 +40,9 @@ export class ContactsController {
   }
 
   @Get()
-  async findAll(@CurrentUser('sub') clerkId: string) {
-    const currentUser = await this.authService.getUserDetails(clerkId);
+  async findAll(@CurrentUser('id') supabaseUserId: string) {
+    const currentUser =
+      await this.authService.getUserBySupabaseId(supabaseUserId);
 
     if (!currentUser) {
       throw new ForbiddenException('User not found');
@@ -50,10 +53,11 @@ export class ContactsController {
 
   @Get(':id')
   async findOne(
-    @CurrentUser('sub') clerkId: string,
+    @CurrentUser('id') supabaseUserId: string,
     @Param('id') id: string,
   ) {
-    const currentUser = await this.authService.getUserDetails(clerkId);
+    const currentUser =
+      await this.authService.getUserBySupabaseId(supabaseUserId);
 
     if (!currentUser) {
       throw new ForbiddenException('User not found');
@@ -64,28 +68,44 @@ export class ContactsController {
 
   @Patch(':id')
   async update(
-    @CurrentUser('sub') clerkId: string,
+    @CurrentUser('id') supabaseUserId: string,
     @Param('id') id: string,
     @Body() updateContactDto: any,
   ) {
-    const currentUser = await this.authService.getUserDetails(clerkId);
+    const currentUser =
+      await this.authService.getUserBySupabaseId(supabaseUserId);
 
     if (!currentUser) {
       throw new ForbiddenException('User not found');
     }
 
-    return this.contactsService.update(currentUser.tenantId, id, updateContactDto);
+    return this.contactsService.update(
+      currentUser.tenantId,
+      id,
+      updateContactDto,
+    );
   }
 
   @Delete(':id')
   async remove(
-    @CurrentUser('sub') clerkId: string,
+    @CurrentUser('id') supabaseUserId: string,
     @Param('id') id: string,
   ) {
-    const currentUser = await this.authService.getUserDetails(clerkId);
+    const currentUser =
+      await this.authService.getUserBySupabaseId(supabaseUserId);
 
     if (!currentUser) {
       throw new ForbiddenException('User not found');
+    }
+
+    // Only ADMIN and MANAGER can delete contacts
+    if (
+      currentUser.role !== UserRole.ADMIN &&
+      currentUser.role !== UserRole.MANAGER
+    ) {
+      throw new ForbiddenException(
+        'Only admins and managers can delete contacts',
+      );
     }
 
     return this.contactsService.remove(currentUser.tenantId, id);
