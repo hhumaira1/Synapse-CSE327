@@ -1,21 +1,16 @@
 package com.example.synapse.presentation.auth
 
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -23,21 +18,24 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.synapse.R
 import com.example.synapse.data.auth.AuthState
 
 @Composable
-fun SignInScreen(
-    onNavigateToSignUp: () -> Unit,
-    onSignInSuccess: () -> Unit,
+fun SignUpScreen(
+    onNavigateToSignIn: () -> Unit,
+    onSignUpSuccess: () -> Unit,
     viewModel: AuthViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val activity = context as? android.app.Activity
     
+    var firstName by remember { mutableStateOf("") }
+    var lastName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+    var confirmPasswordVisible by remember { mutableStateOf(false) }
     
     val uiState by viewModel.uiState.collectAsState()
     val authState by viewModel.authState.collectAsState(initial = null)
@@ -46,18 +44,27 @@ fun SignInScreen(
     // Navigate on success
     LaunchedEffect(authState) {
         if (authState is AuthState.Authenticated) {
-            onSignInSuccess()
+            onSignUpSuccess()
         }
     }
     
-    // Show errors
+    // Show errors or success messages
     LaunchedEffect(uiState) {
-        if (uiState is AuthUiState.Error) {
-            snackbarHostState.showSnackbar(
-                message = (uiState as AuthUiState.Error).message,
-                duration = SnackbarDuration.Long
-            )
-            viewModel.resetUiState()
+        when (val state = uiState) {
+            is AuthUiState.Error -> {
+                snackbarHostState.showSnackbar(
+                    message = state.message,
+                    duration = SnackbarDuration.Long
+                )
+                viewModel.resetUiState()
+            }
+            is AuthUiState.Success -> {
+                snackbarHostState.showSnackbar(
+                    message = "Account created successfully!",
+                    duration = SnackbarDuration.Short
+                )
+            }
+            else -> {}
         }
     }
     
@@ -90,7 +97,7 @@ fun SignInScreen(
             Spacer(modifier = Modifier.height(24.dp))
             
             Text(
-                text = "Welcome Back",
+                text = "Create Account",
                 style = MaterialTheme.typography.headlineMedium.copy(
                     fontWeight = FontWeight.Bold
                 ),
@@ -98,7 +105,7 @@ fun SignInScreen(
             )
             
             Text(
-                text = "Sign in to your account",
+                text = "Sign up to get started",
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(top = 8.dp)
@@ -106,14 +113,38 @@ fun SignInScreen(
             
             Spacer(modifier = Modifier.height(32.dp))
             
-            // Email field
+            // First Name
+            OutlinedTextField(
+                value = firstName,
+                onValueChange = { firstName = it },
+                label = { Text("First Name") },
+                leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                enabled = uiState !is AuthUiState.Loading
+            )
+            
+            Spacer(modifier = Modifier.height(16.dp))
+            
+            // Last Name
+            OutlinedTextField(
+                value = lastName,
+                onValueChange = { lastName = it },
+                label = { Text("Last Name") },
+                leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                enabled = uiState !is AuthUiState.Loading
+            )
+            
+            Spacer(modifier = Modifier.height(16.dp))
+            
+            // Email
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
                 label = { Text("Email") },
-                leadingIcon = {
-                    Icon(Icons.Default.Email, contentDescription = null)
-                },
+                leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
@@ -122,19 +153,17 @@ fun SignInScreen(
             
             Spacer(modifier = Modifier.height(16.dp))
             
-            // Password field
+            // Password
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
                 label = { Text("Password") },
-                leadingIcon = {
-                    Icon(Icons.Default.Lock, contentDescription = null)
-                },
+                leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
                 trailingIcon = {
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
                         Icon(
                             imageVector = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                            contentDescription = if (passwordVisible) "Hide password" else "Show password"
+                            contentDescription = null
                         )
                     }
                 },
@@ -145,15 +174,53 @@ fun SignInScreen(
                 enabled = uiState !is AuthUiState.Loading
             )
             
+            Spacer(modifier = Modifier.height(16.dp))
+            
+            // Confirm Password
+            OutlinedTextField(
+                value = confirmPassword,
+                onValueChange = { confirmPassword = it },
+                label = { Text("Confirm Password") },
+                leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
+                trailingIcon = {
+                    IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
+                        Icon(
+                            imageVector = if (confirmPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                            contentDescription = null
+                        )
+                    }
+                },
+                visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                isError = confirmPassword.isNotEmpty() && password != confirmPassword,
+                supportingText = {
+                    if (confirmPassword.isNotEmpty() && password != confirmPassword) {
+                        Text("Passwords don't match", color = MaterialTheme.colorScheme.error)
+                    }
+                },
+                enabled = uiState !is AuthUiState.Loading
+            )
+            
             Spacer(modifier = Modifier.height(24.dp))
             
-            // Sign In button
+            // Sign Up button
             Button(
-                onClick = { viewModel.signInWithEmail(email, password) },
+                onClick = {
+                    if (password == confirmPassword) {
+                        viewModel.signUpWithEmail(email, password, firstName, lastName)
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
-                enabled = uiState !is AuthUiState.Loading && email.isNotBlank() && password.isNotBlank()
+                enabled = uiState !is AuthUiState.Loading && 
+                        firstName.isNotBlank() && 
+                        lastName.isNotBlank() &&
+                        email.isNotBlank() && 
+                        password.isNotBlank() &&
+                        password == confirmPassword
             ) {
                 if (uiState is AuthUiState.Loading) {
                     CircularProgressIndicator(
@@ -161,7 +228,7 @@ fun SignInScreen(
                         color = MaterialTheme.colorScheme.onPrimary
                     )
                 } else {
-                    Text("Sign In", style = MaterialTheme.typography.labelLarge)
+                    Text("Create Account", style = MaterialTheme.typography.labelLarge)
                 }
             }
             
@@ -184,7 +251,7 @@ fun SignInScreen(
             
             Spacer(modifier = Modifier.height(16.dp))
             
-            // Google Sign In button
+            // Google Sign Up button
             OutlinedButton(
                 onClick = { 
                     activity?.let { viewModel.signInWithGoogle(it) }
@@ -196,23 +263,23 @@ fun SignInScreen(
             ) {
                 Text("🔵", style = MaterialTheme.typography.titleMedium)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Sign in with Google", style = MaterialTheme.typography.labelLarge)
+                Text("Sign up with Google", style = MaterialTheme.typography.labelLarge)
             }
             
             Spacer(modifier = Modifier.height(24.dp))
             
-            // Sign Up link
+            // Sign In link
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Don't have an account?",
+                    text = "Already have an account?",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Spacer(modifier = Modifier.width(4.dp))
-                TextButton(onClick = onNavigateToSignUp) {
-                    Text("Sign Up", style = MaterialTheme.typography.labelLarge)
+                TextButton(onClick = onNavigateToSignIn) {
+                    Text("Sign In", style = MaterialTheme.typography.labelLarge)
                 }
             }
         }

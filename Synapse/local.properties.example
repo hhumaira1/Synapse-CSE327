@@ -1,0 +1,14 @@
+# Supabase Configuration
+# Get these from: https://app.supabase.com -> Your Project -> Settings -> API
+supabase.url=https://your-project.supabase.co
+supabase.anonKey=your_anon_key_here
+
+# Backend API (your existing NestJS server)
+# For Android Emulator, use 10.0.2.2 to access localhost
+api.baseUrl=http://10.0.2.2:3001/api/
+# For physical device, replace with your computer's IP:
+# api.baseUrl=http://192.168.1.100:3001/api/
+
+# Google Sign-In (get from Google Cloud Console)
+# https://console.cloud.google.com -> APIs & Services -> Credentials
+google.webClientId=your_google_web_client_id.apps.googleusercontent.com

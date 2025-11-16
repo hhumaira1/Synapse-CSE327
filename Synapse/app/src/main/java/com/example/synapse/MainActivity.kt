@@ -15,6 +15,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.synapse.ui.theme.SynapseTheme
 import com.example.synapse.presentation.contacts.CreateContact
+import com.example.synapse.presentation.auth.SignInScreen
+import com.example.synapse.presentation.auth.SignUpScreen
 //import com.example.synapse.ui.theme.screens.CreateDeal
 import com.example.synapse.presentation.LandingPage
 import com.example.synapse.presentation.dashboard.OwnerDashboard
@@ -52,7 +54,28 @@ fun NavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
         startDestination = "landing",
         modifier = modifier
     ) {
+        // Landing and Auth screens
         composable("landing") { LandingPage(navController) }
+        
+        composable("signin") {
+            SignInScreen(
+                onNavigateToSignUp = { navController.navigate("signup") },
+                onSignInSuccess = { navController.navigate("owner_dashboard") {
+                    popUpTo("landing") { inclusive = true }
+                }}
+            )
+        }
+        
+        composable("signup") {
+            SignUpScreen(
+                onNavigateToSignIn = { navController.navigate("signin") },
+                onSignUpSuccess = { navController.navigate("owner_dashboard") {
+                    popUpTo("landing") { inclusive = true }
+                }}
+            )
+        }
+        
+        // Dashboard screens
         composable("owner_dashboard") {
             OwnerDashboard(
                 isDarkMode = false,
@@ -62,6 +85,8 @@ fun NavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
                 }
             )
         }
+        
+        // Feature screens
         composable("contacts/create") { CreateContact(
             navController,
             onSave = { /* Handle saved contact */ },

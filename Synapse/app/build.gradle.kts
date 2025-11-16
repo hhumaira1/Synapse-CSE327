@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -18,6 +20,19 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        
+        // Read from local.properties (create this file with your keys)
+//        val localProperties = java.util.Properties()
+        val localProperties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            localPropertiesFile.inputStream().use{ localProperties.load(it) }
+        }
+        
+        buildConfigField("String", "SUPABASE_URL", "\"${localProperties.getProperty("supabase.url", "")}\"")
+        buildConfigField("String", "SUPABASE_ANON_KEY", "\"${localProperties.getProperty("supabase.anonKey", "")}\"")
+        buildConfigField("String", "API_BASE_URL", "\"${localProperties.getProperty("api.baseUrl", "http://10.0.2.2:3001/api/")}\"")
+        buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"${localProperties.getProperty("google.webClientId", "")}\"")
     }
 
     buildTypes {
@@ -43,6 +58,14 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
+    
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/INDEX.LIST"
+            excludes += "META-INF/io.netty.versions.properties"
+        }
+    }
 }
 
 dependencies {
@@ -67,6 +90,23 @@ dependencies {
     // Jetpack Compose Navigation
     implementation("androidx.navigation:navigation-compose:2.8.0")
 
+    // Supabase Kotlin SDK
+    implementation("io.github.jan-tennert.supabase:postgrest-kt:2.6.0")
+    implementation("io.github.jan-tennert.supabase:gotrue-kt:2.6.0")
+    implementation("io.github.jan-tennert.supabase:storage-kt:2.6.0")
+//    implementation("io.github.jan-tennert.supabase:compose-auth:2.6.0")
+
+    // Ktor (required by Supabase)
+    implementation("io.ktor:ktor-client-android:2.3.12")
+    implementation("io.ktor:ktor-client-core:2.3.12")
+    implementation("io.ktor:ktor-utils:2.3.12")
+    
+    // Google Sign-In
+    implementation("com.google.android.gms:play-services-auth:21.2.0")
+    implementation("androidx.credentials:credentials:1.3.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+    
     // Network & API
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")

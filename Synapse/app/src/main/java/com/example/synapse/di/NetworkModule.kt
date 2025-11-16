@@ -20,10 +20,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
     
-    // For Android Emulator: 10.0.2.2 maps to host machine's localhost
-    // For physical device: Use your computer's IP address (e.g., "http://192.168.1.100:3001/api/")
-    private const val BASE_URL = "http://10.0.2.2:3001/api/"
-    
     @Provides
     @Singleton
     fun provideAuthInterceptor(@ApplicationContext context: Context): AuthInterceptor {
@@ -54,7 +50,7 @@ object NetworkModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(BuildConfig.API_BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

@@ -132,24 +132,6 @@ fun LandingPage(navController: NavController) {
                 Text(text = "Sign In", fontSize = 18.sp, fontWeight = FontWeight.Medium)
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Continue to Owner Dashboard Button
-            OutlinedButton(
-                onClick = { navController.navigate("owner_dashboard") },
-                colors = ButtonDefaults.outlinedButtonColors(containerColor = Purple1),
-                shape = RoundedCornerShape(10.dp),
-                modifier = Modifier.fillMaxWidth()
-                    .height(55.dp)
-            ) {
-                Text(
-                    text = "Home",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color.White
-                )
-            }
-
 
             Spacer(modifier = Modifier.height(100.dp))
             // Version info at bottom
