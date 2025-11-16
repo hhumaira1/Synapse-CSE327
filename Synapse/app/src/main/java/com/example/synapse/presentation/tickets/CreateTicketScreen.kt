@@ -5,6 +5,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -32,8 +33,10 @@ fun CreateTicketScreen(
     var source by remember { mutableStateOf(TicketSource.INTERNAL) }
     var selectedContact by remember { mutableStateOf<Contact?>(null) }
     var showContactPicker by remember { mutableStateOf(false) }
+    var showNoContactsDialog by remember { mutableStateOf(false) }
     
     val maxDescriptionLength = 500
+    val minDescriptionLength = 10
     
     LaunchedEffect(Unit) {
         contactViewModel.loadContacts()
@@ -70,7 +73,10 @@ fun CreateTicketScreen(
                 label = { Text("Title *") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
-                isError = title.isBlank()
+                isError = title.length < 5,
+                supportingText = if (title.isNotEmpty() && title.length < 5) {
+                    { Text("Title must be at least 5 characters", color = MaterialTheme.colorScheme.error) }
+                } else null
             )
             
             // Description Field
@@ -81,16 +87,24 @@ fun CreateTicketScreen(
                         description = it
                     }
                 },
-                label = { Text("Description *") },
+                label = { Text("Description (Optional)") },
+                placeholder = { Text("Minimum 10 characters if provided") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp),
                 maxLines = 10,
-                isError = description.isBlank(),
+                isError = description.isNotEmpty() && description.length < minDescriptionLength,
                 supportingText = {
+                    val text = if (description.isNotEmpty() && description.length < minDescriptionLength) {
+                        "Description must be at least $minDescriptionLength characters (${description.length}/$minDescriptionLength)"
+                    } else {
+                        "${description.length}/$maxDescriptionLength"
+                    }
                     Text(
-                        text = "${description.length}/$maxDescriptionLength",
-                        color = if (description.length >= maxDescriptionLength) {
+                        text = text,
+                        color = if (description.isNotEmpty() && description.length < minDescriptionLength) {
+                            MaterialTheme.colorScheme.error
+                        } else if (description.length >= maxDescriptionLength) {
                             MaterialTheme.colorScheme.error
                         } else {
                             MaterialTheme.colorScheme.onSurfaceVariant
@@ -151,15 +165,41 @@ fun CreateTicketScreen(
                 }
             }
             
-            // Contact Selector
-            OutlinedButton(
-                onClick = { showContactPicker = true },
-                modifier = Modifier.fillMaxWidth()
-            ) {
+            // Contact Selector (Required)
+            Column {
                 Text(
-                    text = selectedContact?.fullName ?: "Select Contact (Optional)",
-                    style = MaterialTheme.typography.bodyMedium
+                    text = "Contact *",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedButton(
+                    onClick = { 
+                        if (contactsState.contacts.isEmpty() && !contactsState.isLoading) {
+                            showNoContactsDialog = true
+                        } else {
+                            showContactPicker = true
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = if (selectedContact == null) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.surface
+                    )
+                ) {
+                    Text(
+                        text = selectedContact?.fullName ?: "Select Contact (Required)",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = if (selectedContact == null) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
+                    )
+                }
+                if (selectedContact == null) {
+                    Text(
+                        text = "Please select a contact to create a ticket",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+                    )
+                }
             }
             
             // Error Message
@@ -180,14 +220,18 @@ fun CreateTicketScreen(
             // Submit Button
             Button(
                 onClick = {
-                    if (title.isNotBlank() && description.isNotBlank()) {
+                    val isValid = title.length >= 5 && 
+                                  selectedContact != null &&
+                                  (description.isEmpty() || description.length >= minDescriptionLength)
+                    
+                    if (isValid) {
                         viewModel.createTicket(
                             CreateTicketRequest(
                                 title = title,
-                                description = description,
+                                description = description.ifEmpty { null },
                                 priority = priority.name,
                                 source = source.name,
-                                contactId = selectedContact?.id,
+                                contactId = selectedContact?.id ?: "",
                                 dealId = null
                             ),
                             onSuccess = onNavigateBack
@@ -195,7 +239,10 @@ fun CreateTicketScreen(
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
-                enabled = !uiState.isLoading && title.isNotBlank() && description.isNotBlank()
+                enabled = !uiState.isLoading && 
+                          title.length >= 5 && 
+                          selectedContact != null &&
+                          (description.isEmpty() || description.length >= minDescriptionLength)
             ) {
                 if (uiState.isLoading) {
                     CircularProgressIndicator(
@@ -207,6 +254,41 @@ fun CreateTicketScreen(
                 }
             }
         }
+    }
+    
+    // No Contacts Dialog
+    if (showNoContactsDialog) {
+        AlertDialog(
+            onDismissRequest = { showNoContactsDialog = false },
+            icon = {
+                Icon(
+                    Icons.Default.Person,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            },
+            title = { Text("No Contacts Available") },
+            text = { 
+                Text("You need to create at least one contact before creating a ticket. Would you like to create a contact now?") 
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showNoContactsDialog = false
+                        onNavigateBack()
+                        // TODO: Navigate to create contact screen
+                        // For now, just close and let user navigate manually
+                    }
+                ) {
+                    Text("Create Contact")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showNoContactsDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
     }
     
     // Contact Picker Dialog

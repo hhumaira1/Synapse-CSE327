@@ -29,7 +29,7 @@ import com.example.synapse.data.auth.AuthState
 @Composable
 fun SignInScreen(
     onNavigateToSignUp: () -> Unit,
-    onSignInSuccess: () -> Unit,
+    onSignInSuccess: (needsOnboarding: Boolean) -> Unit,
     viewModel: AuthViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
@@ -44,9 +44,10 @@ fun SignInScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     
     // Navigate on success
-    LaunchedEffect(authState) {
-        if (authState is AuthState.Authenticated) {
-            onSignInSuccess()
+    LaunchedEffect(uiState) {
+        if (uiState is AuthUiState.Success) {
+            val needsOnboarding = (uiState as AuthUiState.Success).needsOnboarding
+            onSignInSuccess(needsOnboarding)
         }
     }
     

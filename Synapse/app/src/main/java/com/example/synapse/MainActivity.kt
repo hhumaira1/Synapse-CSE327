@@ -15,9 +15,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.synapse.ui.theme.SynapseTheme
 import com.example.synapse.presentation.contacts.CreateContact
+import com.example.synapse.presentation.contacts.ContactsScreen
+import com.example.synapse.presentation.contacts.ContactDetailScreen
 import com.example.synapse.presentation.auth.SignInScreen
 import com.example.synapse.presentation.auth.SignUpScreen
-//import com.example.synapse.ui.theme.screens.CreateDeal
+import com.example.synapse.presentation.onboarding.OnboardingScreen
+import com.example.synapse.presentation.tickets.TicketsScreen
+import com.example.synapse.presentation.tickets.CreateTicketScreen
 import com.example.synapse.presentation.LandingPage
 import com.example.synapse.presentation.dashboard.OwnerDashboard
 import dagger.hilt.android.AndroidEntryPoint
@@ -60,23 +64,44 @@ fun NavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
         composable("signin") {
             SignInScreen(
                 onNavigateToSignUp = { navController.navigate("signup") },
-                onSignInSuccess = { navController.navigate("owner_dashboard") {
-                    popUpTo("landing") { inclusive = true }
-                }}
+                onSignInSuccess = { needsOnboarding ->
+                    if (needsOnboarding) {
+                        navController.navigate("onboard") {
+                            popUpTo("landing") { inclusive = true }
+                        }
+                    } else {
+                        navController.navigate("owner_dashboard") {
+                            popUpTo("landing") { inclusive = true }
+                        }
+                    }
+                }
             )
         }
         
         composable("signup") {
             SignUpScreen(
                 onNavigateToSignIn = { navController.navigate("signin") },
-                onSignUpSuccess = { navController.navigate("owner_dashboard") {
+                onSignUpSuccess = { navController.navigate("onboard") {
                     popUpTo("landing") { inclusive = true }
                 }}
             )
         }
         
+        // Onboarding screen
+        composable("onboard") {
+            OnboardingScreen(
+                onOnboardingComplete = { 
+                    navController.navigate("owner_dashboard") {
+                        popUpTo("onboard") { inclusive = true }
+                    }
+                }
+            )
+        }
+        
         // Dashboard screens
-        composable("owner_dashboard") {
+        composable(
+            route = "owner_dashboard",
+        ) {
             OwnerDashboard(
                 isDarkMode = false,
                 navController = navController,
@@ -86,13 +111,94 @@ fun NavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
             )
         }
         
-        // Feature screens
-        composable("contacts/create") { CreateContact(
-            navController,
-            onSave = { /* Handle saved contact */ },
-            onBack = { navController.popBackStack() }
-        ) }
-        //composable("deals/create") { CreateDeal(navController) }
+        // Contacts screens
+        composable("contacts") {
+            ContactsScreen(
+                onContactClick = { contactId ->
+                    navController.navigate("contacts/$contactId")
+                },
+                onCreateContact = {
+                    navController.navigate("contacts/create")
+                }
+            )
+        }
+        
+        composable("contacts/{contactId}") { backStackEntry ->
+            val contactId = backStackEntry.arguments?.getString("contactId") ?: return@composable
+            ContactDetailScreen(
+                contactId = contactId,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+        
+        composable("contacts/create") { 
+            CreateContact(
+                navController,
+                onSave = { navController.popBackStack() },
+                onBack = { navController.popBackStack() }
+            ) 
+        }
+        
+        // Tickets screens
+        composable("tickets") {
+            TicketsScreen(
+                onTicketClick = { ticketId ->
+                    // TODO: Navigate to ticket details
+                    // navController.navigate("tickets/$ticketId")
+                },
+                onCreateTicket = {
+                    navController.navigate("tickets/create")
+                }
+            )
+        }
+        
+        composable("tickets/create") {
+            CreateTicketScreen(
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+        
+        // Deals screens - placeholder until DealsScreen is created
+        composable("deals") {
+            OwnerDashboard(
+                isDarkMode = false,
+                navController = navController,
+                onBack = { navController.popBackStack() }
+            )
+        }
+        
+        // Other feature placeholders
+        composable("leads") {
+            OwnerDashboard(
+                isDarkMode = false,
+                navController = navController,
+                onBack = { navController.popBackStack() }
+            )
+        }
+        
+        composable("pipelines") {
+            OwnerDashboard(
+                isDarkMode = false,
+                navController = navController,
+                onBack = { navController.popBackStack() }
+            )
+        }
+        
+        composable("analytics") {
+            OwnerDashboard(
+                isDarkMode = false,
+                navController = navController,
+                onBack = { navController.popBackStack() }
+            )
+        }
+        
+        composable("settings") {
+            OwnerDashboard(
+                isDarkMode = false,
+                navController = navController,
+                onBack = { navController.popBackStack() }
+            )
+        }
     }
 }
 

@@ -1,13 +1,16 @@
 package com.example.synapse.data.api.request
 
+import com.google.gson.annotations.SerializedName
+
 data class OnboardRequest(
+    @SerializedName("tenantName")
     val workspaceName: String,
     val workspaceType: String
 )
 
 data class CreateContactRequest(
     val firstName: String,
-    val lastName: String,
+    val lastName: String?,
     val email: String?,
     val phone: String?,
     val company: String?,
@@ -100,10 +103,10 @@ data class UpdateDealRequest(
 
 data class CreateTicketRequest(
     val title: String,
-    val description: String,
+    val description: String?,
     val priority: String,
     val source: String,
-    val contactId: String?,
+    val contactId: String,
     val dealId: String?
 )
 

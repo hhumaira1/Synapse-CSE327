@@ -29,6 +29,11 @@ fun ContactsScreen(
     val uiState by viewModel.uiState.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
     
+    // Reload contacts when screen is displayed
+    LaunchedEffect(Unit) {
+        viewModel.loadContacts()
+    }
+    
     Scaffold(
         topBar = {
             TopAppBar(

@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.synapse.BuildConfig
 import com.example.synapse.data.api.ApiService
 import com.example.synapse.data.api.AuthInterceptor
+import com.example.synapse.data.preferences.PreferencesManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,8 +23,8 @@ object NetworkModule {
     
     @Provides
     @Singleton
-    fun provideAuthInterceptor(@ApplicationContext context: Context): AuthInterceptor {
-        return AuthInterceptor(context)
+    fun provideAuthInterceptor(preferencesManager: PreferencesManager): AuthInterceptor {
+        return AuthInterceptor(preferencesManager)
     }
     
     @Provides

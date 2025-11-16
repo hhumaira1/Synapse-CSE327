@@ -30,3 +30,46 @@ data class Interaction(
     val dealId: String?,
     val createdAt: String
 )
+
+data class UserTenantInfo(
+    val role: String,
+    val tenant: TenantBasic
+)
+
+data class TenantBasic(
+    val id: String,
+    val name: String,
+    val type: String,
+    val createdAt: String
+)
+
+data class PortalAccessResponse(
+    val id: String,
+    val isActive: Boolean,
+    val tenant: TenantBasic,
+    val contact: ContactBasic
+)
+
+data class ContactBasic(
+    val id: String,
+    val firstName: String,
+    val lastName: String,
+    val email: String?
+)
+
+data class AcceptInviteResponse(
+    val message: String,
+    val user: User
+)
+
+data class PortalInvitationDetails(
+    val id: String,
+    val isActive: Boolean,
+    val contact: ContactBasic,
+    val tenant: TenantBasic
+)
+
+data class PortalLinkResponse(
+    val message: String,
+    val portalAccess: PortalAccessResponse
+)

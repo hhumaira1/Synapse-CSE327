@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.synapse.data.auth.AuthRepository
 import com.example.synapse.data.auth.AuthState
 import com.example.synapse.data.auth.GoogleSignInManager
+import com.example.synapse.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +16,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    private val googleSignInManager: GoogleSignInManager
+    private val googleSignInManager: GoogleSignInManager,
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<AuthUiState>(AuthUiState.Idle)
@@ -28,7 +30,9 @@ class AuthViewModel @Inject constructor(
             _uiState.value = AuthUiState.Loading
             authRepository.signInWithEmail(email, password)
                 .onSuccess {
-                    _uiState.value = AuthUiState.Success
+                    // Check if user needs onboarding
+                    val needsOnboarding = userRepository.needsOnboarding()
+                    _uiState.value = AuthUiState.Success(needsOnboarding = needsOnboarding)
                 }
                 .onFailure { error ->
                     _uiState.value = AuthUiState.Error(error.message ?: "Sign in failed")
@@ -41,7 +45,7 @@ class AuthViewModel @Inject constructor(
             _uiState.value = AuthUiState.Loading
             authRepository.signUpWithEmail(email, password, firstName, lastName)
                 .onSuccess {
-                    _uiState.value = AuthUiState.Success
+                    _uiState.value = AuthUiState.Success()
                 }
                 .onFailure { error ->
                     _uiState.value = AuthUiState.Error(error.message ?: "Sign up failed")
@@ -57,7 +61,9 @@ class AuthViewModel @Inject constructor(
                     // Now use the idToken to sign in with Supabase
                     authRepository.signInWithGoogle(idToken)
                         .onSuccess {
-                            _uiState.value = AuthUiState.Success
+                            // Check if user needs onboarding
+                            val needsOnboarding = userRepository.needsOnboarding()
+                            _uiState.value = AuthUiState.Success(needsOnboarding = needsOnboarding)
                         }
                         .onFailure { error ->
                             _uiState.value = AuthUiState.Error(error.message ?: "Google sign in failed")
@@ -77,6 +83,6 @@ class AuthViewModel @Inject constructor(
 sealed class AuthUiState {
     object Idle : AuthUiState()
     object Loading : AuthUiState()
-    object Success : AuthUiState()
+    data class Success(val needsOnboarding: Boolean = false) : AuthUiState()
     data class Error(val message: String) : AuthUiState()
 }

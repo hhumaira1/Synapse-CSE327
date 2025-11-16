@@ -15,6 +15,23 @@ interface ApiService {
     @GET("auth/me")
     suspend fun getCurrentUser(): Response<User>
     
+    // ========== Users & Workspaces ==========
+    @GET("users/my-tenants")
+    suspend fun getMyTenants(): Response<List<UserTenantInfo>>
+    
+    @POST("users/accept-invite/{token}")
+    suspend fun acceptTeamInvite(@Path("token") token: String): Response<AcceptInviteResponse>
+    
+    // ========== Portal Customer ==========
+    @GET("portal/customers/my-access")
+    suspend fun getMyPortalAccess(): Response<List<PortalAccessResponse>>
+    
+    @GET("portal/customers/invitation/{accessToken}")
+    suspend fun getPortalInvitation(@Path("accessToken") accessToken: String): Response<PortalInvitationDetails>
+    
+    @POST("portal/customers/link/{accessToken}")
+    suspend fun linkPortalCustomer(@Path("accessToken") accessToken: String): Response<PortalLinkResponse>
+    
     // ========== Contacts ==========
     @GET("contacts")
     suspend fun getContacts(

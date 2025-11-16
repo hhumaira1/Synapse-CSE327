@@ -23,8 +23,8 @@ import androidx.navigation.NavHostController
 import com.example.synapse.ui.theme.*
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import kotlinx.coroutines.delay
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.hilt.navigation.compose.hiltViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,22 +32,20 @@ import androidx.compose.material3.ExtendedFloatingActionButton
 fun OwnerDashboard(
     isDarkMode: Boolean = false,
     navController: NavHostController,
-    onBack: (() -> Unit)? = null
+    onBack: (() -> Unit)? = null,
+    viewModel: DashboardViewModel = hiltViewModel()
 ) {
-    var isRefreshing by remember { mutableStateOf(false) }
+    val uiState by viewModel.uiState.collectAsState()
     var showQuickActions by remember { mutableStateOf(false) }
+
+    // Reload dashboard data whenever this screen is displayed
+    LaunchedEffect(Unit) {
+        viewModel.loadDashboardStats()
+    }
 
     // Handle back button press
     BackHandler(enabled = true) {
         onBack?.invoke()
-    }
-
-    // Mock data refresh
-    LaunchedEffect(isRefreshing) {
-        if (isRefreshing) {
-            delay(1500)
-            isRefreshing = false
-        }
     }
     QuickActionsSpeedDials (
         expanded = showQuickActions,
@@ -77,8 +75,8 @@ fun OwnerDashboard(
         }
     ) { paddingValues ->
         SwipeRefresh(
-            state = rememberSwipeRefreshState(isRefreshing),
-            onRefresh = { isRefreshing = true }
+            state = rememberSwipeRefreshState(uiState.isLoading),
+            onRefresh = { viewModel.refresh() }
         ) {
             LazyColumn(
                 modifier = Modifier
@@ -88,9 +86,40 @@ fun OwnerDashboard(
                 verticalArrangement = Arrangement.spacedBy(20.dp),
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp)
             ) {
-                // Overview Section (Always Visible - Database Ready)
+                // Show error if any
+                uiState.error?.let { error ->
+                    item {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.errorContainer
+                            )
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    Icons.Default.Error,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.error
+                                )
+                                Text(
+                                    text = error,
+                                    color = MaterialTheme.colorScheme.error,
+                                    fontSize = 14.sp
+                                )
+                            }
+                        }
+                    }
+                }
+
+                // Overview Section with real data
                 item {
-                    OverviewSection()
+                    OverviewSection(stats = uiState.stats)
                 }
 
                 // Bottom padding
@@ -158,7 +187,7 @@ fun OwnerDashboardTopBar(
 }
 
 @Composable
-fun OverviewSection() {
+fun OverviewSection(stats: com.example.synapse.data.model.DashboardStats?) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
@@ -193,17 +222,25 @@ fun OverviewSection() {
                     fontWeight = FontWeight.Bold,
                     color = Purple1
                 )
-                Icon(
-                    Icons.Default.Refresh,
-                    contentDescription = "Refresh",
-                    tint = Purple1,
-                    modifier = Modifier.size(24.dp)
-                )
+                if (stats != null) {
+                    Icon(
+                        Icons.Default.CheckCircle,
+                        contentDescription = "Connected",
+                        tint = Color(0xFF4CAF50),
+                        modifier = Modifier.size(24.dp)
+                    )
+                } else {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        color = Purple1,
+                        strokeWidth = 2.dp
+                    )
+                }
             }
 
             Divider(color = Purple1.copy(alpha = 0.2f), thickness = 1.dp)
 
-            // Database-Ready Metrics Grid
+            // Real Data Metrics Grid
             Column(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
@@ -213,14 +250,14 @@ fun OverviewSection() {
                 ) {
                     OverviewMetricCard(
                         title = "Total Deals",
-                        value = "0", // TODO: Connect to database
+                        value = stats?.totalDeals?.toString() ?: "-",
                         icon = Icons.Default.Business,
                         color = Purple1,
                         modifier = Modifier.weight(1f)
                     )
                     OverviewMetricCard(
-                        title = "Total Profit",
-                        value = "$0", // TODO: Connect to database
+                        title = "Pipeline Value",
+                        value = stats?.let { "$${String.format("%.0f", it.totalPipelineValue)}" } ?: "-",
                         icon = Icons.Default.AttachMoney,
                         color = Purple2,
                         modifier = Modifier.weight(1f)
@@ -233,14 +270,14 @@ fun OverviewSection() {
                 ) {
                     OverviewMetricCard(
                         title = "Contacts",
-                        value = "0", // TODO: Connect to database
+                        value = stats?.totalContacts?.toString() ?: "-",
                         icon = Icons.Default.Contacts,
                         color = Purple5,
                         modifier = Modifier.weight(1f)
                     )
                     OverviewMetricCard(
                         title = "Active Leads",
-                        value = "0", // TODO: Connect to database
+                        value = stats?.totalLeads?.toString() ?: "-",
                         icon = Icons.AutoMirrored.Filled.TrendingUp,
                         color = DarkBlue2,
                         modifier = Modifier.weight(1f)
@@ -253,15 +290,15 @@ fun OverviewSection() {
                 ) {
                     OverviewMetricCard(
                         title = "Open Tickets",
-                        value = "0", // TODO: Connect to database
+                        value = stats?.openTickets?.toString() ?: "-",
                         icon = Icons.Default.ConfirmationNumber,
                         color = Purple3,
                         modifier = Modifier.weight(1f)
                     )
                     OverviewMetricCard(
-                        title = "Pipelines",
-                        value = "0", // TODO: Connect to database
-                        icon = Icons.Default.Leaderboard,
+                        title = "In Progress",
+                        value = stats?.inProgressTickets?.toString() ?: "-",
+                        icon = Icons.Default.PendingActions,
                         color = Purple6,
                         modifier = Modifier.weight(1f)
                     )
@@ -272,15 +309,15 @@ fun OverviewSection() {
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     OverviewMetricCard(
-                        title = "Revenue (MTD)",
-                        value = "$0", // TODO: Connect to database
-                        icon = Icons.Default.AccountBalance,
+                        title = "Total Tickets",
+                        value = stats?.totalTickets?.toString() ?: "-",
+                        icon = Icons.Default.ConfirmationNumber,
                         color = DarkBlue1,
                         modifier = Modifier.weight(1f)
                     )
                     OverviewMetricCard(
-                        title = "Conversion Rate",
-                        value = "0%", // TODO: Connect to database
+                        title = "All Records",
+                        value = stats?.let { "${it.totalContacts + it.totalLeads + it.totalDeals}" } ?: "-",
                         icon = Icons.Default.Assessment,
                         color = Purple1,
                         modifier = Modifier.weight(1f)
@@ -288,10 +325,13 @@ fun OverviewSection() {
                 }
             }
 
-            // Database Connection Notice
+            // Status Notice
             Card(
                 colors = CardDefaults.cardColors(
-                    containerColor = Purple1.copy(alpha = 0.1f)
+                    containerColor = if (stats != null) 
+                        Color(0xFF4CAF50).copy(alpha = 0.1f) 
+                    else 
+                        Purple1.copy(alpha = 0.1f)
                 ),
                 shape = RoundedCornerShape(8.dp)
             ) {
@@ -303,15 +343,18 @@ fun OverviewSection() {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        Icons.Default.Info,
+                        if (stats != null) Icons.Default.CheckCircle else Icons.Default.Info,
                         contentDescription = null,
-                        tint = Purple1,
+                        tint = if (stats != null) Color(0xFF4CAF50) else Purple1,
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        text = "Database connection pending. Metrics will update automatically once connected.",
+                        text = if (stats != null) 
+                            "Connected to backend. All metrics are live." 
+                        else 
+                            "Loading dashboard data...",
                         fontSize = 11.sp,
-                        color = Purple1,
+                        color = if (stats != null) Color(0xFF4CAF50) else Purple1,
                         lineHeight = 14.sp
                     )
                 }

@@ -182,10 +182,10 @@ export class AuthController {
   @UseGuards(SupabaseAuthGuard)
   async onboard(
     @CurrentUser() user: any,
-    @Body() body: { tenantName: string },
+    @Body() body: { tenantName: string; workspaceType?: string },
   ) {
     try {
-      const { tenantName } = body;
+      const { tenantName, workspaceType } = body;
 
       if (!tenantName || !tenantName.trim()) {
         throw new HttpException(
@@ -218,7 +218,7 @@ export class AuthController {
         firstName,
         lastName,
         tenantName,
-        'business',
+        workspaceType || 'business',
       );
 
       return {

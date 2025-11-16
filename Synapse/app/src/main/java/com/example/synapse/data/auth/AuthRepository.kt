@@ -1,6 +1,8 @@
 package com.example.synapse.data.auth
 
 import android.util.Log
+import com.example.synapse.data.api.ApiService
+import com.example.synapse.data.api.request.OnboardRequest
 import com.example.synapse.data.preferences.PreferencesManager
 import io.github.jan.supabase.gotrue.providers.builtin.Email
 import io.github.jan.supabase.gotrue.user.UserInfo
@@ -19,7 +21,8 @@ import kotlinx.serialization.json.put
 @Singleton
 class AuthRepository @Inject constructor(
     private val supabaseManager: SupabaseManager,
-    private val preferencesManager: PreferencesManager
+    private val preferencesManager: PreferencesManager,
+    private val apiService: ApiService
 ) {
     private val _authState = MutableStateFlow<AuthState>(AuthState.Loading)
     val authState: Flow<AuthState> = _authState.asStateFlow()
@@ -41,6 +44,7 @@ class AuthRepository @Inject constructor(
 
     suspend fun signInWithEmail(email: String, password: String): Result<UserSession> {
         return try {
+            // Step 1: Authenticate with Supabase
             auth.signInWith(Email) {
                 this.email = email
                 this.password = password
@@ -48,6 +52,20 @@ class AuthRepository @Inject constructor(
 
             val session = auth.currentSessionOrNull()
             if (session != null) {
+                // Step 2: Get user from backend database
+                try {
+                    val backendUser = apiService.getCurrentUser()
+                    if (backendUser.isSuccessful && backendUser.body() != null) {
+                        // User exists in backend, save full user data
+                        val user = backendUser.body()!!
+                        preferencesManager.saveTenantId(user.tenantId)
+                        preferencesManager.saveUserRole(user.role.name)
+                        Log.d("AuthRepository", "User loaded from backend: ${user.id}")
+                    }
+                } catch (e: Exception) {
+                    Log.w("AuthRepository", "User not in backend database yet - may need onboarding", e)
+                }
+
                 _authState.value = AuthState.Authenticated(session)
                 saveUserSession(session)
                 Result.success(session)
@@ -68,6 +86,8 @@ class AuthRepository @Inject constructor(
         lastName: String
     ): Result<UserSession> {
         return try {
+            // Step 1: Create user in Supabase Auth only
+            // User will be onboarded separately via OnboardingScreen
             auth.signUpWith(Email) {
                 this.email = email
                 this.password = password
@@ -81,6 +101,7 @@ class AuthRepository @Inject constructor(
             if (session != null) {
                 _authState.value = AuthState.Authenticated(session)
                 saveUserSession(session)
+                Log.d("AuthRepository", "User signed up successfully in Supabase")
                 Result.success(session)
             } else {
                 Result.failure(Exception("Sign up successful. Please check your email to verify your account."))
@@ -94,7 +115,7 @@ class AuthRepository @Inject constructor(
 
     suspend fun signInWithGoogle(idToken: String): Result<UserSession> {
         return try {
-            // Use Supabase REST API to authenticate with ID token
+            // Step 1: Authenticate with Supabase using Google ID token
             val url = "${supabaseManager.supabase.supabaseUrl}/auth/v1/token?grant_type=id_token"
 
             val response: HttpResponse = supabaseManager.supabase.httpClient.post(url) {
@@ -109,6 +130,23 @@ class AuthRepository @Inject constructor(
             // Get the session
             val session = auth.currentSessionOrNull()
             if (session != null) {
+                // Step 2: Check if user exists in backend
+                try {
+                    val backendUser = apiService.getCurrentUser()
+                    if (backendUser.isSuccessful && backendUser.body() != null) {
+                        // User exists in backend
+                        val user = backendUser.body()!!
+                        preferencesManager.saveTenantId(user.tenantId)
+                        preferencesManager.saveUserRole(user.role.name)
+                        Log.d("AuthRepository", "Existing user signed in with Google")
+                    } else {
+                        // User doesn't exist in backend - will need onboarding
+                        Log.d("AuthRepository", "New Google user - needs onboarding")
+                    }
+                } catch (e: Exception) {
+                    Log.w("AuthRepository", "Failed to check backend user", e)
+                }
+
                 _authState.value = AuthState.Authenticated(session)
                 saveUserSession(session)
                 Result.success(session)

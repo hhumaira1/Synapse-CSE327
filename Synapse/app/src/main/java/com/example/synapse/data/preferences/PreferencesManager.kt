@@ -13,7 +13,8 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "auth_prefs")
+// Singleton DataStore instance - shared across app
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "auth_prefs")
 
 @Singleton
 class PreferencesManager @Inject constructor(
