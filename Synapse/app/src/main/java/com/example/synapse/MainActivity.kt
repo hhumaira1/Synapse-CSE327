@@ -24,6 +24,8 @@ import com.example.synapse.presentation.tickets.TicketsScreen
 import com.example.synapse.presentation.tickets.CreateTicketScreen
 import com.example.synapse.presentation.LandingPage
 import com.example.synapse.presentation.dashboard.OwnerDashboard
+import com.example.synapse.presentation.pipelines.PipelinesScreen
+import com.example.synapse.presentation.leads.LeadsScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -167,19 +169,19 @@ fun NavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
             )
         }
         
-        // Other feature placeholders
-        composable("leads") {
-            OwnerDashboard(
-                isDarkMode = false,
+        // Pipelines and Leads screens
+        composable("pipelines") {
+            PipelinesScreen(
                 navController = navController,
+                isDarkMode = false,
                 onBack = { navController.popBackStack() }
             )
         }
         
-        composable("pipelines") {
-            OwnerDashboard(
-                isDarkMode = false,
+        composable("leads") {
+            LeadsScreen(
                 navController = navController,
+                isDarkMode = false,
                 onBack = { navController.popBackStack() }
             )
         }

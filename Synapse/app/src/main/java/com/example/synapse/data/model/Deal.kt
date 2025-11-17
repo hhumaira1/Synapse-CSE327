@@ -19,17 +19,17 @@ data class Deal(
     val updatedAt: String
 )
 
-data class Pipeline(
-    val id: String,
-    val name: String,
-    val description: String?,
-    val stages: List<Stage>?,
-    val createdAt: String
-)
-
-data class Stage(
-    val id: String,
-    val name: String,
-    val order: Int,
-    val pipelineId: String
-)
+//data class Pipeline(
+//    val id: String,
+//    val name: String,
+//    val description: String?,
+//    val stages: List<Stage>?,
+//    val createdAt: String
+//)
+//
+//data class Stage(
+//    val id: String,
+//    val name: String,
+//    val order: Int,
+//    val pipelineId: String
+//)

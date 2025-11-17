@@ -98,6 +98,27 @@ interface ApiService {
     @DELETE("pipelines/{id}")
     suspend fun deletePipeline(@Path("id") id: String): Response<Unit>
     
+    // ========== Stages ==========
+    @GET("stages")
+    suspend fun getStages(
+        @Query("pipelineId") pipelineId: String? = null
+    ): Response<List<Stage>>
+    
+    @GET("stages/{id}")
+    suspend fun getStageById(@Path("id") id: String): Response<Stage>
+    
+    @POST("stages")
+    suspend fun createStage(@Body request: CreateStageRequest): Response<Stage>
+    
+    @PATCH("stages/{id}")
+    suspend fun updateStage(
+        @Path("id") id: String,
+        @Body request: UpdateStageRequest
+    ): Response<Stage>
+    
+    @DELETE("stages/{id}")
+    suspend fun deleteStage(@Path("id") id: String): Response<Unit>
+    
     // ========== Deals ==========
     @GET("deals")
     suspend fun getDeals(

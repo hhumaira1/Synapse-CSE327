@@ -145,4 +145,6 @@ dependencies {
     // Material Icons Extended
     implementation("androidx.compose.material:material-icons-extended")
 
+    implementation("androidx.core:core-ktx:1.17.0")
+
 }

@@ -41,31 +41,32 @@ data class UpdateContactRequest(
 )
 
 data class CreateLeadRequest(
-    val title: String,
     val contactId: String,
+    val title: String,
+    val source: String,
     val value: Double?,
-    val status: String,
-    val source: String?,
-    val notes: String?
+    val notes: String?,
+    val status: String?
 )
 
 data class UpdateLeadRequest(
-    val title: String?,
     val contactId: String?,
-    val value: Double?,
-    val status: String?,
+    val title: String?,
     val source: String?,
-    val notes: String?
+    val value: Double?,
+    val notes: String?,
+    val status: String?
 )
 
 data class CreatePipelineRequest(
     val name: String,
-    val stages: List<CreateStageRequest>
+    val description: String?
 )
 
 data class CreateStageRequest(
     val name: String,
-    val order: Int
+    val pipelineId: String,
+    val order: Int?
 )
 
 data class UpdatePipelineRequest(
@@ -74,9 +75,9 @@ data class UpdatePipelineRequest(
 )
 
 data class UpdateStageRequest(
-    val id: String?,
-    val name: String,
-    val order: Int
+    val name: String?,
+    val order: Int?,
+    val color: String?
 )
 
 data class CreateDealRequest(
