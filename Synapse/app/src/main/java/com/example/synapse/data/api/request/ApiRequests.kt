@@ -58,6 +58,13 @@ data class UpdateLeadRequest(
     val status: String?
 )
 
+data class ConvertLeadRequest(
+    val pipelineId: String,
+    val stageId: String,
+    val probability: Int? = null,
+    val expectedCloseDate: String? = null
+)
+
 data class CreatePipelineRequest(
     val name: String,
     val description: String?
@@ -100,6 +107,10 @@ data class UpdateDealRequest(
     val expectedCloseDate: String?,
     val notes: String?,
     val status: String?
+)
+
+data class MoveStageRequest(
+    val stageId: String
 )
 
 data class CreateTicketRequest(

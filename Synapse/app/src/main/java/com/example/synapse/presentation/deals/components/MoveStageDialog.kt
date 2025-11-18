@@ -1,4 +1,4 @@
-package com.example.synapse.presentation.leads.components
+package com.example.synapse.presentation.deals.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -8,30 +8,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.example.synapse.data.model.Lead
-import com.example.synapse.data.model.Stage
 import androidx.core.graphics.toColorInt
 import android.graphics.Color as PlatformColor
-
+import com.example.synapse.data.model.Deal
+import com.example.synapse.data.model.Stage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MoveStageDialog(
-    lead: Lead,
+    deal: Deal,
     stages: List<Stage>,
     isMoving: Boolean,
     onDismiss: () -> Unit,
     onConfirm: (stageId: String) -> Unit
 ) {
-    var selectedStageId by remember { mutableStateOf(lead.stageId) }
+    var selectedStageId by remember { mutableStateOf(deal.stageId) }
     var stageExpanded by remember { mutableStateOf(false) }
     var stageError by remember { mutableStateOf(false) }
     
-    // Group stages by pipeline for better UX
-    val groupedStages = stages.groupBy { it.pipelineId }
-    val sortedStages = stages.sortedWith(
-        compareBy<Stage> { it.pipelineId }.thenBy { it.order }
-    )
+    // Sort stages by order
+    val sortedStages = stages.sortedBy { it.order }
     
     Dialog(onDismissRequest = onDismiss) {
         Card(
@@ -46,14 +42,14 @@ fun MoveStageDialog(
                     .padding(24.dp)
             ) {
                 Text(
-                    text = "Move Lead to Stage",
+                    text = "Move Deal to Stage",
                     style = MaterialTheme.typography.headlineSmall
                 )
                 
                 Spacer(modifier = Modifier.height(8.dp))
                 
                 Text(
-                    text = "${lead.firstName} ${lead.lastName}",
+                    text = deal.title,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
@@ -62,49 +58,39 @@ fun MoveStageDialog(
                 Spacer(modifier = Modifier.height(16.dp))
                 
                 // Current Stage Info
-                if (lead.stage != null) {
-                    Card(
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    )
+                ) {
+                    Column(modifier = Modifier.padding(12.dp)) {
+                        Text(
+                            text = "Current Stage",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                    ) {
-                        Column(modifier = Modifier.padding(12.dp)) {
-                            Text(
-                                text = "Current Stage",
-                                style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                            Spacer(modifier = Modifier.height(4.dp))
+                        Spacer(modifier = Modifier.height(4.dp))
+                        deal.stage?.let { currentStage ->
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                                 verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
                             ) {
                                 Surface(
-                                    color = Color(lead.stage.color?.toColorInt() ?: PlatformColor.GRAY),
-                                    shape = MaterialTheme.shapes.small
-                                ) {
-                                    Text(
-                                        text = lead.stage.name,
-                                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
-                                        style = MaterialTheme.typography.labelSmall,
-                                        color = Color.White,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                }
+                                    color = Color(currentStage.color?.toColorInt() ?: PlatformColor.GRAY),
+                                    shape = MaterialTheme.shapes.small,
+                                    modifier = Modifier.size(12.dp)
+                                ) {}
+                                Text(
+                                    text = currentStage.name,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.Bold
+                                )
                             }
                         }
                     }
-                    
-                    Spacer(modifier = Modifier.height(16.dp))
-                } else {
-                    Text(
-                        text = "This lead is not currently in any stage",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    
-                    Spacer(modifier = Modifier.height(16.dp))
                 }
+                
+                Spacer(modifier = Modifier.height(16.dp))
                 
                 // Stage Selection Dropdown
                 ExposedDropdownMenuBox(
@@ -123,7 +109,8 @@ fun MoveStageDialog(
                         isError = stageError,
                         supportingText = if (stageError) {
                             { Text("Please select a stage") }
-                        } else null
+                        } else null,
+                        enabled = !isMoving
                     )
                     
                     ExposedDropdownMenu(
@@ -158,7 +145,7 @@ fun MoveStageDialog(
                 if (stages.isEmpty()) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "No stages available. Please create a pipeline with stages first.",
+                        text = "No stages available in this pipeline.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.error
                     )
@@ -182,8 +169,10 @@ fun MoveStageDialog(
                     
                     Button(
                         onClick = {
-                            if (selectedStageId != null) {
-                                onConfirm(selectedStageId!!)
+                            if (selectedStageId.isNotEmpty() && selectedStageId != deal.stageId) {
+                                onConfirm(selectedStageId)
+                            } else if (selectedStageId == deal.stageId) {
+                                onDismiss() // Same stage, just close
                             } else {
                                 stageError = true
                             }
@@ -204,3 +193,4 @@ fun MoveStageDialog(
         }
     }
 }
+

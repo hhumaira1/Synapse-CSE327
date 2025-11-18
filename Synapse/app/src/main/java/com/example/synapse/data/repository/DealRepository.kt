@@ -3,7 +3,9 @@ package com.example.synapse.data.repository
 import com.example.synapse.data.api.ApiService
 import com.example.synapse.data.api.request.CreateDealRequest
 import com.example.synapse.data.api.request.UpdateDealRequest
+import com.example.synapse.data.api.request.MoveStageRequest
 import com.example.synapse.data.model.Deal
+import com.example.synapse.data.model.PipelineStats
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -71,6 +73,33 @@ class DealRepository @Inject constructor(
                 Result.success(Unit)
             } else {
                 Result.failure(Exception("Failed to delete deal: ${response.message()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    
+    suspend fun moveDealToStage(dealId: String, stageId: String): Result<Deal> {
+        return try {
+            val request = MoveStageRequest(stageId = stageId)
+            val response = apiService.moveDealToStage(dealId, request)
+            if (response.isSuccessful && response.body() != null) {
+                Result.success(response.body()!!)
+            } else {
+                Result.failure(Exception("Failed to move deal: ${response.message()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    
+    suspend fun getStats(pipelineId: String): Result<PipelineStats> {
+        return try {
+            val response = apiService.getDealStats(pipelineId)
+            if (response.isSuccessful && response.body() != null) {
+                Result.success(response.body()!!)
+            } else {
+                Result.failure(Exception("Failed to fetch stats: ${response.message()}"))
             }
         } catch (e: Exception) {
             Result.failure(e)

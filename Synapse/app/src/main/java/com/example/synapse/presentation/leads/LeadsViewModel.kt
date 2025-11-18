@@ -22,7 +22,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LeadsViewModel @Inject constructor(
     private val leadRepository: LeadRepository,
-    private val contactRepository: ContactRepository
+    private val contactRepository: ContactRepository,
+    private val pipelineRepository: PipelineRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<LeadsUiState>(LeadsUiState.Loading)
@@ -40,14 +41,20 @@ class LeadsViewModel @Inject constructor(
     private val _showImportContactDialog = MutableStateFlow(false)
     val showImportContactDialog: StateFlow<Boolean> = _showImportContactDialog.asStateFlow()
 
-    private val _showMoveStageDialog = MutableStateFlow(false)
-    val showMoveStageDialog: StateFlow<Boolean> = _showMoveStageDialog.asStateFlow()
+    private val _showConvertLeadDialog = MutableStateFlow(false)
+    val showConvertLeadDialog: StateFlow<Boolean> = _showConvertLeadDialog.asStateFlow()
+
+    private val _showChangeStatusDialog = MutableStateFlow(false)
+    val showChangeStatusDialog: StateFlow<Boolean> = _showChangeStatusDialog.asStateFlow()
 
     private val _selectedLead = MutableStateFlow<Lead?>(null)
     val selectedLead: StateFlow<Lead?> = _selectedLead.asStateFlow()
 
     private val _availableContacts = MutableStateFlow<List<Contact>>(emptyList())
     val availableContacts: StateFlow<List<Contact>> = _availableContacts.asStateFlow()
+
+    private val _availablePipelines = MutableStateFlow<List<Pipeline>>(emptyList())
+    val availablePipelines: StateFlow<List<Pipeline>> = _availablePipelines.asStateFlow()
 
     private val _isProcessing = MutableStateFlow(false)
     val isProcessing: StateFlow<Boolean> = _isProcessing.asStateFlow()
@@ -58,6 +65,7 @@ class LeadsViewModel @Inject constructor(
     init {
         loadLeads()
         loadContacts()
+        loadPipelines()
     }
 
     fun loadLeads() {
@@ -85,6 +93,15 @@ class LeadsViewModel @Inject constructor(
             contactRepository.getContacts()
                 .onSuccess { contacts ->
                     _availableContacts.value = contacts
+                }
+        }
+    }
+
+    private fun loadPipelines() {
+        viewModelScope.launch {
+            pipelineRepository.getPipelines()
+                .onSuccess { pipelines ->
+                    _availablePipelines.value = pipelines
                 }
         }
     }
@@ -231,13 +248,21 @@ class LeadsViewModel @Inject constructor(
         }
     }
 
-    fun convertLead(leadId: String) {
+    fun convertLead(
+        leadId: String,
+        pipelineId: String,
+        stageId: String,
+        probability: Int? = null,
+        expectedCloseDate: String? = null
+    ) {
         viewModelScope.launch {
             _isProcessing.value = true
             
-            leadRepository.convertLead(leadId)
+            leadRepository.convertLead(leadId, pipelineId, stageId, probability, expectedCloseDate)
                 .onSuccess {
                     _isProcessing.value = false
+                    _showConvertLeadDialog.value = false
+                    _selectedLead.value = null
                     loadLeads()
                 }
                 .onFailure { error ->
@@ -280,13 +305,52 @@ class LeadsViewModel @Inject constructor(
         _showImportContactDialog.value = false
     }
 
-    fun showMoveStageDialog(lead: Lead) {
+    fun showChangeStatusDialog(lead: Lead) {
         _selectedLead.value = lead
-        _showMoveStageDialog.value = true
+        _showChangeStatusDialog.value = true
     }
 
-    fun hideMoveStageDialog() {
-        _showMoveStageDialog.value = false
+    fun hideChangeStatusDialog() {
+        _showChangeStatusDialog.value = false
+        _selectedLead.value = null
+    }
+
+    fun changeLeadStatus(leadId: String, newStatus: String) {
+        viewModelScope.launch {
+            _isProcessing.value = true
+            
+            val request = UpdateLeadRequest(
+                contactId = null,
+                title = null,
+                source = null,
+                value = null,
+                notes = null,
+                status = newStatus
+            )
+            
+            leadRepository.updateLead(leadId, request)
+                .onSuccess {
+                    _isProcessing.value = false
+                    _showChangeStatusDialog.value = false
+                    _selectedLead.value = null
+                    loadLeads()
+                }
+                .onFailure { error ->
+                    _isProcessing.value = false
+                    _uiState.value = LeadsUiState.Error(
+                        error.message ?: "Failed to change lead status"
+                    )
+                }
+        }
+    }
+
+    fun showConvertLeadDialog(lead: Lead) {
+        _selectedLead.value = lead
+        _showConvertLeadDialog.value = true
+    }
+
+    fun hideConvertLeadDialog() {
+        _showConvertLeadDialog.value = false
         _selectedLead.value = null
     }
 

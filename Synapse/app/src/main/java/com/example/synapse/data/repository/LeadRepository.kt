@@ -3,8 +3,9 @@ package com.example.synapse.data.repository
 import com.example.synapse.data.api.ApiService
 import com.example.synapse.data.api.request.CreateLeadRequest
 import com.example.synapse.data.api.request.UpdateLeadRequest
-import com.example.synapse.data.api.response.ConvertLeadResponse
+import com.example.synapse.data.api.request.ConvertLeadRequest
 import com.example.synapse.data.model.Lead
+import com.example.synapse.data.model.Deal
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -78,9 +79,21 @@ class LeadRepository @Inject constructor(
         }
     }
     
-    suspend fun convertLead(id: String): Result<ConvertLeadResponse> {
+    suspend fun convertLead(
+        id: String,
+        pipelineId: String,
+        stageId: String,
+        probability: Int? = null,
+        expectedCloseDate: String? = null
+    ): Result<Deal> {
         return try {
-            val response = apiService.convertLead(id)
+            val request = ConvertLeadRequest(
+                pipelineId = pipelineId,
+                stageId = stageId,
+                probability = probability,
+                expectedCloseDate = expectedCloseDate
+            )
+            val response = apiService.convertLead(id, request)
             if (response.isSuccessful && response.body() != null) {
                 Result.success(response.body()!!)
             } else {

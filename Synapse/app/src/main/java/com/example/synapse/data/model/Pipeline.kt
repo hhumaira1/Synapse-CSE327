@@ -38,6 +38,9 @@ data class Stage(
     @SerializedName("order")
     val order: Int,
     
+    @SerializedName("color")
+    val color: String?,
+    
     @SerializedName("createdAt")
     val createdAt: String,
     

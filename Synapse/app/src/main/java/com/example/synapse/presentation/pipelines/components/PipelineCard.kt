@@ -28,13 +28,16 @@ fun PipelineCard(
     pipeline: Pipeline,
     onAddStage: () -> Unit,
     onDelete: () -> Unit,
-    onDeleteStage: (String) -> Unit
+    onDeleteStage: (String) -> Unit,
+    onClick: (() -> Unit)? = null
 ) {
     var showMenu by remember { mutableStateOf(false) }
     var showDeleteConfirmDialog by remember { mutableStateOf(false) }
 
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(enabled = onClick != null) { onClick?.invoke() },
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {

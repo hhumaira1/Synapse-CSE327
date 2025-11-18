@@ -1,6 +1,7 @@
 package com.example.synapse.presentation.leads.components
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -32,15 +33,18 @@ fun LeadCard(
     lead: Lead,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
-    onMove: () -> Unit,
-    onConvert: () -> Unit
+    onChangeStatus: () -> Unit,
+    onConvert: () -> Unit,
+    onClick: (() -> Unit)? = null
 ) {
     var showMenu by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showConvertDialog by remember { mutableStateOf(false) }
 
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(enabled = onClick != null) { onClick?.invoke() },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -117,25 +121,27 @@ fun LeadCard(
                             }
                         )
                         DropdownMenuItem(
-                            text = { Text("Move to Stage") },
+                            text = { Text("Change Status") },
                             onClick = {
                                 showMenu = false
-                                onMove()
+                                onChangeStatus()
                             },
                             leadingIcon = {
-                                Icon(Icons.Default.MoveToInbox, contentDescription = null)
+                                Icon(Icons.Default.Cached, contentDescription = null)
                             }
                         )
-                        DropdownMenuItem(
-                            text = { Text("Convert to Deal") },
-                            onClick = {
-                                showMenu = false
-                                showConvertDialog = true
-                            },
-                            leadingIcon = {
-                                Icon(Icons.Default.CheckCircle, contentDescription = null)
-                            }
-                        )
+                        if (lead.status != "CONVERTED") {
+                            DropdownMenuItem(
+                                text = { Text("Convert to Deal") },
+                                onClick = {
+                                    showMenu = false
+                                    showConvertDialog = true
+                                },
+                                leadingIcon = {
+                                    Icon(Icons.Default.CheckCircle, contentDescription = null)
+                                }
+                            )
+                        }
                         HorizontalDivider(
                             Modifier,
                             DividerDefaults.Thickness,

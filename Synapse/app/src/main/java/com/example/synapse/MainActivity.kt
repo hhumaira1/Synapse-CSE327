@@ -24,8 +24,11 @@ import com.example.synapse.presentation.tickets.TicketsScreen
 import com.example.synapse.presentation.tickets.CreateTicketScreen
 import com.example.synapse.presentation.LandingPage
 import com.example.synapse.presentation.dashboard.OwnerDashboard
+import com.example.synapse.presentation.deals.DealsScreen
 import com.example.synapse.presentation.pipelines.PipelinesScreen
+import com.example.synapse.presentation.pipelines.PipelineDetailScreen
 import com.example.synapse.presentation.leads.LeadsScreen
+import com.example.synapse.presentation.leads.LeadDetailScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -160,10 +163,9 @@ fun NavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
             )
         }
         
-        // Deals screens - placeholder until DealsScreen is created
+        // Deals screen
         composable("deals") {
-            OwnerDashboard(
-                isDarkMode = false,
+            DealsScreen(
                 navController = navController,
                 onBack = { navController.popBackStack() }
             )
@@ -178,8 +180,28 @@ fun NavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
             )
         }
         
+        composable("pipelines/{pipelineId}") { backStackEntry ->
+            val pipelineId = backStackEntry.arguments?.getString("pipelineId") ?: return@composable
+            PipelineDetailScreen(
+                pipelineId = pipelineId,
+                navController = navController,
+                isDarkMode = false,
+                onBack = { navController.popBackStack() }
+            )
+        }
+        
         composable("leads") {
             LeadsScreen(
+                navController = navController,
+                isDarkMode = false,
+                onBack = { navController.popBackStack() }
+            )
+        }
+        
+        composable("leads/{leadId}") { backStackEntry ->
+            val leadId = backStackEntry.arguments?.getString("leadId") ?: return@composable
+            LeadDetailScreen(
+                leadId = leadId,
                 navController = navController,
                 isDarkMode = false,
                 onBack = { navController.popBackStack() }

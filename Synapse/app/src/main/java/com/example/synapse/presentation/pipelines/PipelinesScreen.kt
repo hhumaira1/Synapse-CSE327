@@ -100,18 +100,22 @@ fun PipelinesScreen(
                 }
                 
                 is PipelinesUiState.Success -> {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        items((uiState as PipelinesUiState.Success).pipelines) { pipeline ->
-                            PipelineCard(
-                                pipeline = pipeline,
-                                onAddStage = { viewModel.showAddStageDialog(pipeline) },
-                                onDelete = { viewModel.deletePipeline(pipeline.id) },
-                                onDeleteStage = { stageId -> viewModel.deleteStage(stageId) }
-                            )
+                    val successState = uiState as? PipelinesUiState.Success
+                    if (successState != null) {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            items(successState.pipelines) { pipeline ->
+                                PipelineCard(
+                                    pipeline = pipeline,
+                                    onAddStage = { viewModel.showAddStageDialog(pipeline) },
+                                    onDelete = { viewModel.deletePipeline(pipeline.id) },
+                                    onDeleteStage = { stageId -> viewModel.deleteStage(stageId) },
+                                    onClick = { navController.navigate("pipelines/${pipeline.id}") }
+                                )
+                            }
                         }
                     }
                 }

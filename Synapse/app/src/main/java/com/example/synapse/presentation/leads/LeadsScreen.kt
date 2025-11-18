@@ -30,8 +30,11 @@ fun LeadsScreen(
     val showCreateDialog by viewModel.showCreateLeadDialog.collectAsState()
     val showEditDialog by viewModel.showEditLeadDialog.collectAsState()
     val showImportDialog by viewModel.showImportContactDialog.collectAsState()
+    val showConvertDialog by viewModel.showConvertLeadDialog.collectAsState()
+    val showChangeStatusDialog by viewModel.showChangeStatusDialog.collectAsState()
     val selectedLead by viewModel.selectedLead.collectAsState()
     val availableContacts by viewModel.availableContacts.collectAsState()
+    val availablePipelines by viewModel.availablePipelines.collectAsState()
     val isProcessing by viewModel.isProcessing.collectAsState()
     val selectedFilter by viewModel.selectedStatusFilter.collectAsState()
     
@@ -170,39 +173,46 @@ fun LeadsScreen(
                 }
                 
                 is LeadsUiState.Success -> {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        items((uiState as LeadsUiState.Success).leads) { lead ->
-                            LeadCard(
-                                lead = lead,
-                                onEdit = { viewModel.showEditLeadDialog(lead) },
-                                onDelete = { viewModel.deleteLead(lead.id) },
-                                onMove = { viewModel.showMoveStageDialog(lead) },
-                                onConvert = { viewModel.convertLead(lead.id) }
-                            )
+                    val successState = uiState as? LeadsUiState.Success
+                    if (successState != null) {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            items(successState.leads) { lead ->
+                                LeadCard(
+                                    lead = lead,
+                                    onEdit = { viewModel.showEditLeadDialog(lead) },
+                                    onDelete = { viewModel.deleteLead(lead.id) },
+                                    onChangeStatus = { viewModel.showChangeStatusDialog(lead) },
+                                    onConvert = { viewModel.showConvertLeadDialog(lead) },
+                                    onClick = { navController.navigate("leads/${lead.id}") }
+                                )
+                            }
                         }
                     }
                 }
                 
                 is LeadsUiState.Error -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                    val errorState = uiState as? LeadsUiState.Error
+                    if (errorState != null) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
                         ) {
-                            Text(
-                                text = (uiState as LeadsUiState.Error).message,
-                                color = MaterialTheme.colorScheme.error,
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                            Button(onClick = { viewModel.onRetry() }) {
-                                Text("Retry")
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(16.dp)
+                            ) {
+                                Text(
+                                    text = errorState.message,
+                                    color = MaterialTheme.colorScheme.error,
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+                                Button(onClick = { viewModel.onRetry() }) {
+                                    Text("Retry")
+                                }
                             }
                         }
                     }
@@ -240,6 +250,35 @@ fun LeadsScreen(
                 onDismiss = { viewModel.hideImportContactDialog() },
                 onConfirm = { contactId ->
                     viewModel.importLeadFromContact(contactId)
+                }
+            )
+        }
+        
+        if (showConvertDialog && selectedLead != null) {
+            ConvertLeadDialog(
+                lead = selectedLead!!,
+                pipelines = availablePipelines,
+                isConverting = isProcessing,
+                onDismiss = { viewModel.hideConvertLeadDialog() },
+                onConfirm = { pipelineId, stageId, probability, expectedCloseDate ->
+                    viewModel.convertLead(
+                        selectedLead!!.id,
+                        pipelineId,
+                        stageId,
+                        probability,
+                        expectedCloseDate
+                    )
+                }
+            )
+        }
+        
+        if (showChangeStatusDialog && selectedLead != null) {
+            ChangeLeadStatusDialog(
+                lead = selectedLead!!,
+                isUpdating = isProcessing,
+                onDismiss = { viewModel.hideChangeStatusDialog() },
+                onConfirm = { newStatus ->
+                    viewModel.changeLeadStatus(selectedLead!!.id, newStatus)
                 }
             )
         }

@@ -77,7 +77,10 @@ interface ApiService {
     suspend fun deleteLead(@Path("id") id: String): Response<Unit>
     
     @POST("leads/{id}/convert")
-    suspend fun convertLead(@Path("id") id: String): Response<ConvertLeadResponse>
+    suspend fun convertLead(
+        @Path("id") id: String,
+        @Body request: ConvertLeadRequest
+    ): Response<Deal>
     
     // ========== Pipelines ==========
     @GET("pipelines")
@@ -140,6 +143,15 @@ interface ApiService {
     
     @DELETE("deals/{id}")
     suspend fun deleteDeal(@Path("id") id: String): Response<Unit>
+    
+    @PATCH("deals/{id}/move")
+    suspend fun moveDealToStage(
+        @Path("id") id: String,
+        @Body request: MoveStageRequest
+    ): Response<Deal>
+    
+    @GET("deals/stats/{pipelineId}")
+    suspend fun getDealStats(@Path("pipelineId") pipelineId: String): Response<PipelineStats>
     
     // ========== Tickets ==========
     @GET("tickets")
