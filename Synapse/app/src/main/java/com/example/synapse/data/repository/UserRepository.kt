@@ -77,11 +77,11 @@ class UserRepository @Inject constructor(
             val tenants = if (tenantsResponse.isSuccessful && tenantsResponse.body() != null) {
                 tenantsResponse.body()!!.map { tenant ->
                     TenantInfo(
-                        id = tenant.tenant.id,
-                        name = tenant.tenant.name,
-                        type = tenant.tenant.type,
+                        id = tenant.id,
+                        name = tenant.name,
+                        type = tenant.type,
                         role = tenant.role,
-                        createdAt = tenant.tenant.createdAt
+                        createdAt = "" // API doesn't provide createdAt in flat structure
                     )
                 }
             } else {

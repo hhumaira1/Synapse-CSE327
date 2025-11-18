@@ -32,8 +32,12 @@ data class Interaction(
 )
 
 data class UserTenantInfo(
+    val id: String,
+    val name: String,
+    val slug: String,
+    val type: String,
     val role: String,
-    val tenant: TenantBasic
+    val userId: String
 )
 
 data class TenantBasic(
@@ -65,6 +69,7 @@ data class AcceptInviteResponse(
 data class PortalInvitationDetails(
     val id: String,
     val isActive: Boolean,
+    val alreadyAccepted: Boolean,
     val contact: ContactBasic,
     val tenant: TenantBasic
 )
