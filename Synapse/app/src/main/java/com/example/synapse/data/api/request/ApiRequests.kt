@@ -144,3 +144,12 @@ data class CreateInteractionRequest(
     val dealId: String?,
     val metadata: Map<String, Any>?
 )
+
+data class InviteUserRequest(
+    val email: String,
+    val role: String
+)
+
+data class ChangeRoleRequest(
+    val role: String
+)

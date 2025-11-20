@@ -19,8 +19,30 @@ interface ApiService {
     @GET("users/my-tenants")
     suspend fun getMyTenants(): Response<List<UserTenantInfo>>
     
+    @GET("users")
+    suspend fun getTeamMembers(): Response<List<TeamMember>>
+    
+    @DELETE("users/{id}")
+    suspend fun removeTeamMember(@Path("id") userId: String): Response<Unit>
+    
+    @POST("users/{id}/role")
+    suspend fun changeUserRole(
+        @Path("id") userId: String,
+        @Body request: ChangeRoleRequest
+    ): Response<TeamMember>
+    
     @POST("users/accept-invite/{token}")
     suspend fun acceptTeamInvite(@Path("token") token: String): Response<AcceptInviteResponse>
+    
+    // ========== Invitations ==========
+    @GET("invitations")
+    suspend fun getInvitations(): Response<List<Invitation>>
+    
+    @POST("invitations")
+    suspend fun sendInvitation(@Body request: InviteUserRequest): Response<Invitation>
+    
+    @DELETE("invitations/{id}")
+    suspend fun cancelInvitation(@Path("id") invitationId: String): Response<Unit>
     
     // ========== Portal Customer ==========
     @GET("portal/customers/my-access")

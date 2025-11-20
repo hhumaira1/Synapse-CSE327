@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -188,224 +189,239 @@ fun OwnerDashboardTopBar(
 
 @Composable
 fun OverviewSection(stats: com.example.synapse.data.model.DashboardStats?) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
-        )
+    Column(
+        verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            Purple1.copy(alpha = 0.1f),
-                            Color.White
+        // Welcome Card with Gradient
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = Color.Transparent
+            )
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        Brush.horizontalGradient(
+                            colors = listOf(
+                                Color(0xFF6366F1),
+                                Color(0xFF8B5CF6),
+                                Color(0xFFEC4899)
+                            )
                         )
                     )
-                )
-                .padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                    .padding(24.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = "👋 Welcome to Your Dashboard",
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                        Text(
+                            text = "Manage your business, track deals, and grow your customer relationships.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.White.copy(alpha = 0.9f)
+                        )
+                        
+                        // Status Badge
+                        Surface(
+                            color = if (stats != null) 
+                                Color(0xFF10B981) 
+                            else 
+                                Color.White.copy(alpha = 0.2f),
+                            shape = RoundedCornerShape(20.dp),
+                            modifier = Modifier.padding(top = 8.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                Icon(
+                                    if (stats != null) Icons.Default.CheckCircle else Icons.Default.Sync,
+                                    contentDescription = null,
+                                    tint = Color.White,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                                Text(
+                                    text = if (stats != null) "Live Data" else "Loading...",
+                                    color = Color.White,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
+                        }
+                    }
+                    Icon(
+                        Icons.Default.TrendingUp,
+                        contentDescription = null,
+                        tint = Color.White.copy(alpha = 0.3f),
+                        modifier = Modifier.size(80.dp)
+                    )
+                }
+            }
+        }
+
+        // Quick Overview Section
+        Text(
+            text = "📊 Quick Overview",
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(vertical = 8.dp)
+        )
+
+        // Metrics Grid - Modern Cards
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Header
+            // Row 1: Key Business Metrics
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Text(
-                    text = "📊 Business Overview",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Purple1
+                ModernMetricCard(
+                    title = "Total Customers",
+                    value = stats?.totalContacts?.toString() ?: "-",
+                    icon = Icons.Default.People,
+                    gradient = listOf(Color(0xFF6366F1), Color(0xFF8B5CF6)),
+                    modifier = Modifier.weight(1f)
                 )
-                if (stats != null) {
-                    Icon(
-                        Icons.Default.CheckCircle,
-                        contentDescription = "Connected",
-                        tint = Color(0xFF4CAF50),
-                        modifier = Modifier.size(24.dp)
-                    )
-                } else {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
-                        color = Purple1,
-                        strokeWidth = 2.dp
-                    )
-                }
+                ModernMetricCard(
+                    title = "Active Deals",
+                    value = stats?.totalDeals?.toString() ?: "-",
+                    icon = Icons.Default.Handshake,
+                    gradient = listOf(Color(0xFF8B5CF6), Color(0xFFEC4899)),
+                    modifier = Modifier.weight(1f)
+                )
             }
 
-            Divider(color = Purple1.copy(alpha = 0.2f), thickness = 1.dp)
-
-            // Real Data Metrics Grid
-            Column(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+            // Row 2: Pipeline & Leads
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    OverviewMetricCard(
-                        title = "Total Deals",
-                        value = stats?.totalDeals?.toString() ?: "-",
-                        icon = Icons.Default.Business,
-                        color = Purple1,
-                        modifier = Modifier.weight(1f)
-                    )
-                    OverviewMetricCard(
-                        title = "Pipeline Value",
-                        value = stats?.let { "$${String.format("%.0f", it.totalPipelineValue)}" } ?: "-",
-                        icon = Icons.Default.AttachMoney,
-                        color = Purple2,
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    OverviewMetricCard(
-                        title = "Contacts",
-                        value = stats?.totalContacts?.toString() ?: "-",
-                        icon = Icons.Default.Contacts,
-                        color = Purple5,
-                        modifier = Modifier.weight(1f)
-                    )
-                    OverviewMetricCard(
-                        title = "Active Leads",
-                        value = stats?.totalLeads?.toString() ?: "-",
-                        icon = Icons.AutoMirrored.Filled.TrendingUp,
-                        color = DarkBlue2,
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    OverviewMetricCard(
-                        title = "Open Tickets",
-                        value = stats?.openTickets?.toString() ?: "-",
-                        icon = Icons.Default.ConfirmationNumber,
-                        color = Purple3,
-                        modifier = Modifier.weight(1f)
-                    )
-                    OverviewMetricCard(
-                        title = "In Progress",
-                        value = stats?.inProgressTickets?.toString() ?: "-",
-                        icon = Icons.Default.PendingActions,
-                        color = Purple6,
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    OverviewMetricCard(
-                        title = "Total Tickets",
-                        value = stats?.totalTickets?.toString() ?: "-",
-                        icon = Icons.Default.ConfirmationNumber,
-                        color = DarkBlue1,
-                        modifier = Modifier.weight(1f)
-                    )
-                    OverviewMetricCard(
-                        title = "All Records",
-                        value = stats?.let { "${it.totalContacts + it.totalLeads + it.totalDeals}" } ?: "-",
-                        icon = Icons.Default.Assessment,
-                        color = Purple1,
-                        modifier = Modifier.weight(1f)
-                    )
-                }
+                ModernMetricCard(
+                    title = "Pipeline Value",
+                    value = stats?.let { "$${String.format("%.0fK", it.totalPipelineValue / 1000)}" } ?: "-",
+                    icon = Icons.Default.AttachMoney,
+                    gradient = listOf(Color(0xFFEC4899), Color(0xFFF97316)),
+                    modifier = Modifier.weight(1f)
+                )
+                ModernMetricCard(
+                    title = "Active Leads",
+                    value = stats?.totalLeads?.toString() ?: "-",
+                    icon = Icons.AutoMirrored.Filled.TrendingUp,
+                    gradient = listOf(Color(0xFFF97316), Color(0xFFF59E0B)),
+                    modifier = Modifier.weight(1f)
+                )
             }
 
-            // Status Notice
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = if (stats != null) 
-                        Color(0xFF4CAF50).copy(alpha = 0.1f) 
-                    else 
-                        Purple1.copy(alpha = 0.1f)
-                ),
-                shape = RoundedCornerShape(8.dp)
+            // Row 3: Ticket Metrics
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(12.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        if (stats != null) Icons.Default.CheckCircle else Icons.Default.Info,
-                        contentDescription = null,
-                        tint = if (stats != null) Color(0xFF4CAF50) else Purple1,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Text(
-                        text = if (stats != null) 
-                            "Connected to backend. All metrics are live." 
-                        else 
-                            "Loading dashboard data...",
-                        fontSize = 11.sp,
-                        color = if (stats != null) Color(0xFF4CAF50) else Purple1,
-                        lineHeight = 14.sp
-                    )
-                }
+                ModernMetricCard(
+                    title = "Open Tickets",
+                    value = stats?.openTickets?.toString() ?: "-",
+                    icon = Icons.Default.ConfirmationNumber,
+                    gradient = listOf(Color(0xFF10B981), Color(0xFF059669)),
+                    modifier = Modifier.weight(1f)
+                )
+                ModernMetricCard(
+                    title = "In Progress",
+                    value = stats?.inProgressTickets?.toString() ?: "-",
+                    icon = Icons.Default.PendingActions,
+                    gradient = listOf(Color(0xFF3B82F6), Color(0xFF2563EB)),
+                    modifier = Modifier.weight(1f)
+                )
             }
         }
     }
 }
 
 @Composable
-fun OverviewMetricCard(
+fun ModernMetricCard(
     title: String,
     value: String,
     icon: ImageVector,
-    color: Color,
+    gradient: List<Color>,
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier.height(100.dp),
+        modifier = modifier.height(120.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = color.copy(alpha = 0.1f)
+            containerColor = Color.White
         )
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(12.dp)
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            gradient[0].copy(alpha = 0.1f),
+                            gradient[1].copy(alpha = 0.05f)
+                        )
+                    )
+                )
         ) {
             Column(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = color,
-                    modifier = Modifier.size(28.dp)
-                )
+                // Icon in gradient circle
+                Surface(
+                    color = gradient[0].copy(alpha = 0.2f),
+                    shape = CircleShape,
+                    modifier = Modifier.size(40.dp)
+                ) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = null,
+                            tint = gradient[0],
+                            modifier = Modifier.size(22.dp)
+                        )
+                    }
+                }
 
-                Column {
+                // Value and Title
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
                     Text(
                         text = value,
-                        fontSize = 24.sp,
+                        fontSize = 28.sp,
                         fontWeight = FontWeight.Bold,
-                        color = color
+                        color = gradient[0],
+                        style = MaterialTheme.typography.headlineMedium
                     )
                     Text(
                         text = title,
-                        fontSize = 11.sp,
-                        color = color.copy(alpha = 0.7f),
+                        fontSize = 13.sp,
+                        color = Color.Gray,
+                        fontWeight = FontWeight.Medium,
                         maxLines = 1
                     )
                 }
