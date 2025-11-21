@@ -1,11 +1,11 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import type { JwtPayload } from '@clerk/types';
+import type { User } from '@supabase/supabase-js';
 
 // Note: Our global type file 'src/types/express/index.d.ts'
 // is what makes 'request.user' available on the Request type.
 export const CurrentUser = createParamDecorator(
-  (data: keyof JwtPayload | undefined, ctx: ExecutionContext) => {
-    const request = ctx.switchToHttp().getRequest<{ user?: JwtPayload }>();
+  (data: keyof User | undefined, ctx: ExecutionContext) => {
+    const request = ctx.switchToHttp().getRequest<{ user?: User }>();
     const user = request.user;
 
     // Debug logging

@@ -3,8 +3,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
-import { ClerkModule } from './clerk/clerk.module';
-import { AuthModule } from './auth/auth.module';
 import { SupabaseAuthModule } from './supabase-auth/supabase-auth.module';
 import { PortalAuthModule } from './portal/auth/portal-auth.module';
 import { UsersModule } from './users/users.module';
@@ -17,8 +15,6 @@ import { LeadsModule } from './leads/leads.module';
 import { DealsModule } from './deals/deals.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { TicketsModule } from './tickets/tickets.module';
-import { TwilioModule } from './twilio/twilio.module';
-import { WebRTCModule } from './webrtc/webrtc.module';
 import { OsticketModule } from './osticket/osticket.module';
 import { JiraModule } from './jira/jira.module';
 
@@ -30,8 +26,6 @@ import { JiraModule } from './jira/jira.module';
     CommonModule,
     DatabaseModule,
     SupabaseAuthModule,
-    ClerkModule,
-    AuthModule,
     PortalAuthModule,
     UsersModule,
     PortalModule,
@@ -44,8 +38,6 @@ import { JiraModule } from './jira/jira.module';
     TicketsModule,
     OsticketModule,
     JiraModule,
-    TwilioModule,
-    WebRTCModule,
   ],
   controllers: [AppController],
   providers: [AppService],

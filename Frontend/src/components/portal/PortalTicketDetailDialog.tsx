@@ -217,7 +217,7 @@ export function PortalTicketDetailDialog({
                 </p>
               ) : (
                 ticket.comments.map((comment) => {
-                  // Use authorName from backend (fetched from Clerk)
+                  // Use authorName from backend (fetched from Supabase)
                   const displayName = comment.authorName || (comment.isInternal ? "Support Member" : "Customer");
                   const initials = displayName
                     .split(" ")

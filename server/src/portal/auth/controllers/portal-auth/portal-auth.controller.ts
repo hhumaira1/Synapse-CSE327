@@ -6,50 +6,27 @@ import {
   UseGuards,
   BadRequestException,
 } from '@nestjs/common';
-import { ClerkAuthGuard } from 'src/clerk/guards/clerk-auth/clerk-auth.guard';
+import { SupabaseAuthGuard } from 'src/supabase-auth/guards/supabase-auth/supabase-auth.guard';
 import { PortalAuthService } from '../../services/portal-auth/portal-auth.service';
 import { CurrentUser } from 'src/common/decorators/current-user/current-user.decorator';
-import type { JwtPayload } from '@clerk/types';
+import type { User } from '@supabase/supabase-js';
 @Controller('portal/auth')
 export class PortalAuthController {
   constructor(private readonly portalAuthService: PortalAuthService) {}
 
   /**
    * Called by the frontend ONCE after a new portal user
-   * signs up via an invite. This links their Clerk account
+   * signs up via an invite. This links their Supabase account
    * to the PortalCustomer record.
    */
   @Post('sync')
-  @UseGuards(ClerkAuthGuard)
+  @UseGuards(SupabaseAuthGuard)
   async syncPortalUser(
-    @CurrentUser('sub') clerkId: string,
-    @CurrentUser() fullUser: JwtPayload,
+    @CurrentUser() user: User,
     @Body() body: { tenantId: string },
   ) {
-    // Extract primary email
-    interface EmailAddress {
-      id: string;
-      email_address: string;
-    }
-
-    type JwtPayloadWithEmail = JwtPayload & {
-      email_addresses?: EmailAddress[];
-      primary_email_address_id?: string;
-    };
-
-    const fullUserWithEmail = fullUser as JwtPayloadWithEmail;
-
-    // Extract primary email
-    const email = fullUserWithEmail.email_addresses?.find(
-      (e) => e.id === fullUserWithEmail.primary_email_address_id,
-    )?.email_address;
-
-    // const email = fullUser.email_addresses?.find(
-    //   (e) => e.id === fullUser.primary_email_address_id,
-    // )?.email_address;
-
-    if (!email) {
-      throw new BadRequestException('Primary email not found in token');
+    if (!user.email) {
+      throw new BadRequestException('Email not found in user profile');
     }
 
     if (!body.tenantId) {
@@ -57,8 +34,8 @@ export class PortalAuthController {
     }
 
     const portalCustomer = await this.portalAuthService.syncPortalCustomer(
-      clerkId,
-      email,
+      user.id,
+      user.email,
       body.tenantId,
     );
 
@@ -73,9 +50,9 @@ export class PortalAuthController {
    * This returns ALL tenant portals this user has access to.
    */
   @Get('me')
-  @UseGuards(ClerkAuthGuard)
-  async getMe(@CurrentUser('sub') clerkId: string) {
-    const accounts = await this.portalAuthService.getPortalAccounts(clerkId);
+  @UseGuards(SupabaseAuthGuard)
+  async getMe(@CurrentUser() user: User) {
+    const accounts = await this.portalAuthService.getPortalAccounts(user.id);
     return accounts;
   }
 }

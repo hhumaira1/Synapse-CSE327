@@ -13,6 +13,6 @@ class SynapseApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         // Initialize any app-wide configurations here
-        // Clerk will be initialized in the auth module when needed
+        // Supabase will be initialized in the auth module when needed
     }
 }

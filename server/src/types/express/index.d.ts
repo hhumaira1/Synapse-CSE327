@@ -1,12 +1,12 @@
-// Import JwtPayload from @clerk/types (used by @clerk/backend)
-import type { JwtPayload } from '@clerk/types';
+// Import User from @supabase/supabase-js (used by Supabase auth)
+import type { User } from '@supabase/supabase-js';
 
 declare global {
   namespace Express {
     interface Request {
       // This adds the 'user' property to the Request object
-      // It's populated by your ClerkAuthGuard with the verified JWT payload
-      user?: JwtPayload;
+      // It's populated by your SupabaseAuthGuard with the verified User object
+      user?: User;
     }
   }
 }

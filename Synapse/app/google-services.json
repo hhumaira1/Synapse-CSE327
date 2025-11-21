@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "272825351322",
+    "project_id": "synapsecrm-a691c",
+    "storage_bucket": "synapsecrm-a691c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:272825351322:android:ed6b2c5c40fd7b8e88f323",
+        "android_client_info": {
+          "package_name": "com.example.synapse"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSGMw8LjuO-t47qcsdLcJSBh2ia8nLqgQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

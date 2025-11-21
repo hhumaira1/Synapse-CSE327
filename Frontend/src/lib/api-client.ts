@@ -12,8 +12,8 @@ export const apiClient = axios.create({
 // Request interceptor to add auth token
 apiClient.interceptors.request.use(
   (config) => {
-    // When Clerk is implemented, get token from Clerk session
-    // const token = getClerkToken();
+    // When Supabase is implemented, get token from Supabase session
+    // const token = getSupabaseToken();
     // if (token) {
     //   config.headers.Authorization = `Bearer ${token}`;
     // }

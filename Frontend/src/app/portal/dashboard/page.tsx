@@ -18,10 +18,6 @@ import {
 } from 'lucide-react';
 import { useApiClient } from '@/lib/api';
 import { useUserStatus } from '@/hooks/useUserStatus';
-import { useVoiceCall } from '@/hooks/useVoiceCall';
-import { IncomingCall } from '@/components/voice/IncomingCall';
-import { ActiveCall } from '@/components/voice/ActiveCall';
-import { getSocket } from '@/lib/webrtc';
 import toast from 'react-hot-toast';
 
 interface PortalAccess {
@@ -64,70 +60,6 @@ export default function PortalDashboardPage() {
   // Get first portal access for tenantId and contactId
   const firstAccess = portalAccess[0];
   
-  // Initialize voice calling (portal customer role)
-  const {
-    callState,
-    duration,
-    isMuted,
-    isSpeakerOn,
-    currentContactName,
-    currentContactNumber,
-    endCall,
-    toggleMute,
-    toggleSpeaker,
-  } = useVoiceCall(
-    firstAccess?.contact?.id || '',
-    firstAccess?.tenant?.id || '',
-    'portal_customer',
-    firstAccess?.contact?.id
-  );
-
-  // Handle incoming calls
-  useEffect(() => {
-    if (!firstAccess) return;
-
-    const socket = getSocket();
-    if (!socket) return;
-
-    const handleIncomingCall = (data: {
-      callId: string;
-      callerId: string;
-      callerName: string;
-      contactPhone: string;
-    }) => {
-      setIncomingCallData(data);
-    };
-
-    socket.on('call:incoming', handleIncomingCall);
-
-    return () => {
-      socket.off('call:incoming', handleIncomingCall);
-    };
-  }, [firstAccess]);
-
-  // Accept incoming call
-  const handleAcceptCall = () => {
-    if (!incomingCallData) return;
-    
-    const socket = getSocket();
-    if (socket) {
-      socket.emit('call:accept', { callId: incomingCallData.callId });
-      setIncomingCallData(null); // Hide incoming call UI
-    }
-  };
-
-  // Reject incoming call
-  const handleRejectCall = () => {
-    if (!incomingCallData) return;
-    
-    const socket = getSocket();
-    if (socket) {
-      socket.emit('call:reject', { callId: incomingCallData.callId });
-      setIncomingCallData(null);
-      // The backend will send call:rejected event which useVoiceCall will handle
-      toast.error('Call rejected');
-    }
-  };
 
   const fetchPortalAccess = useCallback(async () => {
     try {
@@ -537,32 +469,7 @@ export default function PortalDashboardPage() {
         )}
       </main>
 
-      {/* Voice Calling UI - Incoming Call */}
-      {incomingCallData && (
-        <IncomingCall
-          callerName={incomingCallData.callerName}
-          contactPhone={incomingCallData.contactPhone}
-          onAccept={handleAcceptCall}
-          onReject={handleRejectCall}
-        />
-      )}
-
-      {/* Voice Calling UI - Active Call Widget */}
-      {callState !== 'idle' && !incomingCallData && (
-        <div className="fixed bottom-6 right-6 z-50">
-          <ActiveCall
-            callState={callState}
-            contactName={currentContactName || 'Unknown'}
-            contactNumber={currentContactNumber || 'Unknown'}
-            duration={duration}
-            isMuted={isMuted}
-            isSpeakerOn={isSpeakerOn}
-            onEndCall={endCall}
-            onToggleMute={toggleMute}
-            onToggleSpeaker={toggleSpeaker}
-          />
-        </div>
-      )}
+      
     </div>
   );
 }

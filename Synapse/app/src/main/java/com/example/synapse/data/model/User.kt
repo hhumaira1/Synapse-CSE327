@@ -2,7 +2,7 @@ package com.example.synapse.data.model
 
 data class User(
     val id: String,
-    val clerkId: String,
+    val supabaseId: String,
     val email: String,
     val firstName: String?,
     val lastName: String?,
