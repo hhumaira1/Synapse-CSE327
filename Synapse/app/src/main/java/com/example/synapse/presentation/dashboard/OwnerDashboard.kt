@@ -423,6 +423,7 @@ fun QuickActionsSpeedDials(
 ) {
     // Define all navigation items
     val actions = listOf(
+        NavigationItem("AI Assistant", Icons.Default.Psychology, "chatbot", Purple1),
         NavigationItem("Contacts", Icons.Default.Contacts, "contacts", Purple1),
         NavigationItem("Pipelines", Icons.Default.Leaderboard, "pipelines", Purple2),
         NavigationItem("Leads", Icons.AutoMirrored.Filled.TrendingUp, "leads", Purple5),

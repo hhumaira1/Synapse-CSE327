@@ -118,10 +118,10 @@ dependencies {
     kapt ("com.google.dagger:hilt-compiler:2.57")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
-    // Room Database
-    implementation("androidx.room:room-runtime:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
-    kapt("androidx.room:room-compiler:2.6.1")
+    // Room Database - updated to support Kotlin 2.2.0
+    implementation("androidx.room:room-runtime:2.7.0")
+    implementation("androidx.room:room-ktx:2.7.0")
+    kapt("androidx.room:room-compiler:2.7.0")
 
     // DataStore for secure storage
     implementation("androidx.datastore:datastore-preferences:1.1.7")
@@ -144,6 +144,14 @@ dependencies {
 
     // Material Icons Extended
     implementation("androidx.compose.material:material-icons-extended")
+
+    // Markdown rendering for chatbot
+    implementation("io.noties.markwon:core:4.6.2")
+    implementation("io.noties.markwon:ext-strikethrough:4.6.2")
+    implementation("io.noties.markwon:ext-tables:4.6.2")
+
+    // Lottie animations for chatbot
+    implementation("com.airbnb.android:lottie-compose:6.1.0")
 
     implementation("androidx.core:core-ktx:1.17.0")
 

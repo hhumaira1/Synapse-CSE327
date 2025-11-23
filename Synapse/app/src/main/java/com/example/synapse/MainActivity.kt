@@ -39,6 +39,7 @@ import com.example.synapse.presentation.leads.LeadDetailScreen
 import com.example.synapse.presentation.portal.PortalDashboardScreen
 import com.example.synapse.presentation.portal.PortalTicketsScreen
 import com.example.synapse.presentation.portal.PortalAcceptScreen
+import com.example.synapse.presentation.chatbot.ChatScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -264,6 +265,13 @@ fun NavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
                 isDarkMode = false,
                 navController = navController,
                 onBack = { navController.popBackStack() }
+            )
+        }
+
+        // ========== AI Chatbot ==========
+        composable("chatbot") {
+            ChatScreen(
+                onNavigateBack = { navController.popBackStack() }
             )
         }
 

@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.synapse.BuildConfig
 import com.example.synapse.data.api.ApiService
 import com.example.synapse.data.api.AuthInterceptor
+import com.example.synapse.data.api.ChatBotApiService
 import com.example.synapse.data.api.portal.PortalApiService
 import com.example.synapse.data.preferences.PreferencesManager
 import dagger.Module
@@ -68,5 +69,11 @@ object NetworkModule {
     @Singleton
     fun providePortalApiService(retrofit: Retrofit): PortalApiService {
         return retrofit.create(PortalApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideChatBotApiService(retrofit: Retrofit): ChatBotApiService {
+        return retrofit.create(ChatBotApiService::class.java)
     }
 }
