@@ -10,6 +10,7 @@ import { useApiClient } from '@/lib/api';
 import { useUser, useAuth } from '@/hooks/useUser';
 import { Button } from '@/components/ui/button';
 import { Toaster } from 'react-hot-toast';
+import { ChatWindow } from '@/components/chatbot/ChatWindow';
 import { 
   LayoutDashboard, 
   Users, 
@@ -22,7 +23,9 @@ import {
   Store,
   Phone,
   LogOut,
-  User as UserIcon
+  User as UserIcon,
+  MessageSquare,
+  Send
 } from 'lucide-react';
 
 const navigation = [
@@ -46,6 +49,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const { signOut } = useAuth();
   const [hasPortalAccess, setHasPortalAccess] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const handleSignOut = async () => {
     await signOut();
@@ -271,6 +275,28 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           {children}
         </main>
       </div>
+
+      {/* Floating Chat Button */}
+      <Button
+        onClick={() => setIsChatOpen(!isChatOpen)}
+        size="lg"
+        className="fixed bottom-4 right-4 h-14 w-14 rounded-full shadow-lg bg-linear-to-r from-[#6366f1] to-[#a855f7] hover:opacity-90 z-50"
+      >
+        <MessageSquare className="h-6 w-6" />
+      </Button>
+
+      {/* Floating Telegram Button */}
+      <Button
+        onClick={() => router.push('/settings?tab=integrations')}
+        size="lg"
+        className="fixed bottom-20 right-4 h-14 w-14 rounded-full shadow-lg bg-[#0088cc] hover:bg-[#006699] z-50"
+        title="Telegram Integration"
+      >
+        <Send className="h-6 w-6" />
+      </Button>
+
+      {/* Chat Window */}
+      <ChatWindow isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
     </div>
   );
 }

@@ -76,6 +76,13 @@ export class AuthService {
   }
 
   /**
+   * Get user details (alias for getUserBySupabaseId)
+   */
+  async getUserDetails(supabaseUserId: string) {
+    return this.getUserBySupabaseId(supabaseUserId);
+  }
+
+  /**
    * Get user by email
    */
   async getUserByEmail(email: string) {

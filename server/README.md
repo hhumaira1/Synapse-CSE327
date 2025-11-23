@@ -96,3 +96,12 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+## MCP / Gemini CLI integration
+
+This repo includes a minimal MCP module under `server/src/mcp` which exposes:
+
+- GET `/mcp/sse` — SSE transport endpoint for MCP.
+- POST `/mcp/messages` — optional message relay endpoint.
+
+To enable full MCP functionality you must install the MCP SDK and helper libraries in the `server` package and restart the server. See `server/src/mcp/README.md` for instructions.

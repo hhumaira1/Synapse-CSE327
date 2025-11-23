@@ -17,6 +17,8 @@ import { AnalyticsModule } from './analytics/analytics.module';
 import { TicketsModule } from './tickets/tickets.module';
 import { OsticketModule } from './osticket/osticket.module';
 import { JiraModule } from './jira/jira.module';
+import { ChatbotModule } from './chatbot/chatbot.module';
+import { TelegramModule } from './telegram/telegram.module';
 
 @Module({
   imports: [
@@ -38,6 +40,8 @@ import { JiraModule } from './jira/jira.module';
     TicketsModule,
     OsticketModule,
     JiraModule,
+    ChatbotModule,
+    TelegramModule,
   ],
   controllers: [AppController],
   providers: [AppService],

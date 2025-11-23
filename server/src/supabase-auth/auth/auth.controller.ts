@@ -7,26 +7,46 @@ import {
   Get,
   UseGuards,
 } from '@nestjs/common';
+import { IsEmail, IsString, IsOptional } from 'class-validator';
 import { SupabaseAuthService } from '../supabase-auth/supabase-auth.service';
 import { SupabaseAuthGuard } from '../guards/supabase-auth/supabase-auth.guard';
 import { CurrentUser } from '../decorators/current-user.decorator';
 import { AuthService } from '../../auth/auth.service';
 
 class SignUpDto {
+  @IsEmail()
   email: string;
+
+  @IsString()
   password: string;
+
+  @IsOptional()
+  @IsString()
   firstName?: string;
+
+  @IsOptional()
+  @IsString()
   lastName?: string;
+
+  @IsOptional()
+  @IsString()
   workspaceName?: string;
+
+  @IsOptional()
+  @IsString()
   workspaceType?: string;
 }
 
 class SignInDto {
+  @IsEmail()
   email: string;
+
+  @IsString()
   password: string;
 }
 
 class ResetPasswordDto {
+  @IsEmail()
   email: string;
 }
 

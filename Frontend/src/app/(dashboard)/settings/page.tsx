@@ -1,14 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Users, Bell, Shield, CreditCard, Plug } from "lucide-react";
 import TeamInvitationsSection from "@/components/settings/TeamInvitationsSection";
-import OsTicketSettings from "@/components/settings/OsTicketSettings";
+import TelegramSettings from "@/components/settings/TelegramSettings";
 
 export default function SettingsPage() {
-  const [activeTab, setActiveTab] = useState("team");
+  const searchParams = useSearchParams();
+  const activeTab = searchParams.get('tab') || "team";
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -20,7 +21,7 @@ export default function SettingsPage() {
           </p>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <Tabs value={activeTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid">
             <TabsTrigger value="team" className="flex items-center gap-2">
               <Users className="h-4 w-4" />
@@ -49,7 +50,7 @@ export default function SettingsPage() {
           </TabsContent>
 
           <TabsContent value="integrations" className="space-y-6">
-            <OsTicketSettings />
+            <TelegramSettings />
           </TabsContent>
 
           <TabsContent value="notifications" className="space-y-6">

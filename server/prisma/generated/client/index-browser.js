@@ -319,6 +319,44 @@ exports.Prisma.UserInvitationScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ConversationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tenantId: 'tenantId',
+  title: 'title',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.MessageScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  role: 'role',
+  content: 'content',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.TelegramLinkRequestScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  userId: 'userId',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.TelegramUserScalarFieldEnum = {
+  id: 'id',
+  telegramId: 'telegramId',
+  userId: 'userId',
+  username: 'username',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -412,7 +450,11 @@ exports.Prisma.ModelName = {
   Integration: 'Integration',
   CallLog: 'CallLog',
   PortalCustomer: 'PortalCustomer',
-  UserInvitation: 'UserInvitation'
+  UserInvitation: 'UserInvitation',
+  Conversation: 'Conversation',
+  Message: 'Message',
+  TelegramLinkRequest: 'TelegramLinkRequest',
+  TelegramUser: 'TelegramUser'
 };
 
 /**

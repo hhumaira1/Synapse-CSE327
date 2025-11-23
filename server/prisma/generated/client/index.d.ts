@@ -83,6 +83,26 @@ export type PortalCustomer = $Result.DefaultSelection<Prisma.$PortalCustomerPayl
  * 
  */
 export type UserInvitation = $Result.DefaultSelection<Prisma.$UserInvitationPayload>
+/**
+ * Model Conversation
+ * 
+ */
+export type Conversation = $Result.DefaultSelection<Prisma.$ConversationPayload>
+/**
+ * Model Message
+ * 
+ */
+export type Message = $Result.DefaultSelection<Prisma.$MessagePayload>
+/**
+ * Model TelegramLinkRequest
+ * 
+ */
+export type TelegramLinkRequest = $Result.DefaultSelection<Prisma.$TelegramLinkRequestPayload>
+/**
+ * Model TelegramUser
+ * 
+ */
+export type TelegramUser = $Result.DefaultSelection<Prisma.$TelegramUserPayload>
 
 /**
  * Enums
@@ -456,6 +476,46 @@ export class PrismaClient<
     * ```
     */
   get userInvitation(): Prisma.UserInvitationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.conversation`: Exposes CRUD operations for the **Conversation** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Conversations
+    * const conversations = await prisma.conversation.findMany()
+    * ```
+    */
+  get conversation(): Prisma.ConversationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.message`: Exposes CRUD operations for the **Message** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Messages
+    * const messages = await prisma.message.findMany()
+    * ```
+    */
+  get message(): Prisma.MessageDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.telegramLinkRequest`: Exposes CRUD operations for the **TelegramLinkRequest** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TelegramLinkRequests
+    * const telegramLinkRequests = await prisma.telegramLinkRequest.findMany()
+    * ```
+    */
+  get telegramLinkRequest(): Prisma.TelegramLinkRequestDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.telegramUser`: Exposes CRUD operations for the **TelegramUser** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TelegramUsers
+    * const telegramUsers = await prisma.telegramUser.findMany()
+    * ```
+    */
+  get telegramUser(): Prisma.TelegramUserDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -910,7 +970,11 @@ export namespace Prisma {
     Integration: 'Integration',
     CallLog: 'CallLog',
     PortalCustomer: 'PortalCustomer',
-    UserInvitation: 'UserInvitation'
+    UserInvitation: 'UserInvitation',
+    Conversation: 'Conversation',
+    Message: 'Message',
+    TelegramLinkRequest: 'TelegramLinkRequest',
+    TelegramUser: 'TelegramUser'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -929,7 +993,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "tenant" | "user" | "contact" | "lead" | "pipeline" | "stage" | "deal" | "interaction" | "ticket" | "ticketComment" | "integration" | "callLog" | "portalCustomer" | "userInvitation"
+      modelProps: "tenant" | "user" | "contact" | "lead" | "pipeline" | "stage" | "deal" | "interaction" | "ticket" | "ticketComment" | "integration" | "callLog" | "portalCustomer" | "userInvitation" | "conversation" | "message" | "telegramLinkRequest" | "telegramUser"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1969,6 +2033,302 @@ export namespace Prisma {
           }
         }
       }
+      Conversation: {
+        payload: Prisma.$ConversationPayload<ExtArgs>
+        fields: Prisma.ConversationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ConversationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ConversationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationPayload>
+          }
+          findFirst: {
+            args: Prisma.ConversationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ConversationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationPayload>
+          }
+          findMany: {
+            args: Prisma.ConversationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationPayload>[]
+          }
+          create: {
+            args: Prisma.ConversationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationPayload>
+          }
+          createMany: {
+            args: Prisma.ConversationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ConversationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationPayload>[]
+          }
+          delete: {
+            args: Prisma.ConversationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationPayload>
+          }
+          update: {
+            args: Prisma.ConversationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationPayload>
+          }
+          deleteMany: {
+            args: Prisma.ConversationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ConversationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ConversationUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationPayload>[]
+          }
+          upsert: {
+            args: Prisma.ConversationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationPayload>
+          }
+          aggregate: {
+            args: Prisma.ConversationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateConversation>
+          }
+          groupBy: {
+            args: Prisma.ConversationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ConversationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ConversationCountArgs<ExtArgs>
+            result: $Utils.Optional<ConversationCountAggregateOutputType> | number
+          }
+        }
+      }
+      Message: {
+        payload: Prisma.$MessagePayload<ExtArgs>
+        fields: Prisma.MessageFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MessageFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessagePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MessageFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessagePayload>
+          }
+          findFirst: {
+            args: Prisma.MessageFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessagePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MessageFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessagePayload>
+          }
+          findMany: {
+            args: Prisma.MessageFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessagePayload>[]
+          }
+          create: {
+            args: Prisma.MessageCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessagePayload>
+          }
+          createMany: {
+            args: Prisma.MessageCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MessageCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessagePayload>[]
+          }
+          delete: {
+            args: Prisma.MessageDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessagePayload>
+          }
+          update: {
+            args: Prisma.MessageUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessagePayload>
+          }
+          deleteMany: {
+            args: Prisma.MessageDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MessageUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.MessageUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessagePayload>[]
+          }
+          upsert: {
+            args: Prisma.MessageUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessagePayload>
+          }
+          aggregate: {
+            args: Prisma.MessageAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMessage>
+          }
+          groupBy: {
+            args: Prisma.MessageGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MessageGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MessageCountArgs<ExtArgs>
+            result: $Utils.Optional<MessageCountAggregateOutputType> | number
+          }
+        }
+      }
+      TelegramLinkRequest: {
+        payload: Prisma.$TelegramLinkRequestPayload<ExtArgs>
+        fields: Prisma.TelegramLinkRequestFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TelegramLinkRequestFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TelegramLinkRequestPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TelegramLinkRequestFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TelegramLinkRequestPayload>
+          }
+          findFirst: {
+            args: Prisma.TelegramLinkRequestFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TelegramLinkRequestPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TelegramLinkRequestFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TelegramLinkRequestPayload>
+          }
+          findMany: {
+            args: Prisma.TelegramLinkRequestFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TelegramLinkRequestPayload>[]
+          }
+          create: {
+            args: Prisma.TelegramLinkRequestCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TelegramLinkRequestPayload>
+          }
+          createMany: {
+            args: Prisma.TelegramLinkRequestCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TelegramLinkRequestCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TelegramLinkRequestPayload>[]
+          }
+          delete: {
+            args: Prisma.TelegramLinkRequestDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TelegramLinkRequestPayload>
+          }
+          update: {
+            args: Prisma.TelegramLinkRequestUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TelegramLinkRequestPayload>
+          }
+          deleteMany: {
+            args: Prisma.TelegramLinkRequestDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TelegramLinkRequestUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TelegramLinkRequestUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TelegramLinkRequestPayload>[]
+          }
+          upsert: {
+            args: Prisma.TelegramLinkRequestUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TelegramLinkRequestPayload>
+          }
+          aggregate: {
+            args: Prisma.TelegramLinkRequestAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTelegramLinkRequest>
+          }
+          groupBy: {
+            args: Prisma.TelegramLinkRequestGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TelegramLinkRequestGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TelegramLinkRequestCountArgs<ExtArgs>
+            result: $Utils.Optional<TelegramLinkRequestCountAggregateOutputType> | number
+          }
+        }
+      }
+      TelegramUser: {
+        payload: Prisma.$TelegramUserPayload<ExtArgs>
+        fields: Prisma.TelegramUserFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TelegramUserFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TelegramUserPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TelegramUserFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TelegramUserPayload>
+          }
+          findFirst: {
+            args: Prisma.TelegramUserFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TelegramUserPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TelegramUserFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TelegramUserPayload>
+          }
+          findMany: {
+            args: Prisma.TelegramUserFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TelegramUserPayload>[]
+          }
+          create: {
+            args: Prisma.TelegramUserCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TelegramUserPayload>
+          }
+          createMany: {
+            args: Prisma.TelegramUserCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TelegramUserCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TelegramUserPayload>[]
+          }
+          delete: {
+            args: Prisma.TelegramUserDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TelegramUserPayload>
+          }
+          update: {
+            args: Prisma.TelegramUserUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TelegramUserPayload>
+          }
+          deleteMany: {
+            args: Prisma.TelegramUserDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TelegramUserUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TelegramUserUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TelegramUserPayload>[]
+          }
+          upsert: {
+            args: Prisma.TelegramUserUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TelegramUserPayload>
+          }
+          aggregate: {
+            args: Prisma.TelegramUserAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTelegramUser>
+          }
+          groupBy: {
+            args: Prisma.TelegramUserGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TelegramUserGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TelegramUserCountArgs<ExtArgs>
+            result: $Utils.Optional<TelegramUserCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2079,6 +2439,10 @@ export namespace Prisma {
     callLog?: CallLogOmit
     portalCustomer?: PortalCustomerOmit
     userInvitation?: UserInvitationOmit
+    conversation?: ConversationOmit
+    message?: MessageOmit
+    telegramLinkRequest?: TelegramLinkRequestOmit
+    telegramUser?: TelegramUserOmit
   }
 
   /* Types for Logging */
@@ -2170,6 +2534,7 @@ export namespace Prisma {
     callLogs: number
     portalCustomers: number
     userInvitations: number
+    conversations: number
   }
 
   export type TenantCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2184,6 +2549,7 @@ export namespace Prisma {
     callLogs?: boolean | TenantCountOutputTypeCountCallLogsArgs
     portalCustomers?: boolean | TenantCountOutputTypeCountPortalCustomersArgs
     userInvitations?: boolean | TenantCountOutputTypeCountUserInvitationsArgs
+    conversations?: boolean | TenantCountOutputTypeCountConversationsArgs
   }
 
   // Custom InputTypes
@@ -2274,6 +2640,13 @@ export namespace Prisma {
     where?: UserInvitationWhereInput
   }
 
+  /**
+   * TenantCountOutputType without action
+   */
+  export type TenantCountOutputTypeCountConversationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConversationWhereInput
+  }
+
 
   /**
    * Count Type UserCountOutputType
@@ -2285,6 +2658,9 @@ export namespace Prisma {
     ticketComments: number
     invitations: number
     callLogs: number
+    conversations: number
+    telegramUsers: number
+    telegramLinkRequests: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2293,6 +2669,9 @@ export namespace Prisma {
     ticketComments?: boolean | UserCountOutputTypeCountTicketCommentsArgs
     invitations?: boolean | UserCountOutputTypeCountInvitationsArgs
     callLogs?: boolean | UserCountOutputTypeCountCallLogsArgs
+    conversations?: boolean | UserCountOutputTypeCountConversationsArgs
+    telegramUsers?: boolean | UserCountOutputTypeCountTelegramUsersArgs
+    telegramLinkRequests?: boolean | UserCountOutputTypeCountTelegramLinkRequestsArgs
   }
 
   // Custom InputTypes
@@ -2339,6 +2718,27 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountCallLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CallLogWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountConversationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConversationWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountTelegramUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TelegramUserWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountTelegramLinkRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TelegramLinkRequestWhereInput
   }
 
 
@@ -2641,6 +3041,37 @@ export namespace Prisma {
 
 
   /**
+   * Count Type ConversationCountOutputType
+   */
+
+  export type ConversationCountOutputType = {
+    messages: number
+  }
+
+  export type ConversationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    messages?: boolean | ConversationCountOutputTypeCountMessagesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ConversationCountOutputType without action
+   */
+  export type ConversationCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationCountOutputType
+     */
+    select?: ConversationCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ConversationCountOutputType without action
+   */
+  export type ConversationCountOutputTypeCountMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MessageWhereInput
+  }
+
+
+  /**
    * Models
    */
 
@@ -2839,6 +3270,7 @@ export namespace Prisma {
     callLogs?: boolean | Tenant$callLogsArgs<ExtArgs>
     portalCustomers?: boolean | Tenant$portalCustomersArgs<ExtArgs>
     userInvitations?: boolean | Tenant$userInvitationsArgs<ExtArgs>
+    conversations?: boolean | Tenant$conversationsArgs<ExtArgs>
     _count?: boolean | TenantCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["tenant"]>
 
@@ -2888,6 +3320,7 @@ export namespace Prisma {
     callLogs?: boolean | Tenant$callLogsArgs<ExtArgs>
     portalCustomers?: boolean | Tenant$portalCustomersArgs<ExtArgs>
     userInvitations?: boolean | Tenant$userInvitationsArgs<ExtArgs>
+    conversations?: boolean | Tenant$conversationsArgs<ExtArgs>
     _count?: boolean | TenantCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TenantIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2907,6 +3340,7 @@ export namespace Prisma {
       callLogs: Prisma.$CallLogPayload<ExtArgs>[]
       portalCustomers: Prisma.$PortalCustomerPayload<ExtArgs>[]
       userInvitations: Prisma.$UserInvitationPayload<ExtArgs>[]
+      conversations: Prisma.$ConversationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3322,6 +3756,7 @@ export namespace Prisma {
     callLogs<T extends Tenant$callLogsArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$callLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CallLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     portalCustomers<T extends Tenant$portalCustomersArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$portalCustomersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PortalCustomerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     userInvitations<T extends Tenant$userInvitationsArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$userInvitationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserInvitationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    conversations<T extends Tenant$conversationsArgs<ExtArgs> = {}>(args?: Subset<T, Tenant$conversationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4011,6 +4446,30 @@ export namespace Prisma {
   }
 
   /**
+   * Tenant.conversations
+   */
+  export type Tenant$conversationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationInclude<ExtArgs> | null
+    where?: ConversationWhereInput
+    orderBy?: ConversationOrderByWithRelationInput | ConversationOrderByWithRelationInput[]
+    cursor?: ConversationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ConversationScalarFieldEnum | ConversationScalarFieldEnum[]
+  }
+
+  /**
    * Tenant without action
    */
   export type TenantDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4247,6 +4706,9 @@ export namespace Prisma {
     ticketComments?: boolean | User$ticketCommentsArgs<ExtArgs>
     invitations?: boolean | User$invitationsArgs<ExtArgs>
     callLogs?: boolean | User$callLogsArgs<ExtArgs>
+    conversations?: boolean | User$conversationsArgs<ExtArgs>
+    telegramUsers?: boolean | User$telegramUsersArgs<ExtArgs>
+    telegramLinkRequests?: boolean | User$telegramLinkRequestsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -4302,6 +4764,9 @@ export namespace Prisma {
     ticketComments?: boolean | User$ticketCommentsArgs<ExtArgs>
     invitations?: boolean | User$invitationsArgs<ExtArgs>
     callLogs?: boolean | User$callLogsArgs<ExtArgs>
+    conversations?: boolean | User$conversationsArgs<ExtArgs>
+    telegramUsers?: boolean | User$telegramUsersArgs<ExtArgs>
+    telegramLinkRequests?: boolean | User$telegramLinkRequestsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4320,6 +4785,9 @@ export namespace Prisma {
       ticketComments: Prisma.$TicketCommentPayload<ExtArgs>[]
       invitations: Prisma.$UserInvitationPayload<ExtArgs>[]
       callLogs: Prisma.$CallLogPayload<ExtArgs>[]
+      conversations: Prisma.$ConversationPayload<ExtArgs>[]
+      telegramUsers: Prisma.$TelegramUserPayload<ExtArgs>[]
+      telegramLinkRequests: Prisma.$TelegramLinkRequestPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -4733,6 +5201,9 @@ export namespace Prisma {
     ticketComments<T extends User$ticketCommentsArgs<ExtArgs> = {}>(args?: Subset<T, User$ticketCommentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TicketCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     invitations<T extends User$invitationsArgs<ExtArgs> = {}>(args?: Subset<T, User$invitationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserInvitationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     callLogs<T extends User$callLogsArgs<ExtArgs> = {}>(args?: Subset<T, User$callLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CallLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    conversations<T extends User$conversationsArgs<ExtArgs> = {}>(args?: Subset<T, User$conversationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    telegramUsers<T extends User$telegramUsersArgs<ExtArgs> = {}>(args?: Subset<T, User$telegramUsersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TelegramUserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    telegramLinkRequests<T extends User$telegramLinkRequestsArgs<ExtArgs> = {}>(args?: Subset<T, User$telegramLinkRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TelegramLinkRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5286,6 +5757,78 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: CallLogScalarFieldEnum | CallLogScalarFieldEnum[]
+  }
+
+  /**
+   * User.conversations
+   */
+  export type User$conversationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationInclude<ExtArgs> | null
+    where?: ConversationWhereInput
+    orderBy?: ConversationOrderByWithRelationInput | ConversationOrderByWithRelationInput[]
+    cursor?: ConversationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ConversationScalarFieldEnum | ConversationScalarFieldEnum[]
+  }
+
+  /**
+   * User.telegramUsers
+   */
+  export type User$telegramUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TelegramUser
+     */
+    select?: TelegramUserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TelegramUser
+     */
+    omit?: TelegramUserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TelegramUserInclude<ExtArgs> | null
+    where?: TelegramUserWhereInput
+    orderBy?: TelegramUserOrderByWithRelationInput | TelegramUserOrderByWithRelationInput[]
+    cursor?: TelegramUserWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TelegramUserScalarFieldEnum | TelegramUserScalarFieldEnum[]
+  }
+
+  /**
+   * User.telegramLinkRequests
+   */
+  export type User$telegramLinkRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TelegramLinkRequest
+     */
+    select?: TelegramLinkRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TelegramLinkRequest
+     */
+    omit?: TelegramLinkRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TelegramLinkRequestInclude<ExtArgs> | null
+    where?: TelegramLinkRequestWhereInput
+    orderBy?: TelegramLinkRequestOrderByWithRelationInput | TelegramLinkRequestOrderByWithRelationInput[]
+    cursor?: TelegramLinkRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TelegramLinkRequestScalarFieldEnum | TelegramLinkRequestScalarFieldEnum[]
   }
 
   /**
@@ -19998,6 +20541,4354 @@ export namespace Prisma {
 
 
   /**
+   * Model Conversation
+   */
+
+  export type AggregateConversation = {
+    _count: ConversationCountAggregateOutputType | null
+    _min: ConversationMinAggregateOutputType | null
+    _max: ConversationMaxAggregateOutputType | null
+  }
+
+  export type ConversationMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    tenantId: string | null
+    title: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ConversationMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    tenantId: string | null
+    title: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ConversationCountAggregateOutputType = {
+    id: number
+    userId: number
+    tenantId: number
+    title: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ConversationMinAggregateInputType = {
+    id?: true
+    userId?: true
+    tenantId?: true
+    title?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ConversationMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    tenantId?: true
+    title?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ConversationCountAggregateInputType = {
+    id?: true
+    userId?: true
+    tenantId?: true
+    title?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ConversationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Conversation to aggregate.
+     */
+    where?: ConversationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Conversations to fetch.
+     */
+    orderBy?: ConversationOrderByWithRelationInput | ConversationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ConversationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Conversations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Conversations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Conversations
+    **/
+    _count?: true | ConversationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ConversationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ConversationMaxAggregateInputType
+  }
+
+  export type GetConversationAggregateType<T extends ConversationAggregateArgs> = {
+        [P in keyof T & keyof AggregateConversation]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateConversation[P]>
+      : GetScalarType<T[P], AggregateConversation[P]>
+  }
+
+
+
+
+  export type ConversationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConversationWhereInput
+    orderBy?: ConversationOrderByWithAggregationInput | ConversationOrderByWithAggregationInput[]
+    by: ConversationScalarFieldEnum[] | ConversationScalarFieldEnum
+    having?: ConversationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ConversationCountAggregateInputType | true
+    _min?: ConversationMinAggregateInputType
+    _max?: ConversationMaxAggregateInputType
+  }
+
+  export type ConversationGroupByOutputType = {
+    id: string
+    userId: string
+    tenantId: string
+    title: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: ConversationCountAggregateOutputType | null
+    _min: ConversationMinAggregateOutputType | null
+    _max: ConversationMaxAggregateOutputType | null
+  }
+
+  type GetConversationGroupByPayload<T extends ConversationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ConversationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ConversationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ConversationGroupByOutputType[P]>
+            : GetScalarType<T[P], ConversationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ConversationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    tenantId?: boolean
+    title?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    messages?: boolean | Conversation$messagesArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    tenant?: boolean | TenantDefaultArgs<ExtArgs>
+    _count?: boolean | ConversationCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["conversation"]>
+
+  export type ConversationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    tenantId?: boolean
+    title?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    tenant?: boolean | TenantDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["conversation"]>
+
+  export type ConversationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    tenantId?: boolean
+    title?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    tenant?: boolean | TenantDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["conversation"]>
+
+  export type ConversationSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    tenantId?: boolean
+    title?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ConversationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "tenantId" | "title" | "createdAt" | "updatedAt", ExtArgs["result"]["conversation"]>
+  export type ConversationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    messages?: boolean | Conversation$messagesArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    tenant?: boolean | TenantDefaultArgs<ExtArgs>
+    _count?: boolean | ConversationCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ConversationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    tenant?: boolean | TenantDefaultArgs<ExtArgs>
+  }
+  export type ConversationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    tenant?: boolean | TenantDefaultArgs<ExtArgs>
+  }
+
+  export type $ConversationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Conversation"
+    objects: {
+      messages: Prisma.$MessagePayload<ExtArgs>[]
+      user: Prisma.$UserPayload<ExtArgs>
+      tenant: Prisma.$TenantPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      tenantId: string
+      title: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["conversation"]>
+    composites: {}
+  }
+
+  type ConversationGetPayload<S extends boolean | null | undefined | ConversationDefaultArgs> = $Result.GetResult<Prisma.$ConversationPayload, S>
+
+  type ConversationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ConversationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ConversationCountAggregateInputType | true
+    }
+
+  export interface ConversationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Conversation'], meta: { name: 'Conversation' } }
+    /**
+     * Find zero or one Conversation that matches the filter.
+     * @param {ConversationFindUniqueArgs} args - Arguments to find a Conversation
+     * @example
+     * // Get one Conversation
+     * const conversation = await prisma.conversation.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ConversationFindUniqueArgs>(args: SelectSubset<T, ConversationFindUniqueArgs<ExtArgs>>): Prisma__ConversationClient<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Conversation that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ConversationFindUniqueOrThrowArgs} args - Arguments to find a Conversation
+     * @example
+     * // Get one Conversation
+     * const conversation = await prisma.conversation.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ConversationFindUniqueOrThrowArgs>(args: SelectSubset<T, ConversationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ConversationClient<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Conversation that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationFindFirstArgs} args - Arguments to find a Conversation
+     * @example
+     * // Get one Conversation
+     * const conversation = await prisma.conversation.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ConversationFindFirstArgs>(args?: SelectSubset<T, ConversationFindFirstArgs<ExtArgs>>): Prisma__ConversationClient<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Conversation that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationFindFirstOrThrowArgs} args - Arguments to find a Conversation
+     * @example
+     * // Get one Conversation
+     * const conversation = await prisma.conversation.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ConversationFindFirstOrThrowArgs>(args?: SelectSubset<T, ConversationFindFirstOrThrowArgs<ExtArgs>>): Prisma__ConversationClient<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Conversations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Conversations
+     * const conversations = await prisma.conversation.findMany()
+     * 
+     * // Get first 10 Conversations
+     * const conversations = await prisma.conversation.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const conversationWithIdOnly = await prisma.conversation.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ConversationFindManyArgs>(args?: SelectSubset<T, ConversationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Conversation.
+     * @param {ConversationCreateArgs} args - Arguments to create a Conversation.
+     * @example
+     * // Create one Conversation
+     * const Conversation = await prisma.conversation.create({
+     *   data: {
+     *     // ... data to create a Conversation
+     *   }
+     * })
+     * 
+     */
+    create<T extends ConversationCreateArgs>(args: SelectSubset<T, ConversationCreateArgs<ExtArgs>>): Prisma__ConversationClient<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Conversations.
+     * @param {ConversationCreateManyArgs} args - Arguments to create many Conversations.
+     * @example
+     * // Create many Conversations
+     * const conversation = await prisma.conversation.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ConversationCreateManyArgs>(args?: SelectSubset<T, ConversationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Conversations and returns the data saved in the database.
+     * @param {ConversationCreateManyAndReturnArgs} args - Arguments to create many Conversations.
+     * @example
+     * // Create many Conversations
+     * const conversation = await prisma.conversation.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Conversations and only return the `id`
+     * const conversationWithIdOnly = await prisma.conversation.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ConversationCreateManyAndReturnArgs>(args?: SelectSubset<T, ConversationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Conversation.
+     * @param {ConversationDeleteArgs} args - Arguments to delete one Conversation.
+     * @example
+     * // Delete one Conversation
+     * const Conversation = await prisma.conversation.delete({
+     *   where: {
+     *     // ... filter to delete one Conversation
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ConversationDeleteArgs>(args: SelectSubset<T, ConversationDeleteArgs<ExtArgs>>): Prisma__ConversationClient<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Conversation.
+     * @param {ConversationUpdateArgs} args - Arguments to update one Conversation.
+     * @example
+     * // Update one Conversation
+     * const conversation = await prisma.conversation.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ConversationUpdateArgs>(args: SelectSubset<T, ConversationUpdateArgs<ExtArgs>>): Prisma__ConversationClient<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Conversations.
+     * @param {ConversationDeleteManyArgs} args - Arguments to filter Conversations to delete.
+     * @example
+     * // Delete a few Conversations
+     * const { count } = await prisma.conversation.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ConversationDeleteManyArgs>(args?: SelectSubset<T, ConversationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Conversations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Conversations
+     * const conversation = await prisma.conversation.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ConversationUpdateManyArgs>(args: SelectSubset<T, ConversationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Conversations and returns the data updated in the database.
+     * @param {ConversationUpdateManyAndReturnArgs} args - Arguments to update many Conversations.
+     * @example
+     * // Update many Conversations
+     * const conversation = await prisma.conversation.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Conversations and only return the `id`
+     * const conversationWithIdOnly = await prisma.conversation.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ConversationUpdateManyAndReturnArgs>(args: SelectSubset<T, ConversationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Conversation.
+     * @param {ConversationUpsertArgs} args - Arguments to update or create a Conversation.
+     * @example
+     * // Update or create a Conversation
+     * const conversation = await prisma.conversation.upsert({
+     *   create: {
+     *     // ... data to create a Conversation
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Conversation we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ConversationUpsertArgs>(args: SelectSubset<T, ConversationUpsertArgs<ExtArgs>>): Prisma__ConversationClient<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Conversations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationCountArgs} args - Arguments to filter Conversations to count.
+     * @example
+     * // Count the number of Conversations
+     * const count = await prisma.conversation.count({
+     *   where: {
+     *     // ... the filter for the Conversations we want to count
+     *   }
+     * })
+    **/
+    count<T extends ConversationCountArgs>(
+      args?: Subset<T, ConversationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ConversationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Conversation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ConversationAggregateArgs>(args: Subset<T, ConversationAggregateArgs>): Prisma.PrismaPromise<GetConversationAggregateType<T>>
+
+    /**
+     * Group by Conversation.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ConversationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ConversationGroupByArgs['orderBy'] }
+        : { orderBy?: ConversationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ConversationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetConversationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Conversation model
+   */
+  readonly fields: ConversationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Conversation.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ConversationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    messages<T extends Conversation$messagesArgs<ExtArgs> = {}>(args?: Subset<T, Conversation$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    tenant<T extends TenantDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TenantDefaultArgs<ExtArgs>>): Prisma__TenantClient<$Result.GetResult<Prisma.$TenantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Conversation model
+   */
+  interface ConversationFieldRefs {
+    readonly id: FieldRef<"Conversation", 'String'>
+    readonly userId: FieldRef<"Conversation", 'String'>
+    readonly tenantId: FieldRef<"Conversation", 'String'>
+    readonly title: FieldRef<"Conversation", 'String'>
+    readonly createdAt: FieldRef<"Conversation", 'DateTime'>
+    readonly updatedAt: FieldRef<"Conversation", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Conversation findUnique
+   */
+  export type ConversationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationInclude<ExtArgs> | null
+    /**
+     * Filter, which Conversation to fetch.
+     */
+    where: ConversationWhereUniqueInput
+  }
+
+  /**
+   * Conversation findUniqueOrThrow
+   */
+  export type ConversationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationInclude<ExtArgs> | null
+    /**
+     * Filter, which Conversation to fetch.
+     */
+    where: ConversationWhereUniqueInput
+  }
+
+  /**
+   * Conversation findFirst
+   */
+  export type ConversationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationInclude<ExtArgs> | null
+    /**
+     * Filter, which Conversation to fetch.
+     */
+    where?: ConversationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Conversations to fetch.
+     */
+    orderBy?: ConversationOrderByWithRelationInput | ConversationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Conversations.
+     */
+    cursor?: ConversationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Conversations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Conversations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Conversations.
+     */
+    distinct?: ConversationScalarFieldEnum | ConversationScalarFieldEnum[]
+  }
+
+  /**
+   * Conversation findFirstOrThrow
+   */
+  export type ConversationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationInclude<ExtArgs> | null
+    /**
+     * Filter, which Conversation to fetch.
+     */
+    where?: ConversationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Conversations to fetch.
+     */
+    orderBy?: ConversationOrderByWithRelationInput | ConversationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Conversations.
+     */
+    cursor?: ConversationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Conversations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Conversations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Conversations.
+     */
+    distinct?: ConversationScalarFieldEnum | ConversationScalarFieldEnum[]
+  }
+
+  /**
+   * Conversation findMany
+   */
+  export type ConversationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationInclude<ExtArgs> | null
+    /**
+     * Filter, which Conversations to fetch.
+     */
+    where?: ConversationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Conversations to fetch.
+     */
+    orderBy?: ConversationOrderByWithRelationInput | ConversationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Conversations.
+     */
+    cursor?: ConversationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Conversations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Conversations.
+     */
+    skip?: number
+    distinct?: ConversationScalarFieldEnum | ConversationScalarFieldEnum[]
+  }
+
+  /**
+   * Conversation create
+   */
+  export type ConversationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Conversation.
+     */
+    data: XOR<ConversationCreateInput, ConversationUncheckedCreateInput>
+  }
+
+  /**
+   * Conversation createMany
+   */
+  export type ConversationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Conversations.
+     */
+    data: ConversationCreateManyInput | ConversationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Conversation createManyAndReturn
+   */
+  export type ConversationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * The data used to create many Conversations.
+     */
+    data: ConversationCreateManyInput | ConversationCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Conversation update
+   */
+  export type ConversationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Conversation.
+     */
+    data: XOR<ConversationUpdateInput, ConversationUncheckedUpdateInput>
+    /**
+     * Choose, which Conversation to update.
+     */
+    where: ConversationWhereUniqueInput
+  }
+
+  /**
+   * Conversation updateMany
+   */
+  export type ConversationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Conversations.
+     */
+    data: XOR<ConversationUpdateManyMutationInput, ConversationUncheckedUpdateManyInput>
+    /**
+     * Filter which Conversations to update
+     */
+    where?: ConversationWhereInput
+    /**
+     * Limit how many Conversations to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Conversation updateManyAndReturn
+   */
+  export type ConversationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * The data used to update Conversations.
+     */
+    data: XOR<ConversationUpdateManyMutationInput, ConversationUncheckedUpdateManyInput>
+    /**
+     * Filter which Conversations to update
+     */
+    where?: ConversationWhereInput
+    /**
+     * Limit how many Conversations to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Conversation upsert
+   */
+  export type ConversationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Conversation to update in case it exists.
+     */
+    where: ConversationWhereUniqueInput
+    /**
+     * In case the Conversation found by the `where` argument doesn't exist, create a new Conversation with this data.
+     */
+    create: XOR<ConversationCreateInput, ConversationUncheckedCreateInput>
+    /**
+     * In case the Conversation was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ConversationUpdateInput, ConversationUncheckedUpdateInput>
+  }
+
+  /**
+   * Conversation delete
+   */
+  export type ConversationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationInclude<ExtArgs> | null
+    /**
+     * Filter which Conversation to delete.
+     */
+    where: ConversationWhereUniqueInput
+  }
+
+  /**
+   * Conversation deleteMany
+   */
+  export type ConversationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Conversations to delete
+     */
+    where?: ConversationWhereInput
+    /**
+     * Limit how many Conversations to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Conversation.messages
+   */
+  export type Conversation$messagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Message
+     */
+    select?: MessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Message
+     */
+    omit?: MessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageInclude<ExtArgs> | null
+    where?: MessageWhereInput
+    orderBy?: MessageOrderByWithRelationInput | MessageOrderByWithRelationInput[]
+    cursor?: MessageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MessageScalarFieldEnum | MessageScalarFieldEnum[]
+  }
+
+  /**
+   * Conversation without action
+   */
+  export type ConversationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Message
+   */
+
+  export type AggregateMessage = {
+    _count: MessageCountAggregateOutputType | null
+    _min: MessageMinAggregateOutputType | null
+    _max: MessageMaxAggregateOutputType | null
+  }
+
+  export type MessageMinAggregateOutputType = {
+    id: string | null
+    conversationId: string | null
+    role: string | null
+    content: string | null
+    createdAt: Date | null
+  }
+
+  export type MessageMaxAggregateOutputType = {
+    id: string | null
+    conversationId: string | null
+    role: string | null
+    content: string | null
+    createdAt: Date | null
+  }
+
+  export type MessageCountAggregateOutputType = {
+    id: number
+    conversationId: number
+    role: number
+    content: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type MessageMinAggregateInputType = {
+    id?: true
+    conversationId?: true
+    role?: true
+    content?: true
+    createdAt?: true
+  }
+
+  export type MessageMaxAggregateInputType = {
+    id?: true
+    conversationId?: true
+    role?: true
+    content?: true
+    createdAt?: true
+  }
+
+  export type MessageCountAggregateInputType = {
+    id?: true
+    conversationId?: true
+    role?: true
+    content?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type MessageAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Message to aggregate.
+     */
+    where?: MessageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Messages to fetch.
+     */
+    orderBy?: MessageOrderByWithRelationInput | MessageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MessageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Messages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Messages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Messages
+    **/
+    _count?: true | MessageCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MessageMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MessageMaxAggregateInputType
+  }
+
+  export type GetMessageAggregateType<T extends MessageAggregateArgs> = {
+        [P in keyof T & keyof AggregateMessage]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMessage[P]>
+      : GetScalarType<T[P], AggregateMessage[P]>
+  }
+
+
+
+
+  export type MessageGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MessageWhereInput
+    orderBy?: MessageOrderByWithAggregationInput | MessageOrderByWithAggregationInput[]
+    by: MessageScalarFieldEnum[] | MessageScalarFieldEnum
+    having?: MessageScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MessageCountAggregateInputType | true
+    _min?: MessageMinAggregateInputType
+    _max?: MessageMaxAggregateInputType
+  }
+
+  export type MessageGroupByOutputType = {
+    id: string
+    conversationId: string
+    role: string
+    content: string
+    createdAt: Date
+    _count: MessageCountAggregateOutputType | null
+    _min: MessageMinAggregateOutputType | null
+    _max: MessageMaxAggregateOutputType | null
+  }
+
+  type GetMessageGroupByPayload<T extends MessageGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MessageGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MessageGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MessageGroupByOutputType[P]>
+            : GetScalarType<T[P], MessageGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MessageSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    conversationId?: boolean
+    role?: boolean
+    content?: boolean
+    createdAt?: boolean
+    conversation?: boolean | ConversationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["message"]>
+
+  export type MessageSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    conversationId?: boolean
+    role?: boolean
+    content?: boolean
+    createdAt?: boolean
+    conversation?: boolean | ConversationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["message"]>
+
+  export type MessageSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    conversationId?: boolean
+    role?: boolean
+    content?: boolean
+    createdAt?: boolean
+    conversation?: boolean | ConversationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["message"]>
+
+  export type MessageSelectScalar = {
+    id?: boolean
+    conversationId?: boolean
+    role?: boolean
+    content?: boolean
+    createdAt?: boolean
+  }
+
+  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "conversationId" | "role" | "content" | "createdAt", ExtArgs["result"]["message"]>
+  export type MessageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    conversation?: boolean | ConversationDefaultArgs<ExtArgs>
+  }
+  export type MessageIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    conversation?: boolean | ConversationDefaultArgs<ExtArgs>
+  }
+  export type MessageIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    conversation?: boolean | ConversationDefaultArgs<ExtArgs>
+  }
+
+  export type $MessagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Message"
+    objects: {
+      conversation: Prisma.$ConversationPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      conversationId: string
+      role: string
+      content: string
+      createdAt: Date
+    }, ExtArgs["result"]["message"]>
+    composites: {}
+  }
+
+  type MessageGetPayload<S extends boolean | null | undefined | MessageDefaultArgs> = $Result.GetResult<Prisma.$MessagePayload, S>
+
+  type MessageCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MessageFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MessageCountAggregateInputType | true
+    }
+
+  export interface MessageDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Message'], meta: { name: 'Message' } }
+    /**
+     * Find zero or one Message that matches the filter.
+     * @param {MessageFindUniqueArgs} args - Arguments to find a Message
+     * @example
+     * // Get one Message
+     * const message = await prisma.message.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MessageFindUniqueArgs>(args: SelectSubset<T, MessageFindUniqueArgs<ExtArgs>>): Prisma__MessageClient<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Message that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MessageFindUniqueOrThrowArgs} args - Arguments to find a Message
+     * @example
+     * // Get one Message
+     * const message = await prisma.message.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MessageFindUniqueOrThrowArgs>(args: SelectSubset<T, MessageFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MessageClient<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Message that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MessageFindFirstArgs} args - Arguments to find a Message
+     * @example
+     * // Get one Message
+     * const message = await prisma.message.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MessageFindFirstArgs>(args?: SelectSubset<T, MessageFindFirstArgs<ExtArgs>>): Prisma__MessageClient<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Message that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MessageFindFirstOrThrowArgs} args - Arguments to find a Message
+     * @example
+     * // Get one Message
+     * const message = await prisma.message.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MessageFindFirstOrThrowArgs>(args?: SelectSubset<T, MessageFindFirstOrThrowArgs<ExtArgs>>): Prisma__MessageClient<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Messages that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MessageFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Messages
+     * const messages = await prisma.message.findMany()
+     * 
+     * // Get first 10 Messages
+     * const messages = await prisma.message.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const messageWithIdOnly = await prisma.message.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MessageFindManyArgs>(args?: SelectSubset<T, MessageFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Message.
+     * @param {MessageCreateArgs} args - Arguments to create a Message.
+     * @example
+     * // Create one Message
+     * const Message = await prisma.message.create({
+     *   data: {
+     *     // ... data to create a Message
+     *   }
+     * })
+     * 
+     */
+    create<T extends MessageCreateArgs>(args: SelectSubset<T, MessageCreateArgs<ExtArgs>>): Prisma__MessageClient<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Messages.
+     * @param {MessageCreateManyArgs} args - Arguments to create many Messages.
+     * @example
+     * // Create many Messages
+     * const message = await prisma.message.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MessageCreateManyArgs>(args?: SelectSubset<T, MessageCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Messages and returns the data saved in the database.
+     * @param {MessageCreateManyAndReturnArgs} args - Arguments to create many Messages.
+     * @example
+     * // Create many Messages
+     * const message = await prisma.message.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Messages and only return the `id`
+     * const messageWithIdOnly = await prisma.message.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MessageCreateManyAndReturnArgs>(args?: SelectSubset<T, MessageCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Message.
+     * @param {MessageDeleteArgs} args - Arguments to delete one Message.
+     * @example
+     * // Delete one Message
+     * const Message = await prisma.message.delete({
+     *   where: {
+     *     // ... filter to delete one Message
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MessageDeleteArgs>(args: SelectSubset<T, MessageDeleteArgs<ExtArgs>>): Prisma__MessageClient<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Message.
+     * @param {MessageUpdateArgs} args - Arguments to update one Message.
+     * @example
+     * // Update one Message
+     * const message = await prisma.message.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MessageUpdateArgs>(args: SelectSubset<T, MessageUpdateArgs<ExtArgs>>): Prisma__MessageClient<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Messages.
+     * @param {MessageDeleteManyArgs} args - Arguments to filter Messages to delete.
+     * @example
+     * // Delete a few Messages
+     * const { count } = await prisma.message.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MessageDeleteManyArgs>(args?: SelectSubset<T, MessageDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Messages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MessageUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Messages
+     * const message = await prisma.message.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MessageUpdateManyArgs>(args: SelectSubset<T, MessageUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Messages and returns the data updated in the database.
+     * @param {MessageUpdateManyAndReturnArgs} args - Arguments to update many Messages.
+     * @example
+     * // Update many Messages
+     * const message = await prisma.message.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Messages and only return the `id`
+     * const messageWithIdOnly = await prisma.message.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends MessageUpdateManyAndReturnArgs>(args: SelectSubset<T, MessageUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Message.
+     * @param {MessageUpsertArgs} args - Arguments to update or create a Message.
+     * @example
+     * // Update or create a Message
+     * const message = await prisma.message.upsert({
+     *   create: {
+     *     // ... data to create a Message
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Message we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MessageUpsertArgs>(args: SelectSubset<T, MessageUpsertArgs<ExtArgs>>): Prisma__MessageClient<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Messages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MessageCountArgs} args - Arguments to filter Messages to count.
+     * @example
+     * // Count the number of Messages
+     * const count = await prisma.message.count({
+     *   where: {
+     *     // ... the filter for the Messages we want to count
+     *   }
+     * })
+    **/
+    count<T extends MessageCountArgs>(
+      args?: Subset<T, MessageCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MessageCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Message.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MessageAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MessageAggregateArgs>(args: Subset<T, MessageAggregateArgs>): Prisma.PrismaPromise<GetMessageAggregateType<T>>
+
+    /**
+     * Group by Message.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MessageGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MessageGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MessageGroupByArgs['orderBy'] }
+        : { orderBy?: MessageGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MessageGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMessageGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Message model
+   */
+  readonly fields: MessageFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Message.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MessageClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    conversation<T extends ConversationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ConversationDefaultArgs<ExtArgs>>): Prisma__ConversationClient<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Message model
+   */
+  interface MessageFieldRefs {
+    readonly id: FieldRef<"Message", 'String'>
+    readonly conversationId: FieldRef<"Message", 'String'>
+    readonly role: FieldRef<"Message", 'String'>
+    readonly content: FieldRef<"Message", 'String'>
+    readonly createdAt: FieldRef<"Message", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Message findUnique
+   */
+  export type MessageFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Message
+     */
+    select?: MessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Message
+     */
+    omit?: MessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageInclude<ExtArgs> | null
+    /**
+     * Filter, which Message to fetch.
+     */
+    where: MessageWhereUniqueInput
+  }
+
+  /**
+   * Message findUniqueOrThrow
+   */
+  export type MessageFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Message
+     */
+    select?: MessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Message
+     */
+    omit?: MessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageInclude<ExtArgs> | null
+    /**
+     * Filter, which Message to fetch.
+     */
+    where: MessageWhereUniqueInput
+  }
+
+  /**
+   * Message findFirst
+   */
+  export type MessageFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Message
+     */
+    select?: MessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Message
+     */
+    omit?: MessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageInclude<ExtArgs> | null
+    /**
+     * Filter, which Message to fetch.
+     */
+    where?: MessageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Messages to fetch.
+     */
+    orderBy?: MessageOrderByWithRelationInput | MessageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Messages.
+     */
+    cursor?: MessageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Messages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Messages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Messages.
+     */
+    distinct?: MessageScalarFieldEnum | MessageScalarFieldEnum[]
+  }
+
+  /**
+   * Message findFirstOrThrow
+   */
+  export type MessageFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Message
+     */
+    select?: MessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Message
+     */
+    omit?: MessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageInclude<ExtArgs> | null
+    /**
+     * Filter, which Message to fetch.
+     */
+    where?: MessageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Messages to fetch.
+     */
+    orderBy?: MessageOrderByWithRelationInput | MessageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Messages.
+     */
+    cursor?: MessageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Messages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Messages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Messages.
+     */
+    distinct?: MessageScalarFieldEnum | MessageScalarFieldEnum[]
+  }
+
+  /**
+   * Message findMany
+   */
+  export type MessageFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Message
+     */
+    select?: MessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Message
+     */
+    omit?: MessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageInclude<ExtArgs> | null
+    /**
+     * Filter, which Messages to fetch.
+     */
+    where?: MessageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Messages to fetch.
+     */
+    orderBy?: MessageOrderByWithRelationInput | MessageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Messages.
+     */
+    cursor?: MessageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Messages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Messages.
+     */
+    skip?: number
+    distinct?: MessageScalarFieldEnum | MessageScalarFieldEnum[]
+  }
+
+  /**
+   * Message create
+   */
+  export type MessageCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Message
+     */
+    select?: MessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Message
+     */
+    omit?: MessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Message.
+     */
+    data: XOR<MessageCreateInput, MessageUncheckedCreateInput>
+  }
+
+  /**
+   * Message createMany
+   */
+  export type MessageCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Messages.
+     */
+    data: MessageCreateManyInput | MessageCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Message createManyAndReturn
+   */
+  export type MessageCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Message
+     */
+    select?: MessageSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Message
+     */
+    omit?: MessageOmit<ExtArgs> | null
+    /**
+     * The data used to create many Messages.
+     */
+    data: MessageCreateManyInput | MessageCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Message update
+   */
+  export type MessageUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Message
+     */
+    select?: MessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Message
+     */
+    omit?: MessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Message.
+     */
+    data: XOR<MessageUpdateInput, MessageUncheckedUpdateInput>
+    /**
+     * Choose, which Message to update.
+     */
+    where: MessageWhereUniqueInput
+  }
+
+  /**
+   * Message updateMany
+   */
+  export type MessageUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Messages.
+     */
+    data: XOR<MessageUpdateManyMutationInput, MessageUncheckedUpdateManyInput>
+    /**
+     * Filter which Messages to update
+     */
+    where?: MessageWhereInput
+    /**
+     * Limit how many Messages to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Message updateManyAndReturn
+   */
+  export type MessageUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Message
+     */
+    select?: MessageSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Message
+     */
+    omit?: MessageOmit<ExtArgs> | null
+    /**
+     * The data used to update Messages.
+     */
+    data: XOR<MessageUpdateManyMutationInput, MessageUncheckedUpdateManyInput>
+    /**
+     * Filter which Messages to update
+     */
+    where?: MessageWhereInput
+    /**
+     * Limit how many Messages to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Message upsert
+   */
+  export type MessageUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Message
+     */
+    select?: MessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Message
+     */
+    omit?: MessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Message to update in case it exists.
+     */
+    where: MessageWhereUniqueInput
+    /**
+     * In case the Message found by the `where` argument doesn't exist, create a new Message with this data.
+     */
+    create: XOR<MessageCreateInput, MessageUncheckedCreateInput>
+    /**
+     * In case the Message was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MessageUpdateInput, MessageUncheckedUpdateInput>
+  }
+
+  /**
+   * Message delete
+   */
+  export type MessageDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Message
+     */
+    select?: MessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Message
+     */
+    omit?: MessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageInclude<ExtArgs> | null
+    /**
+     * Filter which Message to delete.
+     */
+    where: MessageWhereUniqueInput
+  }
+
+  /**
+   * Message deleteMany
+   */
+  export type MessageDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Messages to delete
+     */
+    where?: MessageWhereInput
+    /**
+     * Limit how many Messages to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Message without action
+   */
+  export type MessageDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Message
+     */
+    select?: MessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Message
+     */
+    omit?: MessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TelegramLinkRequest
+   */
+
+  export type AggregateTelegramLinkRequest = {
+    _count: TelegramLinkRequestCountAggregateOutputType | null
+    _min: TelegramLinkRequestMinAggregateOutputType | null
+    _max: TelegramLinkRequestMaxAggregateOutputType | null
+  }
+
+  export type TelegramLinkRequestMinAggregateOutputType = {
+    id: string | null
+    code: string | null
+    userId: string | null
+    expiresAt: Date | null
+    usedAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type TelegramLinkRequestMaxAggregateOutputType = {
+    id: string | null
+    code: string | null
+    userId: string | null
+    expiresAt: Date | null
+    usedAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type TelegramLinkRequestCountAggregateOutputType = {
+    id: number
+    code: number
+    userId: number
+    expiresAt: number
+    usedAt: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type TelegramLinkRequestMinAggregateInputType = {
+    id?: true
+    code?: true
+    userId?: true
+    expiresAt?: true
+    usedAt?: true
+    createdAt?: true
+  }
+
+  export type TelegramLinkRequestMaxAggregateInputType = {
+    id?: true
+    code?: true
+    userId?: true
+    expiresAt?: true
+    usedAt?: true
+    createdAt?: true
+  }
+
+  export type TelegramLinkRequestCountAggregateInputType = {
+    id?: true
+    code?: true
+    userId?: true
+    expiresAt?: true
+    usedAt?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type TelegramLinkRequestAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TelegramLinkRequest to aggregate.
+     */
+    where?: TelegramLinkRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TelegramLinkRequests to fetch.
+     */
+    orderBy?: TelegramLinkRequestOrderByWithRelationInput | TelegramLinkRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TelegramLinkRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TelegramLinkRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TelegramLinkRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TelegramLinkRequests
+    **/
+    _count?: true | TelegramLinkRequestCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TelegramLinkRequestMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TelegramLinkRequestMaxAggregateInputType
+  }
+
+  export type GetTelegramLinkRequestAggregateType<T extends TelegramLinkRequestAggregateArgs> = {
+        [P in keyof T & keyof AggregateTelegramLinkRequest]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTelegramLinkRequest[P]>
+      : GetScalarType<T[P], AggregateTelegramLinkRequest[P]>
+  }
+
+
+
+
+  export type TelegramLinkRequestGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TelegramLinkRequestWhereInput
+    orderBy?: TelegramLinkRequestOrderByWithAggregationInput | TelegramLinkRequestOrderByWithAggregationInput[]
+    by: TelegramLinkRequestScalarFieldEnum[] | TelegramLinkRequestScalarFieldEnum
+    having?: TelegramLinkRequestScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TelegramLinkRequestCountAggregateInputType | true
+    _min?: TelegramLinkRequestMinAggregateInputType
+    _max?: TelegramLinkRequestMaxAggregateInputType
+  }
+
+  export type TelegramLinkRequestGroupByOutputType = {
+    id: string
+    code: string
+    userId: string
+    expiresAt: Date
+    usedAt: Date | null
+    createdAt: Date
+    _count: TelegramLinkRequestCountAggregateOutputType | null
+    _min: TelegramLinkRequestMinAggregateOutputType | null
+    _max: TelegramLinkRequestMaxAggregateOutputType | null
+  }
+
+  type GetTelegramLinkRequestGroupByPayload<T extends TelegramLinkRequestGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TelegramLinkRequestGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TelegramLinkRequestGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TelegramLinkRequestGroupByOutputType[P]>
+            : GetScalarType<T[P], TelegramLinkRequestGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TelegramLinkRequestSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    userId?: boolean
+    expiresAt?: boolean
+    usedAt?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["telegramLinkRequest"]>
+
+  export type TelegramLinkRequestSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    userId?: boolean
+    expiresAt?: boolean
+    usedAt?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["telegramLinkRequest"]>
+
+  export type TelegramLinkRequestSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    userId?: boolean
+    expiresAt?: boolean
+    usedAt?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["telegramLinkRequest"]>
+
+  export type TelegramLinkRequestSelectScalar = {
+    id?: boolean
+    code?: boolean
+    userId?: boolean
+    expiresAt?: boolean
+    usedAt?: boolean
+    createdAt?: boolean
+  }
+
+  export type TelegramLinkRequestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "code" | "userId" | "expiresAt" | "usedAt" | "createdAt", ExtArgs["result"]["telegramLinkRequest"]>
+  export type TelegramLinkRequestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type TelegramLinkRequestIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type TelegramLinkRequestIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $TelegramLinkRequestPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TelegramLinkRequest"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      code: string
+      userId: string
+      expiresAt: Date
+      usedAt: Date | null
+      createdAt: Date
+    }, ExtArgs["result"]["telegramLinkRequest"]>
+    composites: {}
+  }
+
+  type TelegramLinkRequestGetPayload<S extends boolean | null | undefined | TelegramLinkRequestDefaultArgs> = $Result.GetResult<Prisma.$TelegramLinkRequestPayload, S>
+
+  type TelegramLinkRequestCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TelegramLinkRequestFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TelegramLinkRequestCountAggregateInputType | true
+    }
+
+  export interface TelegramLinkRequestDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TelegramLinkRequest'], meta: { name: 'TelegramLinkRequest' } }
+    /**
+     * Find zero or one TelegramLinkRequest that matches the filter.
+     * @param {TelegramLinkRequestFindUniqueArgs} args - Arguments to find a TelegramLinkRequest
+     * @example
+     * // Get one TelegramLinkRequest
+     * const telegramLinkRequest = await prisma.telegramLinkRequest.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TelegramLinkRequestFindUniqueArgs>(args: SelectSubset<T, TelegramLinkRequestFindUniqueArgs<ExtArgs>>): Prisma__TelegramLinkRequestClient<$Result.GetResult<Prisma.$TelegramLinkRequestPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TelegramLinkRequest that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TelegramLinkRequestFindUniqueOrThrowArgs} args - Arguments to find a TelegramLinkRequest
+     * @example
+     * // Get one TelegramLinkRequest
+     * const telegramLinkRequest = await prisma.telegramLinkRequest.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TelegramLinkRequestFindUniqueOrThrowArgs>(args: SelectSubset<T, TelegramLinkRequestFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TelegramLinkRequestClient<$Result.GetResult<Prisma.$TelegramLinkRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TelegramLinkRequest that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TelegramLinkRequestFindFirstArgs} args - Arguments to find a TelegramLinkRequest
+     * @example
+     * // Get one TelegramLinkRequest
+     * const telegramLinkRequest = await prisma.telegramLinkRequest.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TelegramLinkRequestFindFirstArgs>(args?: SelectSubset<T, TelegramLinkRequestFindFirstArgs<ExtArgs>>): Prisma__TelegramLinkRequestClient<$Result.GetResult<Prisma.$TelegramLinkRequestPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TelegramLinkRequest that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TelegramLinkRequestFindFirstOrThrowArgs} args - Arguments to find a TelegramLinkRequest
+     * @example
+     * // Get one TelegramLinkRequest
+     * const telegramLinkRequest = await prisma.telegramLinkRequest.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TelegramLinkRequestFindFirstOrThrowArgs>(args?: SelectSubset<T, TelegramLinkRequestFindFirstOrThrowArgs<ExtArgs>>): Prisma__TelegramLinkRequestClient<$Result.GetResult<Prisma.$TelegramLinkRequestPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TelegramLinkRequests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TelegramLinkRequestFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TelegramLinkRequests
+     * const telegramLinkRequests = await prisma.telegramLinkRequest.findMany()
+     * 
+     * // Get first 10 TelegramLinkRequests
+     * const telegramLinkRequests = await prisma.telegramLinkRequest.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const telegramLinkRequestWithIdOnly = await prisma.telegramLinkRequest.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TelegramLinkRequestFindManyArgs>(args?: SelectSubset<T, TelegramLinkRequestFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TelegramLinkRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TelegramLinkRequest.
+     * @param {TelegramLinkRequestCreateArgs} args - Arguments to create a TelegramLinkRequest.
+     * @example
+     * // Create one TelegramLinkRequest
+     * const TelegramLinkRequest = await prisma.telegramLinkRequest.create({
+     *   data: {
+     *     // ... data to create a TelegramLinkRequest
+     *   }
+     * })
+     * 
+     */
+    create<T extends TelegramLinkRequestCreateArgs>(args: SelectSubset<T, TelegramLinkRequestCreateArgs<ExtArgs>>): Prisma__TelegramLinkRequestClient<$Result.GetResult<Prisma.$TelegramLinkRequestPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TelegramLinkRequests.
+     * @param {TelegramLinkRequestCreateManyArgs} args - Arguments to create many TelegramLinkRequests.
+     * @example
+     * // Create many TelegramLinkRequests
+     * const telegramLinkRequest = await prisma.telegramLinkRequest.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TelegramLinkRequestCreateManyArgs>(args?: SelectSubset<T, TelegramLinkRequestCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TelegramLinkRequests and returns the data saved in the database.
+     * @param {TelegramLinkRequestCreateManyAndReturnArgs} args - Arguments to create many TelegramLinkRequests.
+     * @example
+     * // Create many TelegramLinkRequests
+     * const telegramLinkRequest = await prisma.telegramLinkRequest.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TelegramLinkRequests and only return the `id`
+     * const telegramLinkRequestWithIdOnly = await prisma.telegramLinkRequest.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TelegramLinkRequestCreateManyAndReturnArgs>(args?: SelectSubset<T, TelegramLinkRequestCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TelegramLinkRequestPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TelegramLinkRequest.
+     * @param {TelegramLinkRequestDeleteArgs} args - Arguments to delete one TelegramLinkRequest.
+     * @example
+     * // Delete one TelegramLinkRequest
+     * const TelegramLinkRequest = await prisma.telegramLinkRequest.delete({
+     *   where: {
+     *     // ... filter to delete one TelegramLinkRequest
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TelegramLinkRequestDeleteArgs>(args: SelectSubset<T, TelegramLinkRequestDeleteArgs<ExtArgs>>): Prisma__TelegramLinkRequestClient<$Result.GetResult<Prisma.$TelegramLinkRequestPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TelegramLinkRequest.
+     * @param {TelegramLinkRequestUpdateArgs} args - Arguments to update one TelegramLinkRequest.
+     * @example
+     * // Update one TelegramLinkRequest
+     * const telegramLinkRequest = await prisma.telegramLinkRequest.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TelegramLinkRequestUpdateArgs>(args: SelectSubset<T, TelegramLinkRequestUpdateArgs<ExtArgs>>): Prisma__TelegramLinkRequestClient<$Result.GetResult<Prisma.$TelegramLinkRequestPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TelegramLinkRequests.
+     * @param {TelegramLinkRequestDeleteManyArgs} args - Arguments to filter TelegramLinkRequests to delete.
+     * @example
+     * // Delete a few TelegramLinkRequests
+     * const { count } = await prisma.telegramLinkRequest.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TelegramLinkRequestDeleteManyArgs>(args?: SelectSubset<T, TelegramLinkRequestDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TelegramLinkRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TelegramLinkRequestUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TelegramLinkRequests
+     * const telegramLinkRequest = await prisma.telegramLinkRequest.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TelegramLinkRequestUpdateManyArgs>(args: SelectSubset<T, TelegramLinkRequestUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TelegramLinkRequests and returns the data updated in the database.
+     * @param {TelegramLinkRequestUpdateManyAndReturnArgs} args - Arguments to update many TelegramLinkRequests.
+     * @example
+     * // Update many TelegramLinkRequests
+     * const telegramLinkRequest = await prisma.telegramLinkRequest.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TelegramLinkRequests and only return the `id`
+     * const telegramLinkRequestWithIdOnly = await prisma.telegramLinkRequest.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TelegramLinkRequestUpdateManyAndReturnArgs>(args: SelectSubset<T, TelegramLinkRequestUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TelegramLinkRequestPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TelegramLinkRequest.
+     * @param {TelegramLinkRequestUpsertArgs} args - Arguments to update or create a TelegramLinkRequest.
+     * @example
+     * // Update or create a TelegramLinkRequest
+     * const telegramLinkRequest = await prisma.telegramLinkRequest.upsert({
+     *   create: {
+     *     // ... data to create a TelegramLinkRequest
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TelegramLinkRequest we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TelegramLinkRequestUpsertArgs>(args: SelectSubset<T, TelegramLinkRequestUpsertArgs<ExtArgs>>): Prisma__TelegramLinkRequestClient<$Result.GetResult<Prisma.$TelegramLinkRequestPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TelegramLinkRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TelegramLinkRequestCountArgs} args - Arguments to filter TelegramLinkRequests to count.
+     * @example
+     * // Count the number of TelegramLinkRequests
+     * const count = await prisma.telegramLinkRequest.count({
+     *   where: {
+     *     // ... the filter for the TelegramLinkRequests we want to count
+     *   }
+     * })
+    **/
+    count<T extends TelegramLinkRequestCountArgs>(
+      args?: Subset<T, TelegramLinkRequestCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TelegramLinkRequestCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TelegramLinkRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TelegramLinkRequestAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TelegramLinkRequestAggregateArgs>(args: Subset<T, TelegramLinkRequestAggregateArgs>): Prisma.PrismaPromise<GetTelegramLinkRequestAggregateType<T>>
+
+    /**
+     * Group by TelegramLinkRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TelegramLinkRequestGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TelegramLinkRequestGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TelegramLinkRequestGroupByArgs['orderBy'] }
+        : { orderBy?: TelegramLinkRequestGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TelegramLinkRequestGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTelegramLinkRequestGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TelegramLinkRequest model
+   */
+  readonly fields: TelegramLinkRequestFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TelegramLinkRequest.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TelegramLinkRequestClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TelegramLinkRequest model
+   */
+  interface TelegramLinkRequestFieldRefs {
+    readonly id: FieldRef<"TelegramLinkRequest", 'String'>
+    readonly code: FieldRef<"TelegramLinkRequest", 'String'>
+    readonly userId: FieldRef<"TelegramLinkRequest", 'String'>
+    readonly expiresAt: FieldRef<"TelegramLinkRequest", 'DateTime'>
+    readonly usedAt: FieldRef<"TelegramLinkRequest", 'DateTime'>
+    readonly createdAt: FieldRef<"TelegramLinkRequest", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TelegramLinkRequest findUnique
+   */
+  export type TelegramLinkRequestFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TelegramLinkRequest
+     */
+    select?: TelegramLinkRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TelegramLinkRequest
+     */
+    omit?: TelegramLinkRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TelegramLinkRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which TelegramLinkRequest to fetch.
+     */
+    where: TelegramLinkRequestWhereUniqueInput
+  }
+
+  /**
+   * TelegramLinkRequest findUniqueOrThrow
+   */
+  export type TelegramLinkRequestFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TelegramLinkRequest
+     */
+    select?: TelegramLinkRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TelegramLinkRequest
+     */
+    omit?: TelegramLinkRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TelegramLinkRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which TelegramLinkRequest to fetch.
+     */
+    where: TelegramLinkRequestWhereUniqueInput
+  }
+
+  /**
+   * TelegramLinkRequest findFirst
+   */
+  export type TelegramLinkRequestFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TelegramLinkRequest
+     */
+    select?: TelegramLinkRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TelegramLinkRequest
+     */
+    omit?: TelegramLinkRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TelegramLinkRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which TelegramLinkRequest to fetch.
+     */
+    where?: TelegramLinkRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TelegramLinkRequests to fetch.
+     */
+    orderBy?: TelegramLinkRequestOrderByWithRelationInput | TelegramLinkRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TelegramLinkRequests.
+     */
+    cursor?: TelegramLinkRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TelegramLinkRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TelegramLinkRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TelegramLinkRequests.
+     */
+    distinct?: TelegramLinkRequestScalarFieldEnum | TelegramLinkRequestScalarFieldEnum[]
+  }
+
+  /**
+   * TelegramLinkRequest findFirstOrThrow
+   */
+  export type TelegramLinkRequestFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TelegramLinkRequest
+     */
+    select?: TelegramLinkRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TelegramLinkRequest
+     */
+    omit?: TelegramLinkRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TelegramLinkRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which TelegramLinkRequest to fetch.
+     */
+    where?: TelegramLinkRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TelegramLinkRequests to fetch.
+     */
+    orderBy?: TelegramLinkRequestOrderByWithRelationInput | TelegramLinkRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TelegramLinkRequests.
+     */
+    cursor?: TelegramLinkRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TelegramLinkRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TelegramLinkRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TelegramLinkRequests.
+     */
+    distinct?: TelegramLinkRequestScalarFieldEnum | TelegramLinkRequestScalarFieldEnum[]
+  }
+
+  /**
+   * TelegramLinkRequest findMany
+   */
+  export type TelegramLinkRequestFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TelegramLinkRequest
+     */
+    select?: TelegramLinkRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TelegramLinkRequest
+     */
+    omit?: TelegramLinkRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TelegramLinkRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which TelegramLinkRequests to fetch.
+     */
+    where?: TelegramLinkRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TelegramLinkRequests to fetch.
+     */
+    orderBy?: TelegramLinkRequestOrderByWithRelationInput | TelegramLinkRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TelegramLinkRequests.
+     */
+    cursor?: TelegramLinkRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TelegramLinkRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TelegramLinkRequests.
+     */
+    skip?: number
+    distinct?: TelegramLinkRequestScalarFieldEnum | TelegramLinkRequestScalarFieldEnum[]
+  }
+
+  /**
+   * TelegramLinkRequest create
+   */
+  export type TelegramLinkRequestCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TelegramLinkRequest
+     */
+    select?: TelegramLinkRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TelegramLinkRequest
+     */
+    omit?: TelegramLinkRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TelegramLinkRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TelegramLinkRequest.
+     */
+    data: XOR<TelegramLinkRequestCreateInput, TelegramLinkRequestUncheckedCreateInput>
+  }
+
+  /**
+   * TelegramLinkRequest createMany
+   */
+  export type TelegramLinkRequestCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TelegramLinkRequests.
+     */
+    data: TelegramLinkRequestCreateManyInput | TelegramLinkRequestCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TelegramLinkRequest createManyAndReturn
+   */
+  export type TelegramLinkRequestCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TelegramLinkRequest
+     */
+    select?: TelegramLinkRequestSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TelegramLinkRequest
+     */
+    omit?: TelegramLinkRequestOmit<ExtArgs> | null
+    /**
+     * The data used to create many TelegramLinkRequests.
+     */
+    data: TelegramLinkRequestCreateManyInput | TelegramLinkRequestCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TelegramLinkRequestIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TelegramLinkRequest update
+   */
+  export type TelegramLinkRequestUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TelegramLinkRequest
+     */
+    select?: TelegramLinkRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TelegramLinkRequest
+     */
+    omit?: TelegramLinkRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TelegramLinkRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TelegramLinkRequest.
+     */
+    data: XOR<TelegramLinkRequestUpdateInput, TelegramLinkRequestUncheckedUpdateInput>
+    /**
+     * Choose, which TelegramLinkRequest to update.
+     */
+    where: TelegramLinkRequestWhereUniqueInput
+  }
+
+  /**
+   * TelegramLinkRequest updateMany
+   */
+  export type TelegramLinkRequestUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TelegramLinkRequests.
+     */
+    data: XOR<TelegramLinkRequestUpdateManyMutationInput, TelegramLinkRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which TelegramLinkRequests to update
+     */
+    where?: TelegramLinkRequestWhereInput
+    /**
+     * Limit how many TelegramLinkRequests to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TelegramLinkRequest updateManyAndReturn
+   */
+  export type TelegramLinkRequestUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TelegramLinkRequest
+     */
+    select?: TelegramLinkRequestSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TelegramLinkRequest
+     */
+    omit?: TelegramLinkRequestOmit<ExtArgs> | null
+    /**
+     * The data used to update TelegramLinkRequests.
+     */
+    data: XOR<TelegramLinkRequestUpdateManyMutationInput, TelegramLinkRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which TelegramLinkRequests to update
+     */
+    where?: TelegramLinkRequestWhereInput
+    /**
+     * Limit how many TelegramLinkRequests to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TelegramLinkRequestIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TelegramLinkRequest upsert
+   */
+  export type TelegramLinkRequestUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TelegramLinkRequest
+     */
+    select?: TelegramLinkRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TelegramLinkRequest
+     */
+    omit?: TelegramLinkRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TelegramLinkRequestInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TelegramLinkRequest to update in case it exists.
+     */
+    where: TelegramLinkRequestWhereUniqueInput
+    /**
+     * In case the TelegramLinkRequest found by the `where` argument doesn't exist, create a new TelegramLinkRequest with this data.
+     */
+    create: XOR<TelegramLinkRequestCreateInput, TelegramLinkRequestUncheckedCreateInput>
+    /**
+     * In case the TelegramLinkRequest was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TelegramLinkRequestUpdateInput, TelegramLinkRequestUncheckedUpdateInput>
+  }
+
+  /**
+   * TelegramLinkRequest delete
+   */
+  export type TelegramLinkRequestDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TelegramLinkRequest
+     */
+    select?: TelegramLinkRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TelegramLinkRequest
+     */
+    omit?: TelegramLinkRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TelegramLinkRequestInclude<ExtArgs> | null
+    /**
+     * Filter which TelegramLinkRequest to delete.
+     */
+    where: TelegramLinkRequestWhereUniqueInput
+  }
+
+  /**
+   * TelegramLinkRequest deleteMany
+   */
+  export type TelegramLinkRequestDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TelegramLinkRequests to delete
+     */
+    where?: TelegramLinkRequestWhereInput
+    /**
+     * Limit how many TelegramLinkRequests to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TelegramLinkRequest without action
+   */
+  export type TelegramLinkRequestDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TelegramLinkRequest
+     */
+    select?: TelegramLinkRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TelegramLinkRequest
+     */
+    omit?: TelegramLinkRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TelegramLinkRequestInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TelegramUser
+   */
+
+  export type AggregateTelegramUser = {
+    _count: TelegramUserCountAggregateOutputType | null
+    _min: TelegramUserMinAggregateOutputType | null
+    _max: TelegramUserMaxAggregateOutputType | null
+  }
+
+  export type TelegramUserMinAggregateOutputType = {
+    id: string | null
+    telegramId: string | null
+    userId: string | null
+    username: string | null
+    firstName: string | null
+    lastName: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TelegramUserMaxAggregateOutputType = {
+    id: string | null
+    telegramId: string | null
+    userId: string | null
+    username: string | null
+    firstName: string | null
+    lastName: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TelegramUserCountAggregateOutputType = {
+    id: number
+    telegramId: number
+    userId: number
+    username: number
+    firstName: number
+    lastName: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type TelegramUserMinAggregateInputType = {
+    id?: true
+    telegramId?: true
+    userId?: true
+    username?: true
+    firstName?: true
+    lastName?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TelegramUserMaxAggregateInputType = {
+    id?: true
+    telegramId?: true
+    userId?: true
+    username?: true
+    firstName?: true
+    lastName?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TelegramUserCountAggregateInputType = {
+    id?: true
+    telegramId?: true
+    userId?: true
+    username?: true
+    firstName?: true
+    lastName?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type TelegramUserAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TelegramUser to aggregate.
+     */
+    where?: TelegramUserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TelegramUsers to fetch.
+     */
+    orderBy?: TelegramUserOrderByWithRelationInput | TelegramUserOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TelegramUserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TelegramUsers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TelegramUsers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TelegramUsers
+    **/
+    _count?: true | TelegramUserCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TelegramUserMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TelegramUserMaxAggregateInputType
+  }
+
+  export type GetTelegramUserAggregateType<T extends TelegramUserAggregateArgs> = {
+        [P in keyof T & keyof AggregateTelegramUser]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTelegramUser[P]>
+      : GetScalarType<T[P], AggregateTelegramUser[P]>
+  }
+
+
+
+
+  export type TelegramUserGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TelegramUserWhereInput
+    orderBy?: TelegramUserOrderByWithAggregationInput | TelegramUserOrderByWithAggregationInput[]
+    by: TelegramUserScalarFieldEnum[] | TelegramUserScalarFieldEnum
+    having?: TelegramUserScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TelegramUserCountAggregateInputType | true
+    _min?: TelegramUserMinAggregateInputType
+    _max?: TelegramUserMaxAggregateInputType
+  }
+
+  export type TelegramUserGroupByOutputType = {
+    id: string
+    telegramId: string
+    userId: string
+    username: string | null
+    firstName: string | null
+    lastName: string | null
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: TelegramUserCountAggregateOutputType | null
+    _min: TelegramUserMinAggregateOutputType | null
+    _max: TelegramUserMaxAggregateOutputType | null
+  }
+
+  type GetTelegramUserGroupByPayload<T extends TelegramUserGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TelegramUserGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TelegramUserGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TelegramUserGroupByOutputType[P]>
+            : GetScalarType<T[P], TelegramUserGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TelegramUserSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    telegramId?: boolean
+    userId?: boolean
+    username?: boolean
+    firstName?: boolean
+    lastName?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["telegramUser"]>
+
+  export type TelegramUserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    telegramId?: boolean
+    userId?: boolean
+    username?: boolean
+    firstName?: boolean
+    lastName?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["telegramUser"]>
+
+  export type TelegramUserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    telegramId?: boolean
+    userId?: boolean
+    username?: boolean
+    firstName?: boolean
+    lastName?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["telegramUser"]>
+
+  export type TelegramUserSelectScalar = {
+    id?: boolean
+    telegramId?: boolean
+    userId?: boolean
+    username?: boolean
+    firstName?: boolean
+    lastName?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type TelegramUserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "telegramId" | "userId" | "username" | "firstName" | "lastName" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["telegramUser"]>
+  export type TelegramUserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type TelegramUserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type TelegramUserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $TelegramUserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TelegramUser"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      telegramId: string
+      userId: string
+      username: string | null
+      firstName: string | null
+      lastName: string | null
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["telegramUser"]>
+    composites: {}
+  }
+
+  type TelegramUserGetPayload<S extends boolean | null | undefined | TelegramUserDefaultArgs> = $Result.GetResult<Prisma.$TelegramUserPayload, S>
+
+  type TelegramUserCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TelegramUserFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TelegramUserCountAggregateInputType | true
+    }
+
+  export interface TelegramUserDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TelegramUser'], meta: { name: 'TelegramUser' } }
+    /**
+     * Find zero or one TelegramUser that matches the filter.
+     * @param {TelegramUserFindUniqueArgs} args - Arguments to find a TelegramUser
+     * @example
+     * // Get one TelegramUser
+     * const telegramUser = await prisma.telegramUser.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TelegramUserFindUniqueArgs>(args: SelectSubset<T, TelegramUserFindUniqueArgs<ExtArgs>>): Prisma__TelegramUserClient<$Result.GetResult<Prisma.$TelegramUserPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TelegramUser that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TelegramUserFindUniqueOrThrowArgs} args - Arguments to find a TelegramUser
+     * @example
+     * // Get one TelegramUser
+     * const telegramUser = await prisma.telegramUser.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TelegramUserFindUniqueOrThrowArgs>(args: SelectSubset<T, TelegramUserFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TelegramUserClient<$Result.GetResult<Prisma.$TelegramUserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TelegramUser that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TelegramUserFindFirstArgs} args - Arguments to find a TelegramUser
+     * @example
+     * // Get one TelegramUser
+     * const telegramUser = await prisma.telegramUser.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TelegramUserFindFirstArgs>(args?: SelectSubset<T, TelegramUserFindFirstArgs<ExtArgs>>): Prisma__TelegramUserClient<$Result.GetResult<Prisma.$TelegramUserPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TelegramUser that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TelegramUserFindFirstOrThrowArgs} args - Arguments to find a TelegramUser
+     * @example
+     * // Get one TelegramUser
+     * const telegramUser = await prisma.telegramUser.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TelegramUserFindFirstOrThrowArgs>(args?: SelectSubset<T, TelegramUserFindFirstOrThrowArgs<ExtArgs>>): Prisma__TelegramUserClient<$Result.GetResult<Prisma.$TelegramUserPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TelegramUsers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TelegramUserFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TelegramUsers
+     * const telegramUsers = await prisma.telegramUser.findMany()
+     * 
+     * // Get first 10 TelegramUsers
+     * const telegramUsers = await prisma.telegramUser.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const telegramUserWithIdOnly = await prisma.telegramUser.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TelegramUserFindManyArgs>(args?: SelectSubset<T, TelegramUserFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TelegramUserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TelegramUser.
+     * @param {TelegramUserCreateArgs} args - Arguments to create a TelegramUser.
+     * @example
+     * // Create one TelegramUser
+     * const TelegramUser = await prisma.telegramUser.create({
+     *   data: {
+     *     // ... data to create a TelegramUser
+     *   }
+     * })
+     * 
+     */
+    create<T extends TelegramUserCreateArgs>(args: SelectSubset<T, TelegramUserCreateArgs<ExtArgs>>): Prisma__TelegramUserClient<$Result.GetResult<Prisma.$TelegramUserPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TelegramUsers.
+     * @param {TelegramUserCreateManyArgs} args - Arguments to create many TelegramUsers.
+     * @example
+     * // Create many TelegramUsers
+     * const telegramUser = await prisma.telegramUser.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TelegramUserCreateManyArgs>(args?: SelectSubset<T, TelegramUserCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TelegramUsers and returns the data saved in the database.
+     * @param {TelegramUserCreateManyAndReturnArgs} args - Arguments to create many TelegramUsers.
+     * @example
+     * // Create many TelegramUsers
+     * const telegramUser = await prisma.telegramUser.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TelegramUsers and only return the `id`
+     * const telegramUserWithIdOnly = await prisma.telegramUser.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TelegramUserCreateManyAndReturnArgs>(args?: SelectSubset<T, TelegramUserCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TelegramUserPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TelegramUser.
+     * @param {TelegramUserDeleteArgs} args - Arguments to delete one TelegramUser.
+     * @example
+     * // Delete one TelegramUser
+     * const TelegramUser = await prisma.telegramUser.delete({
+     *   where: {
+     *     // ... filter to delete one TelegramUser
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TelegramUserDeleteArgs>(args: SelectSubset<T, TelegramUserDeleteArgs<ExtArgs>>): Prisma__TelegramUserClient<$Result.GetResult<Prisma.$TelegramUserPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TelegramUser.
+     * @param {TelegramUserUpdateArgs} args - Arguments to update one TelegramUser.
+     * @example
+     * // Update one TelegramUser
+     * const telegramUser = await prisma.telegramUser.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TelegramUserUpdateArgs>(args: SelectSubset<T, TelegramUserUpdateArgs<ExtArgs>>): Prisma__TelegramUserClient<$Result.GetResult<Prisma.$TelegramUserPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TelegramUsers.
+     * @param {TelegramUserDeleteManyArgs} args - Arguments to filter TelegramUsers to delete.
+     * @example
+     * // Delete a few TelegramUsers
+     * const { count } = await prisma.telegramUser.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TelegramUserDeleteManyArgs>(args?: SelectSubset<T, TelegramUserDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TelegramUsers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TelegramUserUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TelegramUsers
+     * const telegramUser = await prisma.telegramUser.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TelegramUserUpdateManyArgs>(args: SelectSubset<T, TelegramUserUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TelegramUsers and returns the data updated in the database.
+     * @param {TelegramUserUpdateManyAndReturnArgs} args - Arguments to update many TelegramUsers.
+     * @example
+     * // Update many TelegramUsers
+     * const telegramUser = await prisma.telegramUser.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TelegramUsers and only return the `id`
+     * const telegramUserWithIdOnly = await prisma.telegramUser.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TelegramUserUpdateManyAndReturnArgs>(args: SelectSubset<T, TelegramUserUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TelegramUserPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TelegramUser.
+     * @param {TelegramUserUpsertArgs} args - Arguments to update or create a TelegramUser.
+     * @example
+     * // Update or create a TelegramUser
+     * const telegramUser = await prisma.telegramUser.upsert({
+     *   create: {
+     *     // ... data to create a TelegramUser
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TelegramUser we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TelegramUserUpsertArgs>(args: SelectSubset<T, TelegramUserUpsertArgs<ExtArgs>>): Prisma__TelegramUserClient<$Result.GetResult<Prisma.$TelegramUserPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TelegramUsers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TelegramUserCountArgs} args - Arguments to filter TelegramUsers to count.
+     * @example
+     * // Count the number of TelegramUsers
+     * const count = await prisma.telegramUser.count({
+     *   where: {
+     *     // ... the filter for the TelegramUsers we want to count
+     *   }
+     * })
+    **/
+    count<T extends TelegramUserCountArgs>(
+      args?: Subset<T, TelegramUserCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TelegramUserCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TelegramUser.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TelegramUserAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TelegramUserAggregateArgs>(args: Subset<T, TelegramUserAggregateArgs>): Prisma.PrismaPromise<GetTelegramUserAggregateType<T>>
+
+    /**
+     * Group by TelegramUser.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TelegramUserGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TelegramUserGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TelegramUserGroupByArgs['orderBy'] }
+        : { orderBy?: TelegramUserGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TelegramUserGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTelegramUserGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TelegramUser model
+   */
+  readonly fields: TelegramUserFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TelegramUser.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TelegramUserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TelegramUser model
+   */
+  interface TelegramUserFieldRefs {
+    readonly id: FieldRef<"TelegramUser", 'String'>
+    readonly telegramId: FieldRef<"TelegramUser", 'String'>
+    readonly userId: FieldRef<"TelegramUser", 'String'>
+    readonly username: FieldRef<"TelegramUser", 'String'>
+    readonly firstName: FieldRef<"TelegramUser", 'String'>
+    readonly lastName: FieldRef<"TelegramUser", 'String'>
+    readonly isActive: FieldRef<"TelegramUser", 'Boolean'>
+    readonly createdAt: FieldRef<"TelegramUser", 'DateTime'>
+    readonly updatedAt: FieldRef<"TelegramUser", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TelegramUser findUnique
+   */
+  export type TelegramUserFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TelegramUser
+     */
+    select?: TelegramUserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TelegramUser
+     */
+    omit?: TelegramUserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TelegramUserInclude<ExtArgs> | null
+    /**
+     * Filter, which TelegramUser to fetch.
+     */
+    where: TelegramUserWhereUniqueInput
+  }
+
+  /**
+   * TelegramUser findUniqueOrThrow
+   */
+  export type TelegramUserFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TelegramUser
+     */
+    select?: TelegramUserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TelegramUser
+     */
+    omit?: TelegramUserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TelegramUserInclude<ExtArgs> | null
+    /**
+     * Filter, which TelegramUser to fetch.
+     */
+    where: TelegramUserWhereUniqueInput
+  }
+
+  /**
+   * TelegramUser findFirst
+   */
+  export type TelegramUserFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TelegramUser
+     */
+    select?: TelegramUserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TelegramUser
+     */
+    omit?: TelegramUserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TelegramUserInclude<ExtArgs> | null
+    /**
+     * Filter, which TelegramUser to fetch.
+     */
+    where?: TelegramUserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TelegramUsers to fetch.
+     */
+    orderBy?: TelegramUserOrderByWithRelationInput | TelegramUserOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TelegramUsers.
+     */
+    cursor?: TelegramUserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TelegramUsers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TelegramUsers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TelegramUsers.
+     */
+    distinct?: TelegramUserScalarFieldEnum | TelegramUserScalarFieldEnum[]
+  }
+
+  /**
+   * TelegramUser findFirstOrThrow
+   */
+  export type TelegramUserFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TelegramUser
+     */
+    select?: TelegramUserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TelegramUser
+     */
+    omit?: TelegramUserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TelegramUserInclude<ExtArgs> | null
+    /**
+     * Filter, which TelegramUser to fetch.
+     */
+    where?: TelegramUserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TelegramUsers to fetch.
+     */
+    orderBy?: TelegramUserOrderByWithRelationInput | TelegramUserOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TelegramUsers.
+     */
+    cursor?: TelegramUserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TelegramUsers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TelegramUsers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TelegramUsers.
+     */
+    distinct?: TelegramUserScalarFieldEnum | TelegramUserScalarFieldEnum[]
+  }
+
+  /**
+   * TelegramUser findMany
+   */
+  export type TelegramUserFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TelegramUser
+     */
+    select?: TelegramUserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TelegramUser
+     */
+    omit?: TelegramUserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TelegramUserInclude<ExtArgs> | null
+    /**
+     * Filter, which TelegramUsers to fetch.
+     */
+    where?: TelegramUserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TelegramUsers to fetch.
+     */
+    orderBy?: TelegramUserOrderByWithRelationInput | TelegramUserOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TelegramUsers.
+     */
+    cursor?: TelegramUserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TelegramUsers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TelegramUsers.
+     */
+    skip?: number
+    distinct?: TelegramUserScalarFieldEnum | TelegramUserScalarFieldEnum[]
+  }
+
+  /**
+   * TelegramUser create
+   */
+  export type TelegramUserCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TelegramUser
+     */
+    select?: TelegramUserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TelegramUser
+     */
+    omit?: TelegramUserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TelegramUserInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TelegramUser.
+     */
+    data: XOR<TelegramUserCreateInput, TelegramUserUncheckedCreateInput>
+  }
+
+  /**
+   * TelegramUser createMany
+   */
+  export type TelegramUserCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TelegramUsers.
+     */
+    data: TelegramUserCreateManyInput | TelegramUserCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TelegramUser createManyAndReturn
+   */
+  export type TelegramUserCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TelegramUser
+     */
+    select?: TelegramUserSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TelegramUser
+     */
+    omit?: TelegramUserOmit<ExtArgs> | null
+    /**
+     * The data used to create many TelegramUsers.
+     */
+    data: TelegramUserCreateManyInput | TelegramUserCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TelegramUserIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TelegramUser update
+   */
+  export type TelegramUserUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TelegramUser
+     */
+    select?: TelegramUserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TelegramUser
+     */
+    omit?: TelegramUserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TelegramUserInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TelegramUser.
+     */
+    data: XOR<TelegramUserUpdateInput, TelegramUserUncheckedUpdateInput>
+    /**
+     * Choose, which TelegramUser to update.
+     */
+    where: TelegramUserWhereUniqueInput
+  }
+
+  /**
+   * TelegramUser updateMany
+   */
+  export type TelegramUserUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TelegramUsers.
+     */
+    data: XOR<TelegramUserUpdateManyMutationInput, TelegramUserUncheckedUpdateManyInput>
+    /**
+     * Filter which TelegramUsers to update
+     */
+    where?: TelegramUserWhereInput
+    /**
+     * Limit how many TelegramUsers to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TelegramUser updateManyAndReturn
+   */
+  export type TelegramUserUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TelegramUser
+     */
+    select?: TelegramUserSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TelegramUser
+     */
+    omit?: TelegramUserOmit<ExtArgs> | null
+    /**
+     * The data used to update TelegramUsers.
+     */
+    data: XOR<TelegramUserUpdateManyMutationInput, TelegramUserUncheckedUpdateManyInput>
+    /**
+     * Filter which TelegramUsers to update
+     */
+    where?: TelegramUserWhereInput
+    /**
+     * Limit how many TelegramUsers to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TelegramUserIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TelegramUser upsert
+   */
+  export type TelegramUserUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TelegramUser
+     */
+    select?: TelegramUserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TelegramUser
+     */
+    omit?: TelegramUserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TelegramUserInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TelegramUser to update in case it exists.
+     */
+    where: TelegramUserWhereUniqueInput
+    /**
+     * In case the TelegramUser found by the `where` argument doesn't exist, create a new TelegramUser with this data.
+     */
+    create: XOR<TelegramUserCreateInput, TelegramUserUncheckedCreateInput>
+    /**
+     * In case the TelegramUser was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TelegramUserUpdateInput, TelegramUserUncheckedUpdateInput>
+  }
+
+  /**
+   * TelegramUser delete
+   */
+  export type TelegramUserDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TelegramUser
+     */
+    select?: TelegramUserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TelegramUser
+     */
+    omit?: TelegramUserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TelegramUserInclude<ExtArgs> | null
+    /**
+     * Filter which TelegramUser to delete.
+     */
+    where: TelegramUserWhereUniqueInput
+  }
+
+  /**
+   * TelegramUser deleteMany
+   */
+  export type TelegramUserDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TelegramUsers to delete
+     */
+    where?: TelegramUserWhereInput
+    /**
+     * Limit how many TelegramUsers to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TelegramUser without action
+   */
+  export type TelegramUserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TelegramUser
+     */
+    select?: TelegramUserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TelegramUser
+     */
+    omit?: TelegramUserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TelegramUserInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -20249,6 +25140,56 @@ export namespace Prisma {
   };
 
   export type UserInvitationScalarFieldEnum = (typeof UserInvitationScalarFieldEnum)[keyof typeof UserInvitationScalarFieldEnum]
+
+
+  export const ConversationScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    tenantId: 'tenantId',
+    title: 'title',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ConversationScalarFieldEnum = (typeof ConversationScalarFieldEnum)[keyof typeof ConversationScalarFieldEnum]
+
+
+  export const MessageScalarFieldEnum: {
+    id: 'id',
+    conversationId: 'conversationId',
+    role: 'role',
+    content: 'content',
+    createdAt: 'createdAt'
+  };
+
+  export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
+
+
+  export const TelegramLinkRequestScalarFieldEnum: {
+    id: 'id',
+    code: 'code',
+    userId: 'userId',
+    expiresAt: 'expiresAt',
+    usedAt: 'usedAt',
+    createdAt: 'createdAt'
+  };
+
+  export type TelegramLinkRequestScalarFieldEnum = (typeof TelegramLinkRequestScalarFieldEnum)[keyof typeof TelegramLinkRequestScalarFieldEnum]
+
+
+  export const TelegramUserScalarFieldEnum: {
+    id: 'id',
+    telegramId: 'telegramId',
+    userId: 'userId',
+    username: 'username',
+    firstName: 'firstName',
+    lastName: 'lastName',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type TelegramUserScalarFieldEnum = (typeof TelegramUserScalarFieldEnum)[keyof typeof TelegramUserScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -20526,6 +25467,7 @@ export namespace Prisma {
     callLogs?: CallLogListRelationFilter
     portalCustomers?: PortalCustomerListRelationFilter
     userInvitations?: UserInvitationListRelationFilter
+    conversations?: ConversationListRelationFilter
   }
 
   export type TenantOrderByWithRelationInput = {
@@ -20548,6 +25490,7 @@ export namespace Prisma {
     callLogs?: CallLogOrderByRelationAggregateInput
     portalCustomers?: PortalCustomerOrderByRelationAggregateInput
     userInvitations?: UserInvitationOrderByRelationAggregateInput
+    conversations?: ConversationOrderByRelationAggregateInput
   }
 
   export type TenantWhereUniqueInput = Prisma.AtLeast<{
@@ -20573,6 +25516,7 @@ export namespace Prisma {
     callLogs?: CallLogListRelationFilter
     portalCustomers?: PortalCustomerListRelationFilter
     userInvitations?: UserInvitationListRelationFilter
+    conversations?: ConversationListRelationFilter
   }, "id" | "slug">
 
   export type TenantOrderByWithAggregationInput = {
@@ -20624,6 +25568,9 @@ export namespace Prisma {
     ticketComments?: TicketCommentListRelationFilter
     invitations?: UserInvitationListRelationFilter
     callLogs?: CallLogListRelationFilter
+    conversations?: ConversationListRelationFilter
+    telegramUsers?: TelegramUserListRelationFilter
+    telegramLinkRequests?: TelegramLinkRequestListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -20644,6 +25591,9 @@ export namespace Prisma {
     ticketComments?: TicketCommentOrderByRelationAggregateInput
     invitations?: UserInvitationOrderByRelationAggregateInput
     callLogs?: CallLogOrderByRelationAggregateInput
+    conversations?: ConversationOrderByRelationAggregateInput
+    telegramUsers?: TelegramUserOrderByRelationAggregateInput
+    telegramLinkRequests?: TelegramLinkRequestOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -20668,6 +25618,9 @@ export namespace Prisma {
     ticketComments?: TicketCommentListRelationFilter
     invitations?: UserInvitationListRelationFilter
     callLogs?: CallLogListRelationFilter
+    conversations?: ConversationListRelationFilter
+    telegramUsers?: TelegramUserListRelationFilter
+    telegramLinkRequests?: TelegramLinkRequestListRelationFilter
   }, "id" | "supabaseUserId" | "email" | "tenantId_supabaseUserId">
 
   export type UserOrderByWithAggregationInput = {
@@ -21868,6 +26821,262 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"UserInvitation"> | Date | string
   }
 
+  export type ConversationWhereInput = {
+    AND?: ConversationWhereInput | ConversationWhereInput[]
+    OR?: ConversationWhereInput[]
+    NOT?: ConversationWhereInput | ConversationWhereInput[]
+    id?: StringFilter<"Conversation"> | string
+    userId?: StringFilter<"Conversation"> | string
+    tenantId?: StringFilter<"Conversation"> | string
+    title?: StringNullableFilter<"Conversation"> | string | null
+    createdAt?: DateTimeFilter<"Conversation"> | Date | string
+    updatedAt?: DateTimeFilter<"Conversation"> | Date | string
+    messages?: MessageListRelationFilter
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
+  }
+
+  export type ConversationOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    tenantId?: SortOrder
+    title?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    messages?: MessageOrderByRelationAggregateInput
+    user?: UserOrderByWithRelationInput
+    tenant?: TenantOrderByWithRelationInput
+  }
+
+  export type ConversationWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ConversationWhereInput | ConversationWhereInput[]
+    OR?: ConversationWhereInput[]
+    NOT?: ConversationWhereInput | ConversationWhereInput[]
+    userId?: StringFilter<"Conversation"> | string
+    tenantId?: StringFilter<"Conversation"> | string
+    title?: StringNullableFilter<"Conversation"> | string | null
+    createdAt?: DateTimeFilter<"Conversation"> | Date | string
+    updatedAt?: DateTimeFilter<"Conversation"> | Date | string
+    messages?: MessageListRelationFilter
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    tenant?: XOR<TenantScalarRelationFilter, TenantWhereInput>
+  }, "id">
+
+  export type ConversationOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    tenantId?: SortOrder
+    title?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ConversationCountOrderByAggregateInput
+    _max?: ConversationMaxOrderByAggregateInput
+    _min?: ConversationMinOrderByAggregateInput
+  }
+
+  export type ConversationScalarWhereWithAggregatesInput = {
+    AND?: ConversationScalarWhereWithAggregatesInput | ConversationScalarWhereWithAggregatesInput[]
+    OR?: ConversationScalarWhereWithAggregatesInput[]
+    NOT?: ConversationScalarWhereWithAggregatesInput | ConversationScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Conversation"> | string
+    userId?: StringWithAggregatesFilter<"Conversation"> | string
+    tenantId?: StringWithAggregatesFilter<"Conversation"> | string
+    title?: StringNullableWithAggregatesFilter<"Conversation"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Conversation"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Conversation"> | Date | string
+  }
+
+  export type MessageWhereInput = {
+    AND?: MessageWhereInput | MessageWhereInput[]
+    OR?: MessageWhereInput[]
+    NOT?: MessageWhereInput | MessageWhereInput[]
+    id?: StringFilter<"Message"> | string
+    conversationId?: StringFilter<"Message"> | string
+    role?: StringFilter<"Message"> | string
+    content?: StringFilter<"Message"> | string
+    createdAt?: DateTimeFilter<"Message"> | Date | string
+    conversation?: XOR<ConversationScalarRelationFilter, ConversationWhereInput>
+  }
+
+  export type MessageOrderByWithRelationInput = {
+    id?: SortOrder
+    conversationId?: SortOrder
+    role?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+    conversation?: ConversationOrderByWithRelationInput
+  }
+
+  export type MessageWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: MessageWhereInput | MessageWhereInput[]
+    OR?: MessageWhereInput[]
+    NOT?: MessageWhereInput | MessageWhereInput[]
+    conversationId?: StringFilter<"Message"> | string
+    role?: StringFilter<"Message"> | string
+    content?: StringFilter<"Message"> | string
+    createdAt?: DateTimeFilter<"Message"> | Date | string
+    conversation?: XOR<ConversationScalarRelationFilter, ConversationWhereInput>
+  }, "id">
+
+  export type MessageOrderByWithAggregationInput = {
+    id?: SortOrder
+    conversationId?: SortOrder
+    role?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+    _count?: MessageCountOrderByAggregateInput
+    _max?: MessageMaxOrderByAggregateInput
+    _min?: MessageMinOrderByAggregateInput
+  }
+
+  export type MessageScalarWhereWithAggregatesInput = {
+    AND?: MessageScalarWhereWithAggregatesInput | MessageScalarWhereWithAggregatesInput[]
+    OR?: MessageScalarWhereWithAggregatesInput[]
+    NOT?: MessageScalarWhereWithAggregatesInput | MessageScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Message"> | string
+    conversationId?: StringWithAggregatesFilter<"Message"> | string
+    role?: StringWithAggregatesFilter<"Message"> | string
+    content?: StringWithAggregatesFilter<"Message"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Message"> | Date | string
+  }
+
+  export type TelegramLinkRequestWhereInput = {
+    AND?: TelegramLinkRequestWhereInput | TelegramLinkRequestWhereInput[]
+    OR?: TelegramLinkRequestWhereInput[]
+    NOT?: TelegramLinkRequestWhereInput | TelegramLinkRequestWhereInput[]
+    id?: StringFilter<"TelegramLinkRequest"> | string
+    code?: StringFilter<"TelegramLinkRequest"> | string
+    userId?: StringFilter<"TelegramLinkRequest"> | string
+    expiresAt?: DateTimeFilter<"TelegramLinkRequest"> | Date | string
+    usedAt?: DateTimeNullableFilter<"TelegramLinkRequest"> | Date | string | null
+    createdAt?: DateTimeFilter<"TelegramLinkRequest"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type TelegramLinkRequestOrderByWithRelationInput = {
+    id?: SortOrder
+    code?: SortOrder
+    userId?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type TelegramLinkRequestWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    code?: string
+    AND?: TelegramLinkRequestWhereInput | TelegramLinkRequestWhereInput[]
+    OR?: TelegramLinkRequestWhereInput[]
+    NOT?: TelegramLinkRequestWhereInput | TelegramLinkRequestWhereInput[]
+    userId?: StringFilter<"TelegramLinkRequest"> | string
+    expiresAt?: DateTimeFilter<"TelegramLinkRequest"> | Date | string
+    usedAt?: DateTimeNullableFilter<"TelegramLinkRequest"> | Date | string | null
+    createdAt?: DateTimeFilter<"TelegramLinkRequest"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "code">
+
+  export type TelegramLinkRequestOrderByWithAggregationInput = {
+    id?: SortOrder
+    code?: SortOrder
+    userId?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: TelegramLinkRequestCountOrderByAggregateInput
+    _max?: TelegramLinkRequestMaxOrderByAggregateInput
+    _min?: TelegramLinkRequestMinOrderByAggregateInput
+  }
+
+  export type TelegramLinkRequestScalarWhereWithAggregatesInput = {
+    AND?: TelegramLinkRequestScalarWhereWithAggregatesInput | TelegramLinkRequestScalarWhereWithAggregatesInput[]
+    OR?: TelegramLinkRequestScalarWhereWithAggregatesInput[]
+    NOT?: TelegramLinkRequestScalarWhereWithAggregatesInput | TelegramLinkRequestScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"TelegramLinkRequest"> | string
+    code?: StringWithAggregatesFilter<"TelegramLinkRequest"> | string
+    userId?: StringWithAggregatesFilter<"TelegramLinkRequest"> | string
+    expiresAt?: DateTimeWithAggregatesFilter<"TelegramLinkRequest"> | Date | string
+    usedAt?: DateTimeNullableWithAggregatesFilter<"TelegramLinkRequest"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"TelegramLinkRequest"> | Date | string
+  }
+
+  export type TelegramUserWhereInput = {
+    AND?: TelegramUserWhereInput | TelegramUserWhereInput[]
+    OR?: TelegramUserWhereInput[]
+    NOT?: TelegramUserWhereInput | TelegramUserWhereInput[]
+    id?: StringFilter<"TelegramUser"> | string
+    telegramId?: StringFilter<"TelegramUser"> | string
+    userId?: StringFilter<"TelegramUser"> | string
+    username?: StringNullableFilter<"TelegramUser"> | string | null
+    firstName?: StringNullableFilter<"TelegramUser"> | string | null
+    lastName?: StringNullableFilter<"TelegramUser"> | string | null
+    isActive?: BoolFilter<"TelegramUser"> | boolean
+    createdAt?: DateTimeFilter<"TelegramUser"> | Date | string
+    updatedAt?: DateTimeFilter<"TelegramUser"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type TelegramUserOrderByWithRelationInput = {
+    id?: SortOrder
+    telegramId?: SortOrder
+    userId?: SortOrder
+    username?: SortOrderInput | SortOrder
+    firstName?: SortOrderInput | SortOrder
+    lastName?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type TelegramUserWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    telegramId?: string
+    AND?: TelegramUserWhereInput | TelegramUserWhereInput[]
+    OR?: TelegramUserWhereInput[]
+    NOT?: TelegramUserWhereInput | TelegramUserWhereInput[]
+    userId?: StringFilter<"TelegramUser"> | string
+    username?: StringNullableFilter<"TelegramUser"> | string | null
+    firstName?: StringNullableFilter<"TelegramUser"> | string | null
+    lastName?: StringNullableFilter<"TelegramUser"> | string | null
+    isActive?: BoolFilter<"TelegramUser"> | boolean
+    createdAt?: DateTimeFilter<"TelegramUser"> | Date | string
+    updatedAt?: DateTimeFilter<"TelegramUser"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "telegramId">
+
+  export type TelegramUserOrderByWithAggregationInput = {
+    id?: SortOrder
+    telegramId?: SortOrder
+    userId?: SortOrder
+    username?: SortOrderInput | SortOrder
+    firstName?: SortOrderInput | SortOrder
+    lastName?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: TelegramUserCountOrderByAggregateInput
+    _max?: TelegramUserMaxOrderByAggregateInput
+    _min?: TelegramUserMinOrderByAggregateInput
+  }
+
+  export type TelegramUserScalarWhereWithAggregatesInput = {
+    AND?: TelegramUserScalarWhereWithAggregatesInput | TelegramUserScalarWhereWithAggregatesInput[]
+    OR?: TelegramUserScalarWhereWithAggregatesInput[]
+    NOT?: TelegramUserScalarWhereWithAggregatesInput | TelegramUserScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"TelegramUser"> | string
+    telegramId?: StringWithAggregatesFilter<"TelegramUser"> | string
+    userId?: StringWithAggregatesFilter<"TelegramUser"> | string
+    username?: StringNullableWithAggregatesFilter<"TelegramUser"> | string | null
+    firstName?: StringNullableWithAggregatesFilter<"TelegramUser"> | string | null
+    lastName?: StringNullableWithAggregatesFilter<"TelegramUser"> | string | null
+    isActive?: BoolWithAggregatesFilter<"TelegramUser"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"TelegramUser"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"TelegramUser"> | Date | string
+  }
+
   export type TenantCreateInput = {
     id?: string
     name: string
@@ -21888,6 +27097,7 @@ export namespace Prisma {
     callLogs?: CallLogCreateNestedManyWithoutTenantInput
     portalCustomers?: PortalCustomerCreateNestedManyWithoutTenantInput
     userInvitations?: UserInvitationCreateNestedManyWithoutTenantInput
+    conversations?: ConversationCreateNestedManyWithoutTenantInput
   }
 
   export type TenantUncheckedCreateInput = {
@@ -21910,6 +27120,7 @@ export namespace Prisma {
     callLogs?: CallLogUncheckedCreateNestedManyWithoutTenantInput
     portalCustomers?: PortalCustomerUncheckedCreateNestedManyWithoutTenantInput
     userInvitations?: UserInvitationUncheckedCreateNestedManyWithoutTenantInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type TenantUpdateInput = {
@@ -21932,6 +27143,7 @@ export namespace Prisma {
     callLogs?: CallLogUpdateManyWithoutTenantNestedInput
     portalCustomers?: PortalCustomerUpdateManyWithoutTenantNestedInput
     userInvitations?: UserInvitationUpdateManyWithoutTenantNestedInput
+    conversations?: ConversationUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantUncheckedUpdateInput = {
@@ -21954,6 +27166,7 @@ export namespace Prisma {
     callLogs?: CallLogUncheckedUpdateManyWithoutTenantNestedInput
     portalCustomers?: PortalCustomerUncheckedUpdateManyWithoutTenantNestedInput
     userInvitations?: UserInvitationUncheckedUpdateManyWithoutTenantNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantCreateManyInput = {
@@ -22006,6 +27219,9 @@ export namespace Prisma {
     ticketComments?: TicketCommentCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutInvitedByUserInput
     callLogs?: CallLogCreateNestedManyWithoutUserInput
+    conversations?: ConversationCreateNestedManyWithoutUserInput
+    telegramUsers?: TelegramUserCreateNestedManyWithoutUserInput
+    telegramLinkRequests?: TelegramLinkRequestCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -22025,6 +27241,9 @@ export namespace Prisma {
     ticketComments?: TicketCommentUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutInvitedByUserInput
     callLogs?: CallLogUncheckedCreateNestedManyWithoutUserInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutUserInput
+    telegramUsers?: TelegramUserUncheckedCreateNestedManyWithoutUserInput
+    telegramLinkRequests?: TelegramLinkRequestUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -22044,6 +27263,9 @@ export namespace Prisma {
     ticketComments?: TicketCommentUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutInvitedByUserNestedInput
     callLogs?: CallLogUpdateManyWithoutUserNestedInput
+    conversations?: ConversationUpdateManyWithoutUserNestedInput
+    telegramUsers?: TelegramUserUpdateManyWithoutUserNestedInput
+    telegramLinkRequests?: TelegramLinkRequestUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -22063,6 +27285,9 @@ export namespace Prisma {
     ticketComments?: TicketCommentUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutInvitedByUserNestedInput
     callLogs?: CallLogUncheckedUpdateManyWithoutUserNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutUserNestedInput
+    telegramUsers?: TelegramUserUncheckedUpdateManyWithoutUserNestedInput
+    telegramLinkRequests?: TelegramLinkRequestUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -23350,6 +28575,271 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ConversationCreateInput = {
+    id?: string
+    title?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    messages?: MessageCreateNestedManyWithoutConversationInput
+    user: UserCreateNestedOneWithoutConversationsInput
+    tenant: TenantCreateNestedOneWithoutConversationsInput
+  }
+
+  export type ConversationUncheckedCreateInput = {
+    id?: string
+    userId: string
+    tenantId: string
+    title?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    messages?: MessageUncheckedCreateNestedManyWithoutConversationInput
+  }
+
+  export type ConversationUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    messages?: MessageUpdateManyWithoutConversationNestedInput
+    user?: UserUpdateOneRequiredWithoutConversationsNestedInput
+    tenant?: TenantUpdateOneRequiredWithoutConversationsNestedInput
+  }
+
+  export type ConversationUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    tenantId?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    messages?: MessageUncheckedUpdateManyWithoutConversationNestedInput
+  }
+
+  export type ConversationCreateManyInput = {
+    id?: string
+    userId: string
+    tenantId: string
+    title?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ConversationUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    tenantId?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MessageCreateInput = {
+    id?: string
+    role: string
+    content: string
+    createdAt?: Date | string
+    conversation: ConversationCreateNestedOneWithoutMessagesInput
+  }
+
+  export type MessageUncheckedCreateInput = {
+    id?: string
+    conversationId: string
+    role: string
+    content: string
+    createdAt?: Date | string
+  }
+
+  export type MessageUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    conversation?: ConversationUpdateOneRequiredWithoutMessagesNestedInput
+  }
+
+  export type MessageUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    conversationId?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MessageCreateManyInput = {
+    id?: string
+    conversationId: string
+    role: string
+    content: string
+    createdAt?: Date | string
+  }
+
+  export type MessageUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MessageUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    conversationId?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TelegramLinkRequestCreateInput = {
+    id?: string
+    code: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutTelegramLinkRequestsInput
+  }
+
+  export type TelegramLinkRequestUncheckedCreateInput = {
+    id?: string
+    code: string
+    userId: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type TelegramLinkRequestUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutTelegramLinkRequestsNestedInput
+  }
+
+  export type TelegramLinkRequestUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TelegramLinkRequestCreateManyInput = {
+    id?: string
+    code: string
+    userId: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type TelegramLinkRequestUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TelegramLinkRequestUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TelegramUserCreateInput = {
+    id?: string
+    telegramId: string
+    username?: string | null
+    firstName?: string | null
+    lastName?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutTelegramUsersInput
+  }
+
+  export type TelegramUserUncheckedCreateInput = {
+    id?: string
+    telegramId: string
+    userId: string
+    username?: string | null
+    firstName?: string | null
+    lastName?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TelegramUserUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    telegramId?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutTelegramUsersNestedInput
+  }
+
+  export type TelegramUserUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    telegramId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TelegramUserCreateManyInput = {
+    id?: string
+    telegramId: string
+    userId: string
+    username?: string | null
+    firstName?: string | null
+    lastName?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TelegramUserUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    telegramId?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TelegramUserUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    telegramId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -23487,6 +28977,12 @@ export namespace Prisma {
     none?: UserInvitationWhereInput
   }
 
+  export type ConversationListRelationFilter = {
+    every?: ConversationWhereInput
+    some?: ConversationWhereInput
+    none?: ConversationWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -23533,6 +29029,10 @@ export namespace Prisma {
   }
 
   export type UserInvitationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ConversationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -23676,7 +29176,27 @@ export namespace Prisma {
     none?: TicketCommentWhereInput
   }
 
+  export type TelegramUserListRelationFilter = {
+    every?: TelegramUserWhereInput
+    some?: TelegramUserWhereInput
+    none?: TelegramUserWhereInput
+  }
+
+  export type TelegramLinkRequestListRelationFilter = {
+    every?: TelegramLinkRequestWhereInput
+    some?: TelegramLinkRequestWhereInput
+    none?: TelegramLinkRequestWhereInput
+  }
+
   export type TicketCommentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TelegramUserOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TelegramLinkRequestOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -24593,6 +30113,135 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type MessageListRelationFilter = {
+    every?: MessageWhereInput
+    some?: MessageWhereInput
+    none?: MessageWhereInput
+  }
+
+  export type MessageOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ConversationCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    tenantId?: SortOrder
+    title?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ConversationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    tenantId?: SortOrder
+    title?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ConversationMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    tenantId?: SortOrder
+    title?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ConversationScalarRelationFilter = {
+    is?: ConversationWhereInput
+    isNot?: ConversationWhereInput
+  }
+
+  export type MessageCountOrderByAggregateInput = {
+    id?: SortOrder
+    conversationId?: SortOrder
+    role?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type MessageMaxOrderByAggregateInput = {
+    id?: SortOrder
+    conversationId?: SortOrder
+    role?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type MessageMinOrderByAggregateInput = {
+    id?: SortOrder
+    conversationId?: SortOrder
+    role?: SortOrder
+    content?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TelegramLinkRequestCountOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    userId?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TelegramLinkRequestMaxOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    userId?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TelegramLinkRequestMinOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    userId?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TelegramUserCountOrderByAggregateInput = {
+    id?: SortOrder
+    telegramId?: SortOrder
+    userId?: SortOrder
+    username?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TelegramUserMaxOrderByAggregateInput = {
+    id?: SortOrder
+    telegramId?: SortOrder
+    userId?: SortOrder
+    username?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TelegramUserMinOrderByAggregateInput = {
+    id?: SortOrder
+    telegramId?: SortOrder
+    userId?: SortOrder
+    username?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type UserCreateNestedManyWithoutTenantInput = {
     create?: XOR<UserCreateWithoutTenantInput, UserUncheckedCreateWithoutTenantInput> | UserCreateWithoutTenantInput[] | UserUncheckedCreateWithoutTenantInput[]
     connectOrCreate?: UserCreateOrConnectWithoutTenantInput | UserCreateOrConnectWithoutTenantInput[]
@@ -24670,6 +30319,13 @@ export namespace Prisma {
     connect?: UserInvitationWhereUniqueInput | UserInvitationWhereUniqueInput[]
   }
 
+  export type ConversationCreateNestedManyWithoutTenantInput = {
+    create?: XOR<ConversationCreateWithoutTenantInput, ConversationUncheckedCreateWithoutTenantInput> | ConversationCreateWithoutTenantInput[] | ConversationUncheckedCreateWithoutTenantInput[]
+    connectOrCreate?: ConversationCreateOrConnectWithoutTenantInput | ConversationCreateOrConnectWithoutTenantInput[]
+    createMany?: ConversationCreateManyTenantInputEnvelope
+    connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+  }
+
   export type UserUncheckedCreateNestedManyWithoutTenantInput = {
     create?: XOR<UserCreateWithoutTenantInput, UserUncheckedCreateWithoutTenantInput> | UserCreateWithoutTenantInput[] | UserUncheckedCreateWithoutTenantInput[]
     connectOrCreate?: UserCreateOrConnectWithoutTenantInput | UserCreateOrConnectWithoutTenantInput[]
@@ -24745,6 +30401,13 @@ export namespace Prisma {
     connectOrCreate?: UserInvitationCreateOrConnectWithoutTenantInput | UserInvitationCreateOrConnectWithoutTenantInput[]
     createMany?: UserInvitationCreateManyTenantInputEnvelope
     connect?: UserInvitationWhereUniqueInput | UserInvitationWhereUniqueInput[]
+  }
+
+  export type ConversationUncheckedCreateNestedManyWithoutTenantInput = {
+    create?: XOR<ConversationCreateWithoutTenantInput, ConversationUncheckedCreateWithoutTenantInput> | ConversationCreateWithoutTenantInput[] | ConversationUncheckedCreateWithoutTenantInput[]
+    connectOrCreate?: ConversationCreateOrConnectWithoutTenantInput | ConversationCreateOrConnectWithoutTenantInput[]
+    createMany?: ConversationCreateManyTenantInputEnvelope
+    connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -24917,6 +30580,20 @@ export namespace Prisma {
     deleteMany?: UserInvitationScalarWhereInput | UserInvitationScalarWhereInput[]
   }
 
+  export type ConversationUpdateManyWithoutTenantNestedInput = {
+    create?: XOR<ConversationCreateWithoutTenantInput, ConversationUncheckedCreateWithoutTenantInput> | ConversationCreateWithoutTenantInput[] | ConversationUncheckedCreateWithoutTenantInput[]
+    connectOrCreate?: ConversationCreateOrConnectWithoutTenantInput | ConversationCreateOrConnectWithoutTenantInput[]
+    upsert?: ConversationUpsertWithWhereUniqueWithoutTenantInput | ConversationUpsertWithWhereUniqueWithoutTenantInput[]
+    createMany?: ConversationCreateManyTenantInputEnvelope
+    set?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    disconnect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    delete?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    update?: ConversationUpdateWithWhereUniqueWithoutTenantInput | ConversationUpdateWithWhereUniqueWithoutTenantInput[]
+    updateMany?: ConversationUpdateManyWithWhereWithoutTenantInput | ConversationUpdateManyWithWhereWithoutTenantInput[]
+    deleteMany?: ConversationScalarWhereInput | ConversationScalarWhereInput[]
+  }
+
   export type UserUncheckedUpdateManyWithoutTenantNestedInput = {
     create?: XOR<UserCreateWithoutTenantInput, UserUncheckedCreateWithoutTenantInput> | UserCreateWithoutTenantInput[] | UserUncheckedCreateWithoutTenantInput[]
     connectOrCreate?: UserCreateOrConnectWithoutTenantInput | UserCreateOrConnectWithoutTenantInput[]
@@ -25071,6 +30748,20 @@ export namespace Prisma {
     deleteMany?: UserInvitationScalarWhereInput | UserInvitationScalarWhereInput[]
   }
 
+  export type ConversationUncheckedUpdateManyWithoutTenantNestedInput = {
+    create?: XOR<ConversationCreateWithoutTenantInput, ConversationUncheckedCreateWithoutTenantInput> | ConversationCreateWithoutTenantInput[] | ConversationUncheckedCreateWithoutTenantInput[]
+    connectOrCreate?: ConversationCreateOrConnectWithoutTenantInput | ConversationCreateOrConnectWithoutTenantInput[]
+    upsert?: ConversationUpsertWithWhereUniqueWithoutTenantInput | ConversationUpsertWithWhereUniqueWithoutTenantInput[]
+    createMany?: ConversationCreateManyTenantInputEnvelope
+    set?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    disconnect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    delete?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    update?: ConversationUpdateWithWhereUniqueWithoutTenantInput | ConversationUpdateWithWhereUniqueWithoutTenantInput[]
+    updateMany?: ConversationUpdateManyWithWhereWithoutTenantInput | ConversationUpdateManyWithWhereWithoutTenantInput[]
+    deleteMany?: ConversationScalarWhereInput | ConversationScalarWhereInput[]
+  }
+
   export type TenantCreateNestedOneWithoutUsersInput = {
     create?: XOR<TenantCreateWithoutUsersInput, TenantUncheckedCreateWithoutUsersInput>
     connectOrCreate?: TenantCreateOrConnectWithoutUsersInput
@@ -25112,6 +30803,27 @@ export namespace Prisma {
     connect?: CallLogWhereUniqueInput | CallLogWhereUniqueInput[]
   }
 
+  export type ConversationCreateNestedManyWithoutUserInput = {
+    create?: XOR<ConversationCreateWithoutUserInput, ConversationUncheckedCreateWithoutUserInput> | ConversationCreateWithoutUserInput[] | ConversationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ConversationCreateOrConnectWithoutUserInput | ConversationCreateOrConnectWithoutUserInput[]
+    createMany?: ConversationCreateManyUserInputEnvelope
+    connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+  }
+
+  export type TelegramUserCreateNestedManyWithoutUserInput = {
+    create?: XOR<TelegramUserCreateWithoutUserInput, TelegramUserUncheckedCreateWithoutUserInput> | TelegramUserCreateWithoutUserInput[] | TelegramUserUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TelegramUserCreateOrConnectWithoutUserInput | TelegramUserCreateOrConnectWithoutUserInput[]
+    createMany?: TelegramUserCreateManyUserInputEnvelope
+    connect?: TelegramUserWhereUniqueInput | TelegramUserWhereUniqueInput[]
+  }
+
+  export type TelegramLinkRequestCreateNestedManyWithoutUserInput = {
+    create?: XOR<TelegramLinkRequestCreateWithoutUserInput, TelegramLinkRequestUncheckedCreateWithoutUserInput> | TelegramLinkRequestCreateWithoutUserInput[] | TelegramLinkRequestUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TelegramLinkRequestCreateOrConnectWithoutUserInput | TelegramLinkRequestCreateOrConnectWithoutUserInput[]
+    createMany?: TelegramLinkRequestCreateManyUserInputEnvelope
+    connect?: TelegramLinkRequestWhereUniqueInput | TelegramLinkRequestWhereUniqueInput[]
+  }
+
   export type InteractionUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<InteractionCreateWithoutUserInput, InteractionUncheckedCreateWithoutUserInput> | InteractionCreateWithoutUserInput[] | InteractionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: InteractionCreateOrConnectWithoutUserInput | InteractionCreateOrConnectWithoutUserInput[]
@@ -25145,6 +30857,27 @@ export namespace Prisma {
     connectOrCreate?: CallLogCreateOrConnectWithoutUserInput | CallLogCreateOrConnectWithoutUserInput[]
     createMany?: CallLogCreateManyUserInputEnvelope
     connect?: CallLogWhereUniqueInput | CallLogWhereUniqueInput[]
+  }
+
+  export type ConversationUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ConversationCreateWithoutUserInput, ConversationUncheckedCreateWithoutUserInput> | ConversationCreateWithoutUserInput[] | ConversationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ConversationCreateOrConnectWithoutUserInput | ConversationCreateOrConnectWithoutUserInput[]
+    createMany?: ConversationCreateManyUserInputEnvelope
+    connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+  }
+
+  export type TelegramUserUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<TelegramUserCreateWithoutUserInput, TelegramUserUncheckedCreateWithoutUserInput> | TelegramUserCreateWithoutUserInput[] | TelegramUserUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TelegramUserCreateOrConnectWithoutUserInput | TelegramUserCreateOrConnectWithoutUserInput[]
+    createMany?: TelegramUserCreateManyUserInputEnvelope
+    connect?: TelegramUserWhereUniqueInput | TelegramUserWhereUniqueInput[]
+  }
+
+  export type TelegramLinkRequestUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<TelegramLinkRequestCreateWithoutUserInput, TelegramLinkRequestUncheckedCreateWithoutUserInput> | TelegramLinkRequestCreateWithoutUserInput[] | TelegramLinkRequestUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TelegramLinkRequestCreateOrConnectWithoutUserInput | TelegramLinkRequestCreateOrConnectWithoutUserInput[]
+    createMany?: TelegramLinkRequestCreateManyUserInputEnvelope
+    connect?: TelegramLinkRequestWhereUniqueInput | TelegramLinkRequestWhereUniqueInput[]
   }
 
   export type EnumUserRoleFieldUpdateOperationsInput = {
@@ -25233,6 +30966,48 @@ export namespace Prisma {
     deleteMany?: CallLogScalarWhereInput | CallLogScalarWhereInput[]
   }
 
+  export type ConversationUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ConversationCreateWithoutUserInput, ConversationUncheckedCreateWithoutUserInput> | ConversationCreateWithoutUserInput[] | ConversationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ConversationCreateOrConnectWithoutUserInput | ConversationCreateOrConnectWithoutUserInput[]
+    upsert?: ConversationUpsertWithWhereUniqueWithoutUserInput | ConversationUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ConversationCreateManyUserInputEnvelope
+    set?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    disconnect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    delete?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    update?: ConversationUpdateWithWhereUniqueWithoutUserInput | ConversationUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ConversationUpdateManyWithWhereWithoutUserInput | ConversationUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ConversationScalarWhereInput | ConversationScalarWhereInput[]
+  }
+
+  export type TelegramUserUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TelegramUserCreateWithoutUserInput, TelegramUserUncheckedCreateWithoutUserInput> | TelegramUserCreateWithoutUserInput[] | TelegramUserUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TelegramUserCreateOrConnectWithoutUserInput | TelegramUserCreateOrConnectWithoutUserInput[]
+    upsert?: TelegramUserUpsertWithWhereUniqueWithoutUserInput | TelegramUserUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TelegramUserCreateManyUserInputEnvelope
+    set?: TelegramUserWhereUniqueInput | TelegramUserWhereUniqueInput[]
+    disconnect?: TelegramUserWhereUniqueInput | TelegramUserWhereUniqueInput[]
+    delete?: TelegramUserWhereUniqueInput | TelegramUserWhereUniqueInput[]
+    connect?: TelegramUserWhereUniqueInput | TelegramUserWhereUniqueInput[]
+    update?: TelegramUserUpdateWithWhereUniqueWithoutUserInput | TelegramUserUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TelegramUserUpdateManyWithWhereWithoutUserInput | TelegramUserUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TelegramUserScalarWhereInput | TelegramUserScalarWhereInput[]
+  }
+
+  export type TelegramLinkRequestUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TelegramLinkRequestCreateWithoutUserInput, TelegramLinkRequestUncheckedCreateWithoutUserInput> | TelegramLinkRequestCreateWithoutUserInput[] | TelegramLinkRequestUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TelegramLinkRequestCreateOrConnectWithoutUserInput | TelegramLinkRequestCreateOrConnectWithoutUserInput[]
+    upsert?: TelegramLinkRequestUpsertWithWhereUniqueWithoutUserInput | TelegramLinkRequestUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TelegramLinkRequestCreateManyUserInputEnvelope
+    set?: TelegramLinkRequestWhereUniqueInput | TelegramLinkRequestWhereUniqueInput[]
+    disconnect?: TelegramLinkRequestWhereUniqueInput | TelegramLinkRequestWhereUniqueInput[]
+    delete?: TelegramLinkRequestWhereUniqueInput | TelegramLinkRequestWhereUniqueInput[]
+    connect?: TelegramLinkRequestWhereUniqueInput | TelegramLinkRequestWhereUniqueInput[]
+    update?: TelegramLinkRequestUpdateWithWhereUniqueWithoutUserInput | TelegramLinkRequestUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TelegramLinkRequestUpdateManyWithWhereWithoutUserInput | TelegramLinkRequestUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TelegramLinkRequestScalarWhereInput | TelegramLinkRequestScalarWhereInput[]
+  }
+
   export type InteractionUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<InteractionCreateWithoutUserInput, InteractionUncheckedCreateWithoutUserInput> | InteractionCreateWithoutUserInput[] | InteractionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: InteractionCreateOrConnectWithoutUserInput | InteractionCreateOrConnectWithoutUserInput[]
@@ -25301,6 +31076,48 @@ export namespace Prisma {
     update?: CallLogUpdateWithWhereUniqueWithoutUserInput | CallLogUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: CallLogUpdateManyWithWhereWithoutUserInput | CallLogUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: CallLogScalarWhereInput | CallLogScalarWhereInput[]
+  }
+
+  export type ConversationUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ConversationCreateWithoutUserInput, ConversationUncheckedCreateWithoutUserInput> | ConversationCreateWithoutUserInput[] | ConversationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ConversationCreateOrConnectWithoutUserInput | ConversationCreateOrConnectWithoutUserInput[]
+    upsert?: ConversationUpsertWithWhereUniqueWithoutUserInput | ConversationUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ConversationCreateManyUserInputEnvelope
+    set?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    disconnect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    delete?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    update?: ConversationUpdateWithWhereUniqueWithoutUserInput | ConversationUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ConversationUpdateManyWithWhereWithoutUserInput | ConversationUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ConversationScalarWhereInput | ConversationScalarWhereInput[]
+  }
+
+  export type TelegramUserUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TelegramUserCreateWithoutUserInput, TelegramUserUncheckedCreateWithoutUserInput> | TelegramUserCreateWithoutUserInput[] | TelegramUserUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TelegramUserCreateOrConnectWithoutUserInput | TelegramUserCreateOrConnectWithoutUserInput[]
+    upsert?: TelegramUserUpsertWithWhereUniqueWithoutUserInput | TelegramUserUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TelegramUserCreateManyUserInputEnvelope
+    set?: TelegramUserWhereUniqueInput | TelegramUserWhereUniqueInput[]
+    disconnect?: TelegramUserWhereUniqueInput | TelegramUserWhereUniqueInput[]
+    delete?: TelegramUserWhereUniqueInput | TelegramUserWhereUniqueInput[]
+    connect?: TelegramUserWhereUniqueInput | TelegramUserWhereUniqueInput[]
+    update?: TelegramUserUpdateWithWhereUniqueWithoutUserInput | TelegramUserUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TelegramUserUpdateManyWithWhereWithoutUserInput | TelegramUserUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TelegramUserScalarWhereInput | TelegramUserScalarWhereInput[]
+  }
+
+  export type TelegramLinkRequestUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TelegramLinkRequestCreateWithoutUserInput, TelegramLinkRequestUncheckedCreateWithoutUserInput> | TelegramLinkRequestCreateWithoutUserInput[] | TelegramLinkRequestUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TelegramLinkRequestCreateOrConnectWithoutUserInput | TelegramLinkRequestCreateOrConnectWithoutUserInput[]
+    upsert?: TelegramLinkRequestUpsertWithWhereUniqueWithoutUserInput | TelegramLinkRequestUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TelegramLinkRequestCreateManyUserInputEnvelope
+    set?: TelegramLinkRequestWhereUniqueInput | TelegramLinkRequestWhereUniqueInput[]
+    disconnect?: TelegramLinkRequestWhereUniqueInput | TelegramLinkRequestWhereUniqueInput[]
+    delete?: TelegramLinkRequestWhereUniqueInput | TelegramLinkRequestWhereUniqueInput[]
+    connect?: TelegramLinkRequestWhereUniqueInput | TelegramLinkRequestWhereUniqueInput[]
+    update?: TelegramLinkRequestUpdateWithWhereUniqueWithoutUserInput | TelegramLinkRequestUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TelegramLinkRequestUpdateManyWithWhereWithoutUserInput | TelegramLinkRequestUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TelegramLinkRequestScalarWhereInput | TelegramLinkRequestScalarWhereInput[]
   }
 
   export type TenantCreateNestedOneWithoutContactsInput = {
@@ -26487,6 +32304,118 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutInvitationsInput, UserUpdateWithoutInvitationsInput>, UserUncheckedUpdateWithoutInvitationsInput>
   }
 
+  export type MessageCreateNestedManyWithoutConversationInput = {
+    create?: XOR<MessageCreateWithoutConversationInput, MessageUncheckedCreateWithoutConversationInput> | MessageCreateWithoutConversationInput[] | MessageUncheckedCreateWithoutConversationInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutConversationInput | MessageCreateOrConnectWithoutConversationInput[]
+    createMany?: MessageCreateManyConversationInputEnvelope
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+  }
+
+  export type UserCreateNestedOneWithoutConversationsInput = {
+    create?: XOR<UserCreateWithoutConversationsInput, UserUncheckedCreateWithoutConversationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutConversationsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type TenantCreateNestedOneWithoutConversationsInput = {
+    create?: XOR<TenantCreateWithoutConversationsInput, TenantUncheckedCreateWithoutConversationsInput>
+    connectOrCreate?: TenantCreateOrConnectWithoutConversationsInput
+    connect?: TenantWhereUniqueInput
+  }
+
+  export type MessageUncheckedCreateNestedManyWithoutConversationInput = {
+    create?: XOR<MessageCreateWithoutConversationInput, MessageUncheckedCreateWithoutConversationInput> | MessageCreateWithoutConversationInput[] | MessageUncheckedCreateWithoutConversationInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutConversationInput | MessageCreateOrConnectWithoutConversationInput[]
+    createMany?: MessageCreateManyConversationInputEnvelope
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+  }
+
+  export type MessageUpdateManyWithoutConversationNestedInput = {
+    create?: XOR<MessageCreateWithoutConversationInput, MessageUncheckedCreateWithoutConversationInput> | MessageCreateWithoutConversationInput[] | MessageUncheckedCreateWithoutConversationInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutConversationInput | MessageCreateOrConnectWithoutConversationInput[]
+    upsert?: MessageUpsertWithWhereUniqueWithoutConversationInput | MessageUpsertWithWhereUniqueWithoutConversationInput[]
+    createMany?: MessageCreateManyConversationInputEnvelope
+    set?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    disconnect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    delete?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    update?: MessageUpdateWithWhereUniqueWithoutConversationInput | MessageUpdateWithWhereUniqueWithoutConversationInput[]
+    updateMany?: MessageUpdateManyWithWhereWithoutConversationInput | MessageUpdateManyWithWhereWithoutConversationInput[]
+    deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
+  }
+
+  export type UserUpdateOneRequiredWithoutConversationsNestedInput = {
+    create?: XOR<UserCreateWithoutConversationsInput, UserUncheckedCreateWithoutConversationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutConversationsInput
+    upsert?: UserUpsertWithoutConversationsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutConversationsInput, UserUpdateWithoutConversationsInput>, UserUncheckedUpdateWithoutConversationsInput>
+  }
+
+  export type TenantUpdateOneRequiredWithoutConversationsNestedInput = {
+    create?: XOR<TenantCreateWithoutConversationsInput, TenantUncheckedCreateWithoutConversationsInput>
+    connectOrCreate?: TenantCreateOrConnectWithoutConversationsInput
+    upsert?: TenantUpsertWithoutConversationsInput
+    connect?: TenantWhereUniqueInput
+    update?: XOR<XOR<TenantUpdateToOneWithWhereWithoutConversationsInput, TenantUpdateWithoutConversationsInput>, TenantUncheckedUpdateWithoutConversationsInput>
+  }
+
+  export type MessageUncheckedUpdateManyWithoutConversationNestedInput = {
+    create?: XOR<MessageCreateWithoutConversationInput, MessageUncheckedCreateWithoutConversationInput> | MessageCreateWithoutConversationInput[] | MessageUncheckedCreateWithoutConversationInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutConversationInput | MessageCreateOrConnectWithoutConversationInput[]
+    upsert?: MessageUpsertWithWhereUniqueWithoutConversationInput | MessageUpsertWithWhereUniqueWithoutConversationInput[]
+    createMany?: MessageCreateManyConversationInputEnvelope
+    set?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    disconnect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    delete?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    update?: MessageUpdateWithWhereUniqueWithoutConversationInput | MessageUpdateWithWhereUniqueWithoutConversationInput[]
+    updateMany?: MessageUpdateManyWithWhereWithoutConversationInput | MessageUpdateManyWithWhereWithoutConversationInput[]
+    deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
+  }
+
+  export type ConversationCreateNestedOneWithoutMessagesInput = {
+    create?: XOR<ConversationCreateWithoutMessagesInput, ConversationUncheckedCreateWithoutMessagesInput>
+    connectOrCreate?: ConversationCreateOrConnectWithoutMessagesInput
+    connect?: ConversationWhereUniqueInput
+  }
+
+  export type ConversationUpdateOneRequiredWithoutMessagesNestedInput = {
+    create?: XOR<ConversationCreateWithoutMessagesInput, ConversationUncheckedCreateWithoutMessagesInput>
+    connectOrCreate?: ConversationCreateOrConnectWithoutMessagesInput
+    upsert?: ConversationUpsertWithoutMessagesInput
+    connect?: ConversationWhereUniqueInput
+    update?: XOR<XOR<ConversationUpdateToOneWithWhereWithoutMessagesInput, ConversationUpdateWithoutMessagesInput>, ConversationUncheckedUpdateWithoutMessagesInput>
+  }
+
+  export type UserCreateNestedOneWithoutTelegramLinkRequestsInput = {
+    create?: XOR<UserCreateWithoutTelegramLinkRequestsInput, UserUncheckedCreateWithoutTelegramLinkRequestsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTelegramLinkRequestsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutTelegramLinkRequestsNestedInput = {
+    create?: XOR<UserCreateWithoutTelegramLinkRequestsInput, UserUncheckedCreateWithoutTelegramLinkRequestsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTelegramLinkRequestsInput
+    upsert?: UserUpsertWithoutTelegramLinkRequestsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTelegramLinkRequestsInput, UserUpdateWithoutTelegramLinkRequestsInput>, UserUncheckedUpdateWithoutTelegramLinkRequestsInput>
+  }
+
+  export type UserCreateNestedOneWithoutTelegramUsersInput = {
+    create?: XOR<UserCreateWithoutTelegramUsersInput, UserUncheckedCreateWithoutTelegramUsersInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTelegramUsersInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutTelegramUsersNestedInput = {
+    create?: XOR<UserCreateWithoutTelegramUsersInput, UserUncheckedCreateWithoutTelegramUsersInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTelegramUsersInput
+    upsert?: UserUpsertWithoutTelegramUsersInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTelegramUsersInput, UserUpdateWithoutTelegramUsersInput>, UserUncheckedUpdateWithoutTelegramUsersInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -26890,6 +32819,9 @@ export namespace Prisma {
     ticketComments?: TicketCommentCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutInvitedByUserInput
     callLogs?: CallLogCreateNestedManyWithoutUserInput
+    conversations?: ConversationCreateNestedManyWithoutUserInput
+    telegramUsers?: TelegramUserCreateNestedManyWithoutUserInput
+    telegramLinkRequests?: TelegramLinkRequestCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTenantInput = {
@@ -26908,6 +32840,9 @@ export namespace Prisma {
     ticketComments?: TicketCommentUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutInvitedByUserInput
     callLogs?: CallLogUncheckedCreateNestedManyWithoutUserInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutUserInput
+    telegramUsers?: TelegramUserUncheckedCreateNestedManyWithoutUserInput
+    telegramLinkRequests?: TelegramLinkRequestUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTenantInput = {
@@ -27334,6 +33269,34 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ConversationCreateWithoutTenantInput = {
+    id?: string
+    title?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    messages?: MessageCreateNestedManyWithoutConversationInput
+    user: UserCreateNestedOneWithoutConversationsInput
+  }
+
+  export type ConversationUncheckedCreateWithoutTenantInput = {
+    id?: string
+    userId: string
+    title?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    messages?: MessageUncheckedCreateNestedManyWithoutConversationInput
+  }
+
+  export type ConversationCreateOrConnectWithoutTenantInput = {
+    where: ConversationWhereUniqueInput
+    create: XOR<ConversationCreateWithoutTenantInput, ConversationUncheckedCreateWithoutTenantInput>
+  }
+
+  export type ConversationCreateManyTenantInputEnvelope = {
+    data: ConversationCreateManyTenantInput | ConversationCreateManyTenantInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithWhereUniqueWithoutTenantInput = {
     where: UserWhereUniqueInput
     update: XOR<UserUpdateWithoutTenantInput, UserUncheckedUpdateWithoutTenantInput>
@@ -27709,6 +33672,34 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"UserInvitation"> | Date | string
   }
 
+  export type ConversationUpsertWithWhereUniqueWithoutTenantInput = {
+    where: ConversationWhereUniqueInput
+    update: XOR<ConversationUpdateWithoutTenantInput, ConversationUncheckedUpdateWithoutTenantInput>
+    create: XOR<ConversationCreateWithoutTenantInput, ConversationUncheckedCreateWithoutTenantInput>
+  }
+
+  export type ConversationUpdateWithWhereUniqueWithoutTenantInput = {
+    where: ConversationWhereUniqueInput
+    data: XOR<ConversationUpdateWithoutTenantInput, ConversationUncheckedUpdateWithoutTenantInput>
+  }
+
+  export type ConversationUpdateManyWithWhereWithoutTenantInput = {
+    where: ConversationScalarWhereInput
+    data: XOR<ConversationUpdateManyMutationInput, ConversationUncheckedUpdateManyWithoutTenantInput>
+  }
+
+  export type ConversationScalarWhereInput = {
+    AND?: ConversationScalarWhereInput | ConversationScalarWhereInput[]
+    OR?: ConversationScalarWhereInput[]
+    NOT?: ConversationScalarWhereInput | ConversationScalarWhereInput[]
+    id?: StringFilter<"Conversation"> | string
+    userId?: StringFilter<"Conversation"> | string
+    tenantId?: StringFilter<"Conversation"> | string
+    title?: StringNullableFilter<"Conversation"> | string | null
+    createdAt?: DateTimeFilter<"Conversation"> | Date | string
+    updatedAt?: DateTimeFilter<"Conversation"> | Date | string
+  }
+
   export type TenantCreateWithoutUsersInput = {
     id?: string
     name: string
@@ -27728,6 +33719,7 @@ export namespace Prisma {
     callLogs?: CallLogCreateNestedManyWithoutTenantInput
     portalCustomers?: PortalCustomerCreateNestedManyWithoutTenantInput
     userInvitations?: UserInvitationCreateNestedManyWithoutTenantInput
+    conversations?: ConversationCreateNestedManyWithoutTenantInput
   }
 
   export type TenantUncheckedCreateWithoutUsersInput = {
@@ -27749,6 +33741,7 @@ export namespace Prisma {
     callLogs?: CallLogUncheckedCreateNestedManyWithoutTenantInput
     portalCustomers?: PortalCustomerUncheckedCreateNestedManyWithoutTenantInput
     userInvitations?: UserInvitationUncheckedCreateNestedManyWithoutTenantInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type TenantCreateOrConnectWithoutUsersInput = {
@@ -27960,6 +33953,92 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ConversationCreateWithoutUserInput = {
+    id?: string
+    title?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    messages?: MessageCreateNestedManyWithoutConversationInput
+    tenant: TenantCreateNestedOneWithoutConversationsInput
+  }
+
+  export type ConversationUncheckedCreateWithoutUserInput = {
+    id?: string
+    tenantId: string
+    title?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    messages?: MessageUncheckedCreateNestedManyWithoutConversationInput
+  }
+
+  export type ConversationCreateOrConnectWithoutUserInput = {
+    where: ConversationWhereUniqueInput
+    create: XOR<ConversationCreateWithoutUserInput, ConversationUncheckedCreateWithoutUserInput>
+  }
+
+  export type ConversationCreateManyUserInputEnvelope = {
+    data: ConversationCreateManyUserInput | ConversationCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TelegramUserCreateWithoutUserInput = {
+    id?: string
+    telegramId: string
+    username?: string | null
+    firstName?: string | null
+    lastName?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TelegramUserUncheckedCreateWithoutUserInput = {
+    id?: string
+    telegramId: string
+    username?: string | null
+    firstName?: string | null
+    lastName?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TelegramUserCreateOrConnectWithoutUserInput = {
+    where: TelegramUserWhereUniqueInput
+    create: XOR<TelegramUserCreateWithoutUserInput, TelegramUserUncheckedCreateWithoutUserInput>
+  }
+
+  export type TelegramUserCreateManyUserInputEnvelope = {
+    data: TelegramUserCreateManyUserInput | TelegramUserCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TelegramLinkRequestCreateWithoutUserInput = {
+    id?: string
+    code: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type TelegramLinkRequestUncheckedCreateWithoutUserInput = {
+    id?: string
+    code: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type TelegramLinkRequestCreateOrConnectWithoutUserInput = {
+    where: TelegramLinkRequestWhereUniqueInput
+    create: XOR<TelegramLinkRequestCreateWithoutUserInput, TelegramLinkRequestUncheckedCreateWithoutUserInput>
+  }
+
+  export type TelegramLinkRequestCreateManyUserInputEnvelope = {
+    data: TelegramLinkRequestCreateManyUserInput | TelegramLinkRequestCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type TenantUpsertWithoutUsersInput = {
     update: XOR<TenantUpdateWithoutUsersInput, TenantUncheckedUpdateWithoutUsersInput>
     create: XOR<TenantCreateWithoutUsersInput, TenantUncheckedCreateWithoutUsersInput>
@@ -27990,6 +34069,7 @@ export namespace Prisma {
     callLogs?: CallLogUpdateManyWithoutTenantNestedInput
     portalCustomers?: PortalCustomerUpdateManyWithoutTenantNestedInput
     userInvitations?: UserInvitationUpdateManyWithoutTenantNestedInput
+    conversations?: ConversationUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantUncheckedUpdateWithoutUsersInput = {
@@ -28011,6 +34091,7 @@ export namespace Prisma {
     callLogs?: CallLogUncheckedUpdateManyWithoutTenantNestedInput
     portalCustomers?: PortalCustomerUncheckedUpdateManyWithoutTenantNestedInput
     userInvitations?: UserInvitationUncheckedUpdateManyWithoutTenantNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type InteractionUpsertWithWhereUniqueWithoutUserInput = {
@@ -28108,6 +34189,81 @@ export namespace Prisma {
     data: XOR<CallLogUpdateManyMutationInput, CallLogUncheckedUpdateManyWithoutUserInput>
   }
 
+  export type ConversationUpsertWithWhereUniqueWithoutUserInput = {
+    where: ConversationWhereUniqueInput
+    update: XOR<ConversationUpdateWithoutUserInput, ConversationUncheckedUpdateWithoutUserInput>
+    create: XOR<ConversationCreateWithoutUserInput, ConversationUncheckedCreateWithoutUserInput>
+  }
+
+  export type ConversationUpdateWithWhereUniqueWithoutUserInput = {
+    where: ConversationWhereUniqueInput
+    data: XOR<ConversationUpdateWithoutUserInput, ConversationUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ConversationUpdateManyWithWhereWithoutUserInput = {
+    where: ConversationScalarWhereInput
+    data: XOR<ConversationUpdateManyMutationInput, ConversationUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type TelegramUserUpsertWithWhereUniqueWithoutUserInput = {
+    where: TelegramUserWhereUniqueInput
+    update: XOR<TelegramUserUpdateWithoutUserInput, TelegramUserUncheckedUpdateWithoutUserInput>
+    create: XOR<TelegramUserCreateWithoutUserInput, TelegramUserUncheckedCreateWithoutUserInput>
+  }
+
+  export type TelegramUserUpdateWithWhereUniqueWithoutUserInput = {
+    where: TelegramUserWhereUniqueInput
+    data: XOR<TelegramUserUpdateWithoutUserInput, TelegramUserUncheckedUpdateWithoutUserInput>
+  }
+
+  export type TelegramUserUpdateManyWithWhereWithoutUserInput = {
+    where: TelegramUserScalarWhereInput
+    data: XOR<TelegramUserUpdateManyMutationInput, TelegramUserUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type TelegramUserScalarWhereInput = {
+    AND?: TelegramUserScalarWhereInput | TelegramUserScalarWhereInput[]
+    OR?: TelegramUserScalarWhereInput[]
+    NOT?: TelegramUserScalarWhereInput | TelegramUserScalarWhereInput[]
+    id?: StringFilter<"TelegramUser"> | string
+    telegramId?: StringFilter<"TelegramUser"> | string
+    userId?: StringFilter<"TelegramUser"> | string
+    username?: StringNullableFilter<"TelegramUser"> | string | null
+    firstName?: StringNullableFilter<"TelegramUser"> | string | null
+    lastName?: StringNullableFilter<"TelegramUser"> | string | null
+    isActive?: BoolFilter<"TelegramUser"> | boolean
+    createdAt?: DateTimeFilter<"TelegramUser"> | Date | string
+    updatedAt?: DateTimeFilter<"TelegramUser"> | Date | string
+  }
+
+  export type TelegramLinkRequestUpsertWithWhereUniqueWithoutUserInput = {
+    where: TelegramLinkRequestWhereUniqueInput
+    update: XOR<TelegramLinkRequestUpdateWithoutUserInput, TelegramLinkRequestUncheckedUpdateWithoutUserInput>
+    create: XOR<TelegramLinkRequestCreateWithoutUserInput, TelegramLinkRequestUncheckedCreateWithoutUserInput>
+  }
+
+  export type TelegramLinkRequestUpdateWithWhereUniqueWithoutUserInput = {
+    where: TelegramLinkRequestWhereUniqueInput
+    data: XOR<TelegramLinkRequestUpdateWithoutUserInput, TelegramLinkRequestUncheckedUpdateWithoutUserInput>
+  }
+
+  export type TelegramLinkRequestUpdateManyWithWhereWithoutUserInput = {
+    where: TelegramLinkRequestScalarWhereInput
+    data: XOR<TelegramLinkRequestUpdateManyMutationInput, TelegramLinkRequestUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type TelegramLinkRequestScalarWhereInput = {
+    AND?: TelegramLinkRequestScalarWhereInput | TelegramLinkRequestScalarWhereInput[]
+    OR?: TelegramLinkRequestScalarWhereInput[]
+    NOT?: TelegramLinkRequestScalarWhereInput | TelegramLinkRequestScalarWhereInput[]
+    id?: StringFilter<"TelegramLinkRequest"> | string
+    code?: StringFilter<"TelegramLinkRequest"> | string
+    userId?: StringFilter<"TelegramLinkRequest"> | string
+    expiresAt?: DateTimeFilter<"TelegramLinkRequest"> | Date | string
+    usedAt?: DateTimeNullableFilter<"TelegramLinkRequest"> | Date | string | null
+    createdAt?: DateTimeFilter<"TelegramLinkRequest"> | Date | string
+  }
+
   export type TenantCreateWithoutContactsInput = {
     id?: string
     name: string
@@ -28127,6 +34283,7 @@ export namespace Prisma {
     callLogs?: CallLogCreateNestedManyWithoutTenantInput
     portalCustomers?: PortalCustomerCreateNestedManyWithoutTenantInput
     userInvitations?: UserInvitationCreateNestedManyWithoutTenantInput
+    conversations?: ConversationCreateNestedManyWithoutTenantInput
   }
 
   export type TenantUncheckedCreateWithoutContactsInput = {
@@ -28148,6 +34305,7 @@ export namespace Prisma {
     callLogs?: CallLogUncheckedCreateNestedManyWithoutTenantInput
     portalCustomers?: PortalCustomerUncheckedCreateNestedManyWithoutTenantInput
     userInvitations?: UserInvitationUncheckedCreateNestedManyWithoutTenantInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type TenantCreateOrConnectWithoutContactsInput = {
@@ -28447,6 +34605,7 @@ export namespace Prisma {
     callLogs?: CallLogUpdateManyWithoutTenantNestedInput
     portalCustomers?: PortalCustomerUpdateManyWithoutTenantNestedInput
     userInvitations?: UserInvitationUpdateManyWithoutTenantNestedInput
+    conversations?: ConversationUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantUncheckedUpdateWithoutContactsInput = {
@@ -28468,6 +34627,7 @@ export namespace Prisma {
     callLogs?: CallLogUncheckedUpdateManyWithoutTenantNestedInput
     portalCustomers?: PortalCustomerUncheckedUpdateManyWithoutTenantNestedInput
     userInvitations?: UserInvitationUncheckedUpdateManyWithoutTenantNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type LeadUpsertWithWhereUniqueWithoutContactInput = {
@@ -28585,6 +34745,7 @@ export namespace Prisma {
     callLogs?: CallLogCreateNestedManyWithoutTenantInput
     portalCustomers?: PortalCustomerCreateNestedManyWithoutTenantInput
     userInvitations?: UserInvitationCreateNestedManyWithoutTenantInput
+    conversations?: ConversationCreateNestedManyWithoutTenantInput
   }
 
   export type TenantUncheckedCreateWithoutLeadsInput = {
@@ -28606,6 +34767,7 @@ export namespace Prisma {
     callLogs?: CallLogUncheckedCreateNestedManyWithoutTenantInput
     portalCustomers?: PortalCustomerUncheckedCreateNestedManyWithoutTenantInput
     userInvitations?: UserInvitationUncheckedCreateNestedManyWithoutTenantInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type TenantCreateOrConnectWithoutLeadsInput = {
@@ -28738,6 +34900,7 @@ export namespace Prisma {
     callLogs?: CallLogUpdateManyWithoutTenantNestedInput
     portalCustomers?: PortalCustomerUpdateManyWithoutTenantNestedInput
     userInvitations?: UserInvitationUpdateManyWithoutTenantNestedInput
+    conversations?: ConversationUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantUncheckedUpdateWithoutLeadsInput = {
@@ -28759,6 +34922,7 @@ export namespace Prisma {
     callLogs?: CallLogUncheckedUpdateManyWithoutTenantNestedInput
     portalCustomers?: PortalCustomerUncheckedUpdateManyWithoutTenantNestedInput
     userInvitations?: UserInvitationUncheckedUpdateManyWithoutTenantNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type ContactUpsertWithoutLeadsInput = {
@@ -28849,6 +35013,7 @@ export namespace Prisma {
     callLogs?: CallLogCreateNestedManyWithoutTenantInput
     portalCustomers?: PortalCustomerCreateNestedManyWithoutTenantInput
     userInvitations?: UserInvitationCreateNestedManyWithoutTenantInput
+    conversations?: ConversationCreateNestedManyWithoutTenantInput
   }
 
   export type TenantUncheckedCreateWithoutPipelinesInput = {
@@ -28870,6 +35035,7 @@ export namespace Prisma {
     callLogs?: CallLogUncheckedCreateNestedManyWithoutTenantInput
     portalCustomers?: PortalCustomerUncheckedCreateNestedManyWithoutTenantInput
     userInvitations?: UserInvitationUncheckedCreateNestedManyWithoutTenantInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type TenantCreateOrConnectWithoutPipelinesInput = {
@@ -28983,6 +35149,7 @@ export namespace Prisma {
     callLogs?: CallLogUpdateManyWithoutTenantNestedInput
     portalCustomers?: PortalCustomerUpdateManyWithoutTenantNestedInput
     userInvitations?: UserInvitationUpdateManyWithoutTenantNestedInput
+    conversations?: ConversationUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantUncheckedUpdateWithoutPipelinesInput = {
@@ -29004,6 +35171,7 @@ export namespace Prisma {
     callLogs?: CallLogUncheckedUpdateManyWithoutTenantNestedInput
     portalCustomers?: PortalCustomerUncheckedUpdateManyWithoutTenantNestedInput
     userInvitations?: UserInvitationUncheckedUpdateManyWithoutTenantNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type StageUpsertWithWhereUniqueWithoutPipelineInput = {
@@ -29193,6 +35361,7 @@ export namespace Prisma {
     callLogs?: CallLogCreateNestedManyWithoutTenantInput
     portalCustomers?: PortalCustomerCreateNestedManyWithoutTenantInput
     userInvitations?: UserInvitationCreateNestedManyWithoutTenantInput
+    conversations?: ConversationCreateNestedManyWithoutTenantInput
   }
 
   export type TenantUncheckedCreateWithoutDealsInput = {
@@ -29214,6 +35383,7 @@ export namespace Prisma {
     callLogs?: CallLogUncheckedCreateNestedManyWithoutTenantInput
     portalCustomers?: PortalCustomerUncheckedCreateNestedManyWithoutTenantInput
     userInvitations?: UserInvitationUncheckedCreateNestedManyWithoutTenantInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type TenantCreateOrConnectWithoutDealsInput = {
@@ -29519,6 +35689,7 @@ export namespace Prisma {
     callLogs?: CallLogUpdateManyWithoutTenantNestedInput
     portalCustomers?: PortalCustomerUpdateManyWithoutTenantNestedInput
     userInvitations?: UserInvitationUpdateManyWithoutTenantNestedInput
+    conversations?: ConversationUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantUncheckedUpdateWithoutDealsInput = {
@@ -29540,6 +35711,7 @@ export namespace Prisma {
     callLogs?: CallLogUncheckedUpdateManyWithoutTenantNestedInput
     portalCustomers?: PortalCustomerUncheckedUpdateManyWithoutTenantNestedInput
     userInvitations?: UserInvitationUncheckedUpdateManyWithoutTenantNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type ContactUpsertWithoutDealsInput = {
@@ -29763,6 +35935,7 @@ export namespace Prisma {
     callLogs?: CallLogCreateNestedManyWithoutTenantInput
     portalCustomers?: PortalCustomerCreateNestedManyWithoutTenantInput
     userInvitations?: UserInvitationCreateNestedManyWithoutTenantInput
+    conversations?: ConversationCreateNestedManyWithoutTenantInput
   }
 
   export type TenantUncheckedCreateWithoutInteractionsInput = {
@@ -29784,6 +35957,7 @@ export namespace Prisma {
     callLogs?: CallLogUncheckedCreateNestedManyWithoutTenantInput
     portalCustomers?: PortalCustomerUncheckedCreateNestedManyWithoutTenantInput
     userInvitations?: UserInvitationUncheckedCreateNestedManyWithoutTenantInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type TenantCreateOrConnectWithoutInteractionsInput = {
@@ -29897,6 +36071,9 @@ export namespace Prisma {
     ticketComments?: TicketCommentCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutInvitedByUserInput
     callLogs?: CallLogCreateNestedManyWithoutUserInput
+    conversations?: ConversationCreateNestedManyWithoutUserInput
+    telegramUsers?: TelegramUserCreateNestedManyWithoutUserInput
+    telegramLinkRequests?: TelegramLinkRequestCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutInteractionsInput = {
@@ -29915,6 +36092,9 @@ export namespace Prisma {
     ticketComments?: TicketCommentUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutInvitedByUserInput
     callLogs?: CallLogUncheckedCreateNestedManyWithoutUserInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutUserInput
+    telegramUsers?: TelegramUserUncheckedCreateNestedManyWithoutUserInput
+    telegramLinkRequests?: TelegramLinkRequestUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutInteractionsInput = {
@@ -29952,6 +36132,7 @@ export namespace Prisma {
     callLogs?: CallLogUpdateManyWithoutTenantNestedInput
     portalCustomers?: PortalCustomerUpdateManyWithoutTenantNestedInput
     userInvitations?: UserInvitationUpdateManyWithoutTenantNestedInput
+    conversations?: ConversationUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantUncheckedUpdateWithoutInteractionsInput = {
@@ -29973,6 +36154,7 @@ export namespace Prisma {
     callLogs?: CallLogUncheckedUpdateManyWithoutTenantNestedInput
     portalCustomers?: PortalCustomerUncheckedUpdateManyWithoutTenantNestedInput
     userInvitations?: UserInvitationUncheckedUpdateManyWithoutTenantNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type ContactUpsertWithoutInteractionsInput = {
@@ -30104,6 +36286,9 @@ export namespace Prisma {
     ticketComments?: TicketCommentUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutInvitedByUserNestedInput
     callLogs?: CallLogUpdateManyWithoutUserNestedInput
+    conversations?: ConversationUpdateManyWithoutUserNestedInput
+    telegramUsers?: TelegramUserUpdateManyWithoutUserNestedInput
+    telegramLinkRequests?: TelegramLinkRequestUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInteractionsInput = {
@@ -30122,6 +36307,9 @@ export namespace Prisma {
     ticketComments?: TicketCommentUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutInvitedByUserNestedInput
     callLogs?: CallLogUncheckedUpdateManyWithoutUserNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutUserNestedInput
+    telegramUsers?: TelegramUserUncheckedUpdateManyWithoutUserNestedInput
+    telegramLinkRequests?: TelegramLinkRequestUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type TenantCreateWithoutTicketsInput = {
@@ -30143,6 +36331,7 @@ export namespace Prisma {
     callLogs?: CallLogCreateNestedManyWithoutTenantInput
     portalCustomers?: PortalCustomerCreateNestedManyWithoutTenantInput
     userInvitations?: UserInvitationCreateNestedManyWithoutTenantInput
+    conversations?: ConversationCreateNestedManyWithoutTenantInput
   }
 
   export type TenantUncheckedCreateWithoutTicketsInput = {
@@ -30164,6 +36353,7 @@ export namespace Prisma {
     callLogs?: CallLogUncheckedCreateNestedManyWithoutTenantInput
     portalCustomers?: PortalCustomerUncheckedCreateNestedManyWithoutTenantInput
     userInvitations?: UserInvitationUncheckedCreateNestedManyWithoutTenantInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type TenantCreateOrConnectWithoutTicketsInput = {
@@ -30310,6 +36500,9 @@ export namespace Prisma {
     ticketComments?: TicketCommentCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutInvitedByUserInput
     callLogs?: CallLogCreateNestedManyWithoutUserInput
+    conversations?: ConversationCreateNestedManyWithoutUserInput
+    telegramUsers?: TelegramUserCreateNestedManyWithoutUserInput
+    telegramLinkRequests?: TelegramLinkRequestCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTicketsAssignedInput = {
@@ -30328,6 +36521,9 @@ export namespace Prisma {
     ticketComments?: TicketCommentUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutInvitedByUserInput
     callLogs?: CallLogUncheckedCreateNestedManyWithoutUserInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutUserInput
+    telegramUsers?: TelegramUserUncheckedCreateNestedManyWithoutUserInput
+    telegramLinkRequests?: TelegramLinkRequestUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTicketsAssignedInput = {
@@ -30397,6 +36593,7 @@ export namespace Prisma {
     callLogs?: CallLogUpdateManyWithoutTenantNestedInput
     portalCustomers?: PortalCustomerUpdateManyWithoutTenantNestedInput
     userInvitations?: UserInvitationUpdateManyWithoutTenantNestedInput
+    conversations?: ConversationUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantUncheckedUpdateWithoutTicketsInput = {
@@ -30418,6 +36615,7 @@ export namespace Prisma {
     callLogs?: CallLogUncheckedUpdateManyWithoutTenantNestedInput
     portalCustomers?: PortalCustomerUncheckedUpdateManyWithoutTenantNestedInput
     userInvitations?: UserInvitationUncheckedUpdateManyWithoutTenantNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type ContactUpsertWithoutTicketsInput = {
@@ -30588,6 +36786,9 @@ export namespace Prisma {
     ticketComments?: TicketCommentUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutInvitedByUserNestedInput
     callLogs?: CallLogUpdateManyWithoutUserNestedInput
+    conversations?: ConversationUpdateManyWithoutUserNestedInput
+    telegramUsers?: TelegramUserUpdateManyWithoutUserNestedInput
+    telegramLinkRequests?: TelegramLinkRequestUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTicketsAssignedInput = {
@@ -30606,6 +36807,9 @@ export namespace Prisma {
     ticketComments?: TicketCommentUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutInvitedByUserNestedInput
     callLogs?: CallLogUncheckedUpdateManyWithoutUserNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutUserNestedInput
+    telegramUsers?: TelegramUserUncheckedUpdateManyWithoutUserNestedInput
+    telegramLinkRequests?: TelegramLinkRequestUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type TicketCommentUpsertWithWhereUniqueWithoutTicketInput = {
@@ -30683,6 +36887,9 @@ export namespace Prisma {
     ticketsAssigned?: TicketCreateNestedManyWithoutAssignedUserInput
     invitations?: UserInvitationCreateNestedManyWithoutInvitedByUserInput
     callLogs?: CallLogCreateNestedManyWithoutUserInput
+    conversations?: ConversationCreateNestedManyWithoutUserInput
+    telegramUsers?: TelegramUserCreateNestedManyWithoutUserInput
+    telegramLinkRequests?: TelegramLinkRequestCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTicketCommentsInput = {
@@ -30701,6 +36908,9 @@ export namespace Prisma {
     ticketsAssigned?: TicketUncheckedCreateNestedManyWithoutAssignedUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutInvitedByUserInput
     callLogs?: CallLogUncheckedCreateNestedManyWithoutUserInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutUserInput
+    telegramUsers?: TelegramUserUncheckedCreateNestedManyWithoutUserInput
+    telegramLinkRequests?: TelegramLinkRequestUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTicketCommentsInput = {
@@ -30817,6 +37027,9 @@ export namespace Prisma {
     ticketsAssigned?: TicketUpdateManyWithoutAssignedUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutInvitedByUserNestedInput
     callLogs?: CallLogUpdateManyWithoutUserNestedInput
+    conversations?: ConversationUpdateManyWithoutUserNestedInput
+    telegramUsers?: TelegramUserUpdateManyWithoutUserNestedInput
+    telegramLinkRequests?: TelegramLinkRequestUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTicketCommentsInput = {
@@ -30835,6 +37048,9 @@ export namespace Prisma {
     ticketsAssigned?: TicketUncheckedUpdateManyWithoutAssignedUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutInvitedByUserNestedInput
     callLogs?: CallLogUncheckedUpdateManyWithoutUserNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutUserNestedInput
+    telegramUsers?: TelegramUserUncheckedUpdateManyWithoutUserNestedInput
+    telegramLinkRequests?: TelegramLinkRequestUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type PortalCustomerUpsertWithoutTicketCommentsInput = {
@@ -30895,6 +37111,7 @@ export namespace Prisma {
     callLogs?: CallLogCreateNestedManyWithoutTenantInput
     portalCustomers?: PortalCustomerCreateNestedManyWithoutTenantInput
     userInvitations?: UserInvitationCreateNestedManyWithoutTenantInput
+    conversations?: ConversationCreateNestedManyWithoutTenantInput
   }
 
   export type TenantUncheckedCreateWithoutIntegrationsInput = {
@@ -30916,6 +37133,7 @@ export namespace Prisma {
     callLogs?: CallLogUncheckedCreateNestedManyWithoutTenantInput
     portalCustomers?: PortalCustomerUncheckedCreateNestedManyWithoutTenantInput
     userInvitations?: UserInvitationUncheckedCreateNestedManyWithoutTenantInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type TenantCreateOrConnectWithoutIntegrationsInput = {
@@ -30953,6 +37171,7 @@ export namespace Prisma {
     callLogs?: CallLogUpdateManyWithoutTenantNestedInput
     portalCustomers?: PortalCustomerUpdateManyWithoutTenantNestedInput
     userInvitations?: UserInvitationUpdateManyWithoutTenantNestedInput
+    conversations?: ConversationUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantUncheckedUpdateWithoutIntegrationsInput = {
@@ -30974,6 +37193,7 @@ export namespace Prisma {
     callLogs?: CallLogUncheckedUpdateManyWithoutTenantNestedInput
     portalCustomers?: PortalCustomerUncheckedUpdateManyWithoutTenantNestedInput
     userInvitations?: UserInvitationUncheckedUpdateManyWithoutTenantNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantCreateWithoutCallLogsInput = {
@@ -30995,6 +37215,7 @@ export namespace Prisma {
     integrations?: IntegrationCreateNestedManyWithoutTenantInput
     portalCustomers?: PortalCustomerCreateNestedManyWithoutTenantInput
     userInvitations?: UserInvitationCreateNestedManyWithoutTenantInput
+    conversations?: ConversationCreateNestedManyWithoutTenantInput
   }
 
   export type TenantUncheckedCreateWithoutCallLogsInput = {
@@ -31016,6 +37237,7 @@ export namespace Prisma {
     integrations?: IntegrationUncheckedCreateNestedManyWithoutTenantInput
     portalCustomers?: PortalCustomerUncheckedCreateNestedManyWithoutTenantInput
     userInvitations?: UserInvitationUncheckedCreateNestedManyWithoutTenantInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type TenantCreateOrConnectWithoutCallLogsInput = {
@@ -31039,6 +37261,9 @@ export namespace Prisma {
     ticketsAssigned?: TicketCreateNestedManyWithoutAssignedUserInput
     ticketComments?: TicketCommentCreateNestedManyWithoutUserInput
     invitations?: UserInvitationCreateNestedManyWithoutInvitedByUserInput
+    conversations?: ConversationCreateNestedManyWithoutUserInput
+    telegramUsers?: TelegramUserCreateNestedManyWithoutUserInput
+    telegramLinkRequests?: TelegramLinkRequestCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCallLogsInput = {
@@ -31057,6 +37282,9 @@ export namespace Prisma {
     ticketsAssigned?: TicketUncheckedCreateNestedManyWithoutAssignedUserInput
     ticketComments?: TicketCommentUncheckedCreateNestedManyWithoutUserInput
     invitations?: UserInvitationUncheckedCreateNestedManyWithoutInvitedByUserInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutUserInput
+    telegramUsers?: TelegramUserUncheckedCreateNestedManyWithoutUserInput
+    telegramLinkRequests?: TelegramLinkRequestUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCallLogsInput = {
@@ -31184,6 +37412,7 @@ export namespace Prisma {
     integrations?: IntegrationUpdateManyWithoutTenantNestedInput
     portalCustomers?: PortalCustomerUpdateManyWithoutTenantNestedInput
     userInvitations?: UserInvitationUpdateManyWithoutTenantNestedInput
+    conversations?: ConversationUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantUncheckedUpdateWithoutCallLogsInput = {
@@ -31205,6 +37434,7 @@ export namespace Prisma {
     integrations?: IntegrationUncheckedUpdateManyWithoutTenantNestedInput
     portalCustomers?: PortalCustomerUncheckedUpdateManyWithoutTenantNestedInput
     userInvitations?: UserInvitationUncheckedUpdateManyWithoutTenantNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type UserUpsertWithoutCallLogsInput = {
@@ -31234,6 +37464,9 @@ export namespace Prisma {
     ticketsAssigned?: TicketUpdateManyWithoutAssignedUserNestedInput
     ticketComments?: TicketCommentUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutInvitedByUserNestedInput
+    conversations?: ConversationUpdateManyWithoutUserNestedInput
+    telegramUsers?: TelegramUserUpdateManyWithoutUserNestedInput
+    telegramLinkRequests?: TelegramLinkRequestUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCallLogsInput = {
@@ -31252,6 +37485,9 @@ export namespace Prisma {
     ticketsAssigned?: TicketUncheckedUpdateManyWithoutAssignedUserNestedInput
     ticketComments?: TicketCommentUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutInvitedByUserNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutUserNestedInput
+    telegramUsers?: TelegramUserUncheckedUpdateManyWithoutUserNestedInput
+    telegramLinkRequests?: TelegramLinkRequestUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ContactUpsertWithoutCallLogsInput = {
@@ -31375,6 +37611,7 @@ export namespace Prisma {
     integrations?: IntegrationCreateNestedManyWithoutTenantInput
     callLogs?: CallLogCreateNestedManyWithoutTenantInput
     userInvitations?: UserInvitationCreateNestedManyWithoutTenantInput
+    conversations?: ConversationCreateNestedManyWithoutTenantInput
   }
 
   export type TenantUncheckedCreateWithoutPortalCustomersInput = {
@@ -31396,6 +37633,7 @@ export namespace Prisma {
     integrations?: IntegrationUncheckedCreateNestedManyWithoutTenantInput
     callLogs?: CallLogUncheckedCreateNestedManyWithoutTenantInput
     userInvitations?: UserInvitationUncheckedCreateNestedManyWithoutTenantInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type TenantCreateOrConnectWithoutPortalCustomersInput = {
@@ -31560,6 +37798,7 @@ export namespace Prisma {
     integrations?: IntegrationUpdateManyWithoutTenantNestedInput
     callLogs?: CallLogUpdateManyWithoutTenantNestedInput
     userInvitations?: UserInvitationUpdateManyWithoutTenantNestedInput
+    conversations?: ConversationUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantUncheckedUpdateWithoutPortalCustomersInput = {
@@ -31581,6 +37820,7 @@ export namespace Prisma {
     integrations?: IntegrationUncheckedUpdateManyWithoutTenantNestedInput
     callLogs?: CallLogUncheckedUpdateManyWithoutTenantNestedInput
     userInvitations?: UserInvitationUncheckedUpdateManyWithoutTenantNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type ContactUpsertWithoutPortalCustomersInput = {
@@ -31687,6 +37927,7 @@ export namespace Prisma {
     integrations?: IntegrationCreateNestedManyWithoutTenantInput
     callLogs?: CallLogCreateNestedManyWithoutTenantInput
     portalCustomers?: PortalCustomerCreateNestedManyWithoutTenantInput
+    conversations?: ConversationCreateNestedManyWithoutTenantInput
   }
 
   export type TenantUncheckedCreateWithoutUserInvitationsInput = {
@@ -31708,6 +37949,7 @@ export namespace Prisma {
     integrations?: IntegrationUncheckedCreateNestedManyWithoutTenantInput
     callLogs?: CallLogUncheckedCreateNestedManyWithoutTenantInput
     portalCustomers?: PortalCustomerUncheckedCreateNestedManyWithoutTenantInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type TenantCreateOrConnectWithoutUserInvitationsInput = {
@@ -31731,6 +37973,9 @@ export namespace Prisma {
     ticketsAssigned?: TicketCreateNestedManyWithoutAssignedUserInput
     ticketComments?: TicketCommentCreateNestedManyWithoutUserInput
     callLogs?: CallLogCreateNestedManyWithoutUserInput
+    conversations?: ConversationCreateNestedManyWithoutUserInput
+    telegramUsers?: TelegramUserCreateNestedManyWithoutUserInput
+    telegramLinkRequests?: TelegramLinkRequestCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutInvitationsInput = {
@@ -31749,6 +37994,9 @@ export namespace Prisma {
     ticketsAssigned?: TicketUncheckedCreateNestedManyWithoutAssignedUserInput
     ticketComments?: TicketCommentUncheckedCreateNestedManyWithoutUserInput
     callLogs?: CallLogUncheckedCreateNestedManyWithoutUserInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutUserInput
+    telegramUsers?: TelegramUserUncheckedCreateNestedManyWithoutUserInput
+    telegramLinkRequests?: TelegramLinkRequestUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutInvitationsInput = {
@@ -31786,6 +38034,7 @@ export namespace Prisma {
     integrations?: IntegrationUpdateManyWithoutTenantNestedInput
     callLogs?: CallLogUpdateManyWithoutTenantNestedInput
     portalCustomers?: PortalCustomerUpdateManyWithoutTenantNestedInput
+    conversations?: ConversationUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantUncheckedUpdateWithoutUserInvitationsInput = {
@@ -31807,6 +38056,7 @@ export namespace Prisma {
     integrations?: IntegrationUncheckedUpdateManyWithoutTenantNestedInput
     callLogs?: CallLogUncheckedUpdateManyWithoutTenantNestedInput
     portalCustomers?: PortalCustomerUncheckedUpdateManyWithoutTenantNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type UserUpsertWithoutInvitationsInput = {
@@ -31836,6 +38086,9 @@ export namespace Prisma {
     ticketsAssigned?: TicketUpdateManyWithoutAssignedUserNestedInput
     ticketComments?: TicketCommentUpdateManyWithoutUserNestedInput
     callLogs?: CallLogUpdateManyWithoutUserNestedInput
+    conversations?: ConversationUpdateManyWithoutUserNestedInput
+    telegramUsers?: TelegramUserUpdateManyWithoutUserNestedInput
+    telegramLinkRequests?: TelegramLinkRequestUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInvitationsInput = {
@@ -31854,6 +38107,516 @@ export namespace Prisma {
     ticketsAssigned?: TicketUncheckedUpdateManyWithoutAssignedUserNestedInput
     ticketComments?: TicketCommentUncheckedUpdateManyWithoutUserNestedInput
     callLogs?: CallLogUncheckedUpdateManyWithoutUserNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutUserNestedInput
+    telegramUsers?: TelegramUserUncheckedUpdateManyWithoutUserNestedInput
+    telegramLinkRequests?: TelegramLinkRequestUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type MessageCreateWithoutConversationInput = {
+    id?: string
+    role: string
+    content: string
+    createdAt?: Date | string
+  }
+
+  export type MessageUncheckedCreateWithoutConversationInput = {
+    id?: string
+    role: string
+    content: string
+    createdAt?: Date | string
+  }
+
+  export type MessageCreateOrConnectWithoutConversationInput = {
+    where: MessageWhereUniqueInput
+    create: XOR<MessageCreateWithoutConversationInput, MessageUncheckedCreateWithoutConversationInput>
+  }
+
+  export type MessageCreateManyConversationInputEnvelope = {
+    data: MessageCreateManyConversationInput | MessageCreateManyConversationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserCreateWithoutConversationsInput = {
+    id?: string
+    supabaseUserId: string
+    email: string
+    firstName?: string | null
+    lastName?: string | null
+    name?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tenant: TenantCreateNestedOneWithoutUsersInput
+    interactions?: InteractionCreateNestedManyWithoutUserInput
+    ticketsAssigned?: TicketCreateNestedManyWithoutAssignedUserInput
+    ticketComments?: TicketCommentCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationCreateNestedManyWithoutInvitedByUserInput
+    callLogs?: CallLogCreateNestedManyWithoutUserInput
+    telegramUsers?: TelegramUserCreateNestedManyWithoutUserInput
+    telegramLinkRequests?: TelegramLinkRequestCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutConversationsInput = {
+    id?: string
+    tenantId: string
+    supabaseUserId: string
+    email: string
+    firstName?: string | null
+    lastName?: string | null
+    name?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
+    ticketsAssigned?: TicketUncheckedCreateNestedManyWithoutAssignedUserInput
+    ticketComments?: TicketCommentUncheckedCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationUncheckedCreateNestedManyWithoutInvitedByUserInput
+    callLogs?: CallLogUncheckedCreateNestedManyWithoutUserInput
+    telegramUsers?: TelegramUserUncheckedCreateNestedManyWithoutUserInput
+    telegramLinkRequests?: TelegramLinkRequestUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutConversationsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutConversationsInput, UserUncheckedCreateWithoutConversationsInput>
+  }
+
+  export type TenantCreateWithoutConversationsInput = {
+    id?: string
+    name: string
+    slug: string
+    domain?: string | null
+    type?: $Enums.TenantType
+    settings?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserCreateNestedManyWithoutTenantInput
+    contacts?: ContactCreateNestedManyWithoutTenantInput
+    leads?: LeadCreateNestedManyWithoutTenantInput
+    pipelines?: PipelineCreateNestedManyWithoutTenantInput
+    deals?: DealCreateNestedManyWithoutTenantInput
+    interactions?: InteractionCreateNestedManyWithoutTenantInput
+    tickets?: TicketCreateNestedManyWithoutTenantInput
+    integrations?: IntegrationCreateNestedManyWithoutTenantInput
+    callLogs?: CallLogCreateNestedManyWithoutTenantInput
+    portalCustomers?: PortalCustomerCreateNestedManyWithoutTenantInput
+    userInvitations?: UserInvitationCreateNestedManyWithoutTenantInput
+  }
+
+  export type TenantUncheckedCreateWithoutConversationsInput = {
+    id?: string
+    name: string
+    slug: string
+    domain?: string | null
+    type?: $Enums.TenantType
+    settings?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    users?: UserUncheckedCreateNestedManyWithoutTenantInput
+    contacts?: ContactUncheckedCreateNestedManyWithoutTenantInput
+    leads?: LeadUncheckedCreateNestedManyWithoutTenantInput
+    pipelines?: PipelineUncheckedCreateNestedManyWithoutTenantInput
+    deals?: DealUncheckedCreateNestedManyWithoutTenantInput
+    interactions?: InteractionUncheckedCreateNestedManyWithoutTenantInput
+    tickets?: TicketUncheckedCreateNestedManyWithoutTenantInput
+    integrations?: IntegrationUncheckedCreateNestedManyWithoutTenantInput
+    callLogs?: CallLogUncheckedCreateNestedManyWithoutTenantInput
+    portalCustomers?: PortalCustomerUncheckedCreateNestedManyWithoutTenantInput
+    userInvitations?: UserInvitationUncheckedCreateNestedManyWithoutTenantInput
+  }
+
+  export type TenantCreateOrConnectWithoutConversationsInput = {
+    where: TenantWhereUniqueInput
+    create: XOR<TenantCreateWithoutConversationsInput, TenantUncheckedCreateWithoutConversationsInput>
+  }
+
+  export type MessageUpsertWithWhereUniqueWithoutConversationInput = {
+    where: MessageWhereUniqueInput
+    update: XOR<MessageUpdateWithoutConversationInput, MessageUncheckedUpdateWithoutConversationInput>
+    create: XOR<MessageCreateWithoutConversationInput, MessageUncheckedCreateWithoutConversationInput>
+  }
+
+  export type MessageUpdateWithWhereUniqueWithoutConversationInput = {
+    where: MessageWhereUniqueInput
+    data: XOR<MessageUpdateWithoutConversationInput, MessageUncheckedUpdateWithoutConversationInput>
+  }
+
+  export type MessageUpdateManyWithWhereWithoutConversationInput = {
+    where: MessageScalarWhereInput
+    data: XOR<MessageUpdateManyMutationInput, MessageUncheckedUpdateManyWithoutConversationInput>
+  }
+
+  export type MessageScalarWhereInput = {
+    AND?: MessageScalarWhereInput | MessageScalarWhereInput[]
+    OR?: MessageScalarWhereInput[]
+    NOT?: MessageScalarWhereInput | MessageScalarWhereInput[]
+    id?: StringFilter<"Message"> | string
+    conversationId?: StringFilter<"Message"> | string
+    role?: StringFilter<"Message"> | string
+    content?: StringFilter<"Message"> | string
+    createdAt?: DateTimeFilter<"Message"> | Date | string
+  }
+
+  export type UserUpsertWithoutConversationsInput = {
+    update: XOR<UserUpdateWithoutConversationsInput, UserUncheckedUpdateWithoutConversationsInput>
+    create: XOR<UserCreateWithoutConversationsInput, UserUncheckedCreateWithoutConversationsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutConversationsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutConversationsInput, UserUncheckedUpdateWithoutConversationsInput>
+  }
+
+  export type UserUpdateWithoutConversationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    supabaseUserId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tenant?: TenantUpdateOneRequiredWithoutUsersNestedInput
+    interactions?: InteractionUpdateManyWithoutUserNestedInput
+    ticketsAssigned?: TicketUpdateManyWithoutAssignedUserNestedInput
+    ticketComments?: TicketCommentUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUpdateManyWithoutInvitedByUserNestedInput
+    callLogs?: CallLogUpdateManyWithoutUserNestedInput
+    telegramUsers?: TelegramUserUpdateManyWithoutUserNestedInput
+    telegramLinkRequests?: TelegramLinkRequestUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutConversationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tenantId?: StringFieldUpdateOperationsInput | string
+    supabaseUserId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
+    ticketsAssigned?: TicketUncheckedUpdateManyWithoutAssignedUserNestedInput
+    ticketComments?: TicketCommentUncheckedUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUncheckedUpdateManyWithoutInvitedByUserNestedInput
+    callLogs?: CallLogUncheckedUpdateManyWithoutUserNestedInput
+    telegramUsers?: TelegramUserUncheckedUpdateManyWithoutUserNestedInput
+    telegramLinkRequests?: TelegramLinkRequestUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type TenantUpsertWithoutConversationsInput = {
+    update: XOR<TenantUpdateWithoutConversationsInput, TenantUncheckedUpdateWithoutConversationsInput>
+    create: XOR<TenantCreateWithoutConversationsInput, TenantUncheckedCreateWithoutConversationsInput>
+    where?: TenantWhereInput
+  }
+
+  export type TenantUpdateToOneWithWhereWithoutConversationsInput = {
+    where?: TenantWhereInput
+    data: XOR<TenantUpdateWithoutConversationsInput, TenantUncheckedUpdateWithoutConversationsInput>
+  }
+
+  export type TenantUpdateWithoutConversationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    domain?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumTenantTypeFieldUpdateOperationsInput | $Enums.TenantType
+    settings?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUpdateManyWithoutTenantNestedInput
+    contacts?: ContactUpdateManyWithoutTenantNestedInput
+    leads?: LeadUpdateManyWithoutTenantNestedInput
+    pipelines?: PipelineUpdateManyWithoutTenantNestedInput
+    deals?: DealUpdateManyWithoutTenantNestedInput
+    interactions?: InteractionUpdateManyWithoutTenantNestedInput
+    tickets?: TicketUpdateManyWithoutTenantNestedInput
+    integrations?: IntegrationUpdateManyWithoutTenantNestedInput
+    callLogs?: CallLogUpdateManyWithoutTenantNestedInput
+    portalCustomers?: PortalCustomerUpdateManyWithoutTenantNestedInput
+    userInvitations?: UserInvitationUpdateManyWithoutTenantNestedInput
+  }
+
+  export type TenantUncheckedUpdateWithoutConversationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    domain?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumTenantTypeFieldUpdateOperationsInput | $Enums.TenantType
+    settings?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    users?: UserUncheckedUpdateManyWithoutTenantNestedInput
+    contacts?: ContactUncheckedUpdateManyWithoutTenantNestedInput
+    leads?: LeadUncheckedUpdateManyWithoutTenantNestedInput
+    pipelines?: PipelineUncheckedUpdateManyWithoutTenantNestedInput
+    deals?: DealUncheckedUpdateManyWithoutTenantNestedInput
+    interactions?: InteractionUncheckedUpdateManyWithoutTenantNestedInput
+    tickets?: TicketUncheckedUpdateManyWithoutTenantNestedInput
+    integrations?: IntegrationUncheckedUpdateManyWithoutTenantNestedInput
+    callLogs?: CallLogUncheckedUpdateManyWithoutTenantNestedInput
+    portalCustomers?: PortalCustomerUncheckedUpdateManyWithoutTenantNestedInput
+    userInvitations?: UserInvitationUncheckedUpdateManyWithoutTenantNestedInput
+  }
+
+  export type ConversationCreateWithoutMessagesInput = {
+    id?: string
+    title?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutConversationsInput
+    tenant: TenantCreateNestedOneWithoutConversationsInput
+  }
+
+  export type ConversationUncheckedCreateWithoutMessagesInput = {
+    id?: string
+    userId: string
+    tenantId: string
+    title?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ConversationCreateOrConnectWithoutMessagesInput = {
+    where: ConversationWhereUniqueInput
+    create: XOR<ConversationCreateWithoutMessagesInput, ConversationUncheckedCreateWithoutMessagesInput>
+  }
+
+  export type ConversationUpsertWithoutMessagesInput = {
+    update: XOR<ConversationUpdateWithoutMessagesInput, ConversationUncheckedUpdateWithoutMessagesInput>
+    create: XOR<ConversationCreateWithoutMessagesInput, ConversationUncheckedCreateWithoutMessagesInput>
+    where?: ConversationWhereInput
+  }
+
+  export type ConversationUpdateToOneWithWhereWithoutMessagesInput = {
+    where?: ConversationWhereInput
+    data: XOR<ConversationUpdateWithoutMessagesInput, ConversationUncheckedUpdateWithoutMessagesInput>
+  }
+
+  export type ConversationUpdateWithoutMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutConversationsNestedInput
+    tenant?: TenantUpdateOneRequiredWithoutConversationsNestedInput
+  }
+
+  export type ConversationUncheckedUpdateWithoutMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    tenantId?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserCreateWithoutTelegramLinkRequestsInput = {
+    id?: string
+    supabaseUserId: string
+    email: string
+    firstName?: string | null
+    lastName?: string | null
+    name?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tenant: TenantCreateNestedOneWithoutUsersInput
+    interactions?: InteractionCreateNestedManyWithoutUserInput
+    ticketsAssigned?: TicketCreateNestedManyWithoutAssignedUserInput
+    ticketComments?: TicketCommentCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationCreateNestedManyWithoutInvitedByUserInput
+    callLogs?: CallLogCreateNestedManyWithoutUserInput
+    conversations?: ConversationCreateNestedManyWithoutUserInput
+    telegramUsers?: TelegramUserCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutTelegramLinkRequestsInput = {
+    id?: string
+    tenantId: string
+    supabaseUserId: string
+    email: string
+    firstName?: string | null
+    lastName?: string | null
+    name?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
+    ticketsAssigned?: TicketUncheckedCreateNestedManyWithoutAssignedUserInput
+    ticketComments?: TicketCommentUncheckedCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationUncheckedCreateNestedManyWithoutInvitedByUserInput
+    callLogs?: CallLogUncheckedCreateNestedManyWithoutUserInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutUserInput
+    telegramUsers?: TelegramUserUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutTelegramLinkRequestsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutTelegramLinkRequestsInput, UserUncheckedCreateWithoutTelegramLinkRequestsInput>
+  }
+
+  export type UserUpsertWithoutTelegramLinkRequestsInput = {
+    update: XOR<UserUpdateWithoutTelegramLinkRequestsInput, UserUncheckedUpdateWithoutTelegramLinkRequestsInput>
+    create: XOR<UserCreateWithoutTelegramLinkRequestsInput, UserUncheckedCreateWithoutTelegramLinkRequestsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutTelegramLinkRequestsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutTelegramLinkRequestsInput, UserUncheckedUpdateWithoutTelegramLinkRequestsInput>
+  }
+
+  export type UserUpdateWithoutTelegramLinkRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    supabaseUserId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tenant?: TenantUpdateOneRequiredWithoutUsersNestedInput
+    interactions?: InteractionUpdateManyWithoutUserNestedInput
+    ticketsAssigned?: TicketUpdateManyWithoutAssignedUserNestedInput
+    ticketComments?: TicketCommentUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUpdateManyWithoutInvitedByUserNestedInput
+    callLogs?: CallLogUpdateManyWithoutUserNestedInput
+    conversations?: ConversationUpdateManyWithoutUserNestedInput
+    telegramUsers?: TelegramUserUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutTelegramLinkRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tenantId?: StringFieldUpdateOperationsInput | string
+    supabaseUserId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
+    ticketsAssigned?: TicketUncheckedUpdateManyWithoutAssignedUserNestedInput
+    ticketComments?: TicketCommentUncheckedUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUncheckedUpdateManyWithoutInvitedByUserNestedInput
+    callLogs?: CallLogUncheckedUpdateManyWithoutUserNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutUserNestedInput
+    telegramUsers?: TelegramUserUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutTelegramUsersInput = {
+    id?: string
+    supabaseUserId: string
+    email: string
+    firstName?: string | null
+    lastName?: string | null
+    name?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tenant: TenantCreateNestedOneWithoutUsersInput
+    interactions?: InteractionCreateNestedManyWithoutUserInput
+    ticketsAssigned?: TicketCreateNestedManyWithoutAssignedUserInput
+    ticketComments?: TicketCommentCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationCreateNestedManyWithoutInvitedByUserInput
+    callLogs?: CallLogCreateNestedManyWithoutUserInput
+    conversations?: ConversationCreateNestedManyWithoutUserInput
+    telegramLinkRequests?: TelegramLinkRequestCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutTelegramUsersInput = {
+    id?: string
+    tenantId: string
+    supabaseUserId: string
+    email: string
+    firstName?: string | null
+    lastName?: string | null
+    name?: string | null
+    role?: $Enums.UserRole
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    interactions?: InteractionUncheckedCreateNestedManyWithoutUserInput
+    ticketsAssigned?: TicketUncheckedCreateNestedManyWithoutAssignedUserInput
+    ticketComments?: TicketCommentUncheckedCreateNestedManyWithoutUserInput
+    invitations?: UserInvitationUncheckedCreateNestedManyWithoutInvitedByUserInput
+    callLogs?: CallLogUncheckedCreateNestedManyWithoutUserInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutUserInput
+    telegramLinkRequests?: TelegramLinkRequestUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutTelegramUsersInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutTelegramUsersInput, UserUncheckedCreateWithoutTelegramUsersInput>
+  }
+
+  export type UserUpsertWithoutTelegramUsersInput = {
+    update: XOR<UserUpdateWithoutTelegramUsersInput, UserUncheckedUpdateWithoutTelegramUsersInput>
+    create: XOR<UserCreateWithoutTelegramUsersInput, UserUncheckedCreateWithoutTelegramUsersInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutTelegramUsersInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutTelegramUsersInput, UserUncheckedUpdateWithoutTelegramUsersInput>
+  }
+
+  export type UserUpdateWithoutTelegramUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    supabaseUserId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tenant?: TenantUpdateOneRequiredWithoutUsersNestedInput
+    interactions?: InteractionUpdateManyWithoutUserNestedInput
+    ticketsAssigned?: TicketUpdateManyWithoutAssignedUserNestedInput
+    ticketComments?: TicketCommentUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUpdateManyWithoutInvitedByUserNestedInput
+    callLogs?: CallLogUpdateManyWithoutUserNestedInput
+    conversations?: ConversationUpdateManyWithoutUserNestedInput
+    telegramLinkRequests?: TelegramLinkRequestUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutTelegramUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tenantId?: StringFieldUpdateOperationsInput | string
+    supabaseUserId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    interactions?: InteractionUncheckedUpdateManyWithoutUserNestedInput
+    ticketsAssigned?: TicketUncheckedUpdateManyWithoutAssignedUserNestedInput
+    ticketComments?: TicketCommentUncheckedUpdateManyWithoutUserNestedInput
+    invitations?: UserInvitationUncheckedUpdateManyWithoutInvitedByUserNestedInput
+    callLogs?: CallLogUncheckedUpdateManyWithoutUserNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutUserNestedInput
+    telegramLinkRequests?: TelegramLinkRequestUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyTenantInput = {
@@ -32011,6 +38774,14 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type ConversationCreateManyTenantInput = {
+    id?: string
+    userId: string
+    title?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type UserUpdateWithoutTenantInput = {
     id?: StringFieldUpdateOperationsInput | string
     supabaseUserId?: StringFieldUpdateOperationsInput | string
@@ -32027,6 +38798,9 @@ export namespace Prisma {
     ticketComments?: TicketCommentUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUpdateManyWithoutInvitedByUserNestedInput
     callLogs?: CallLogUpdateManyWithoutUserNestedInput
+    conversations?: ConversationUpdateManyWithoutUserNestedInput
+    telegramUsers?: TelegramUserUpdateManyWithoutUserNestedInput
+    telegramLinkRequests?: TelegramLinkRequestUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTenantInput = {
@@ -32045,6 +38819,9 @@ export namespace Prisma {
     ticketComments?: TicketCommentUncheckedUpdateManyWithoutUserNestedInput
     invitations?: UserInvitationUncheckedUpdateManyWithoutInvitedByUserNestedInput
     callLogs?: CallLogUncheckedUpdateManyWithoutUserNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutUserNestedInput
+    telegramUsers?: TelegramUserUncheckedUpdateManyWithoutUserNestedInput
+    telegramLinkRequests?: TelegramLinkRequestUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutTenantInput = {
@@ -32516,6 +39293,32 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ConversationUpdateWithoutTenantInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    messages?: MessageUpdateManyWithoutConversationNestedInput
+    user?: UserUpdateOneRequiredWithoutConversationsNestedInput
+  }
+
+  export type ConversationUncheckedUpdateWithoutTenantInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    messages?: MessageUncheckedUpdateManyWithoutConversationNestedInput
+  }
+
+  export type ConversationUncheckedUpdateManyWithoutTenantInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type InteractionCreateManyUserInput = {
     id?: string
     tenantId: string
@@ -32590,6 +39393,33 @@ export namespace Prisma {
     endedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type ConversationCreateManyUserInput = {
+    id?: string
+    tenantId: string
+    title?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TelegramUserCreateManyUserInput = {
+    id?: string
+    telegramId: string
+    username?: string | null
+    firstName?: string | null
+    lastName?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TelegramLinkRequestCreateManyUserInput = {
+    id?: string
+    code: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
   }
 
   export type InteractionUpdateWithoutUserInput = {
@@ -32820,6 +39650,89 @@ export namespace Prisma {
     endedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    messages?: MessageUpdateManyWithoutConversationNestedInput
+    tenant?: TenantUpdateOneRequiredWithoutConversationsNestedInput
+  }
+
+  export type ConversationUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tenantId?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    messages?: MessageUncheckedUpdateManyWithoutConversationNestedInput
+  }
+
+  export type ConversationUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tenantId?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TelegramUserUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    telegramId?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TelegramUserUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    telegramId?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TelegramUserUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    telegramId?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TelegramLinkRequestUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TelegramLinkRequestUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TelegramLinkRequestUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type LeadCreateManyContactInput = {
@@ -33830,6 +40743,34 @@ export namespace Prisma {
     isInternal?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MessageCreateManyConversationInput = {
+    id?: string
+    role: string
+    content: string
+    createdAt?: Date | string
+  }
+
+  export type MessageUpdateWithoutConversationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MessageUncheckedUpdateWithoutConversationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MessageUncheckedUpdateManyWithoutConversationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 
