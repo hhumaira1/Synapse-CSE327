@@ -154,7 +154,7 @@ NavHost(navController, startDestination = "contacts") {
 ### 5. Authentication (TODO - High Priority)
 Current state: No authentication implemented yet
 You need to:
-1. Add Supabase Android SDK or implement custom JWT auth
+1. Add Clerk Android SDK or implement custom JWT auth
 2. Create SignInScreen and SignUpScreen
 3. Store JWT token in DataStore after successful login
 4. AuthInterceptor will automatically add token to API requests
@@ -189,7 +189,7 @@ You need to:
 ✅ Backend running on port 3001
 ✅ CORS enabled for all origins
 ✅ All API endpoints working (tested with web app)
-✅ Supabase authentication configured
+✅ Clerk authentication configured
 ✅ Multi-tenant data isolation
 ✅ Jira integration working
 

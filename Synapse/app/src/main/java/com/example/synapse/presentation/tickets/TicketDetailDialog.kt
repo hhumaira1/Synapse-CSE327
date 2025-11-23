@@ -1,4 +1,4 @@
-package com.example.synapse.presentation.portal.components
+package com.example.synapse.presentation.tickets
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -12,22 +12,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.synapse.data.model.portal.TicketDetail
-import com.example.synapse.data.model.portal.TicketPriority
-import com.example.synapse.data.model.portal.TicketStatus
+import com.example.synapse.data.model.Ticket
+import com.example.synapse.data.model.TicketComment
+import com.example.synapse.data.model.TicketPriority
+import com.example.synapse.data.model.TicketStatus
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PortalTicketDetailDialog(
-    ticket: TicketDetail?,
+fun TicketDetailDialog(
+    ticket: Ticket?,
+    comments: List<TicketComment>,
     onDismiss: () -> Unit,
     onAddComment: (String) -> Unit,
     isLoading: Boolean = false
 ) {
-    var comment by remember { mutableStateOf("") }
+    var commentText by remember { mutableStateOf("") }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -88,7 +90,7 @@ fun PortalTicketDetailDialog(
                     }
 
                     // Description
-                    if (ticket.description != null) {
+                    if (ticket.description.isNotEmpty()) {
                         Card(
                             modifier = Modifier.fillMaxWidth(),
                             colors = CardDefaults.cardColors(
@@ -103,7 +105,7 @@ fun PortalTicketDetailDialog(
                                     modifier = Modifier.padding(bottom = 8.dp)
                                 )
                                 Text(
-                                    text = ticket.description!!,
+                                    text = ticket.description,
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -163,7 +165,7 @@ fun PortalTicketDetailDialog(
                                             color = Color(0xFF059669)
                                         )
                                         Text(
-                                            text = "This ticket has been marked as resolved. If you're still experiencing issues, please reply below.",
+                                            text = "This ticket has been marked as resolved.",
                                             style = MaterialTheme.typography.bodySmall,
                                             color = Color(0xFF059669)
                                         )
@@ -197,7 +199,7 @@ fun PortalTicketDetailDialog(
                                             color = Color(0xFF374151)
                                         )
                                         Text(
-                                            text = "This ticket has been closed. If you need further assistance, please submit a new ticket.",
+                                            text = "This ticket has been closed.",
                                             style = MaterialTheme.typography.bodySmall,
                                             color = Color(0xFF6B7280)
                                         )
@@ -220,15 +222,15 @@ fun PortalTicketDetailDialog(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    text = "Conversation (${ticket.comments.size})",
+                                    text = "Conversation (${comments.size})",
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold
                                 )
                             }
 
-                            if (ticket.comments.isEmpty()) {
+                            if (comments.isEmpty()) {
                                 Text(
-                                    text = "No replies yet. Our support team will respond soon.",
+                                    text = "No comments yet.",
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     modifier = Modifier.padding(vertical = 24.dp),
@@ -241,7 +243,7 @@ fun PortalTicketDetailDialog(
                                         .heightIn(max = 300.dp)
                                         .verticalScroll(rememberScrollState())
                                 ) {
-                                    ticket.comments.forEach { comment ->
+                                    comments.forEach { comment ->
                                         Card(
                                             modifier = Modifier.fillMaxWidth(),
                                             colors = CardDefaults.cardColors(
@@ -269,7 +271,7 @@ fun PortalTicketDetailDialog(
                                                                 modifier = Modifier.fillMaxSize()
                                                             ) {
                                                                 Text(
-                                                                    text = getInitials(comment.authorName ?: (if (comment.isInternal) "Support" else "Customer")),
+                                                                    text = getInitials(comment.authorName ?: "Unknown"),
                                                                     color = Color.White,
                                                                     style = MaterialTheme.typography.bodySmall,
                                                                     fontWeight = FontWeight.Bold
@@ -280,16 +282,17 @@ fun PortalTicketDetailDialog(
                                                         Column {
                                                             Row(verticalAlignment = Alignment.CenterVertically) {
                                                                 Text(
-                                                                    text = comment.authorName ?: (if (comment.isInternal) "Support Member" else "Customer"),
+                                                                    text = comment.authorName ?: "Unknown",
                                                                     style = MaterialTheme.typography.bodySmall,
                                                                     fontWeight = FontWeight.Medium
                                                                 )
                                                                 if (comment.isInternal) {
+                                                                    Spacer(modifier = Modifier.width(4.dp))
                                                                     Badge(
                                                                         containerColor = MaterialTheme.colorScheme.primary,
                                                                         contentColor = Color.White
                                                                     ) {
-                                                                        Text("Support Team", style = MaterialTheme.typography.labelSmall)
+                                                                        Text("Internal", style = MaterialTheme.typography.labelSmall)
                                                                     }
                                                                 }
                                                             }
@@ -325,9 +328,9 @@ fun PortalTicketDetailDialog(
                                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                                 ) {
                                     OutlinedTextField(
-                                        value = comment,
-                                        onValueChange = { comment = it },
-                                        placeholder = { Text("Type your reply...") },
+                                        value = commentText,
+                                        onValueChange = { commentText = it },
+                                        placeholder = { Text("Type your comment...") },
                                         modifier = Modifier.weight(1f),
                                         minLines = 2,
                                         maxLines = 4,
@@ -336,23 +339,30 @@ fun PortalTicketDetailDialog(
 
                                     Button(
                                         onClick = {
-                                            if (comment.isNotBlank()) {
-                                                onAddComment(comment)
-                                                comment = ""
+                                            if (commentText.isNotBlank()) {
+                                                onAddComment(commentText)
+                                                commentText = ""
                                             }
                                         },
-                                        enabled = comment.isNotBlank() && !isLoading,
+                                        enabled = commentText.isNotBlank() && !isLoading,
                                         modifier = Modifier.height(56.dp),
                                         colors = ButtonDefaults.buttonColors(
                                             containerColor = Color(0xFF6366F1),
                                             contentColor = Color.White
                                         )
                                     ) {
-                                        Icon(
-                                            Icons.Default.Send,
-                                            contentDescription = "Send",
-                                            modifier = Modifier.size(20.dp)
-                                        )
+                                        if (isLoading) {
+                                            CircularProgressIndicator(
+                                                modifier = Modifier.size(20.dp),
+                                                color = Color.White
+                                            )
+                                        } else {
+                                            Icon(
+                                                Icons.Default.Send,
+                                                contentDescription = "Send",
+                                                modifier = Modifier.size(20.dp)
+                                            )
+                                        }
                                     }
                                 }
                             }

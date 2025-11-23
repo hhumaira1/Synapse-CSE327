@@ -110,7 +110,8 @@ model User {
   ticketsAssigned Ticket[]      @relation("TicketAssignedUser")
   ticketComments  TicketComment[] @relation("TicketComments")
   invitations     UserInvitation[] // Invitations sent to users
-  callLogs        CallLog[]     // Call logs made by this user
+  callLogsFrom    CallLog[]     @relation("CallsFrom")
+  callLogsTo      CallLog[]     @relation("CallsTo")
 
   @@unique([tenantId, supabaseUserId])
   @@index([tenantId])
@@ -351,37 +352,49 @@ enum CallDirection {
 }
 
 model CallLog {
-  id              String         @id @default(cuid())
-  tenantId        String
-  userId          String?
-  contactId       String?
-  dealId          String?
-  direction       CallDirection  @default(OUTBOUND)
-  fromNumber      String
-  toNumber        String
-  status          String         @default("INITIATED") // INITIATED, RINGING, ANSWERED, COMPLETED, FAILED
-  duration        Int?           // seconds
-  outcome         String?        // completed, missed, voicemail
-  recordingUrl    String?
-  recordingSid    String?        // Twilio recording SID
-  twilioCallSid   String?        @unique // Twilio call SID
-  transcription   String?
-  summary         String?
-  startedAt       DateTime?      // When call was answered
-  endedAt         DateTime?      // When call ended
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
+  id                  String         @id @default(cuid())
+  tenantId            String
+  
+  // LiveKit VoIP fields
+  roomName            String?        // LiveKit room identifier
+  roomSid             String?        // LiveKit room SID
+  participantIdentity String?        // LiveKit participant identity
+  
+  // User references
+  fromUserId          String?
+  toUserId            String?
+  contactId           String?
+  dealId              String?
+  
+  // Call metadata
+  direction           CallDirection  @default(OUTBOUND)
+  status              String         @default("INITIATED") // INITIATED, RINGING, IN_PROGRESS, COMPLETED, FAILED, MISSED
+  duration            Int?           // seconds
+  
+  // Recording
+  recordingUrl        String?
+  transcription       String?
+  summary             String?
+  
+  // Timestamps
+  startTime           DateTime       @default(now())
+  endTime             DateTime?
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
 
-  tenant  Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  user    User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  contact Contact? @relation(fields: [contactId], references: [id], onDelete: Restrict)
-  deal    Deal?    @relation(fields: [dealId], references: [id], onDelete: SetNull)
+  // Relations
+  tenant   Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  fromUser User?    @relation("CallsFrom", fields: [fromUserId], references: [id], onDelete: SetNull)
+  toUser   User?    @relation("CallsTo", fields: [toUserId], references: [id], onDelete: SetNull)
+  contact  Contact? @relation(fields: [contactId], references: [id], onDelete: Restrict)
+  deal     Deal?    @relation(fields: [dealId], references: [id], onDelete: SetNull)
 
   @@index([tenantId])
-  @@index([userId])
+  @@index([fromUserId])
+  @@index([toUserId])
   @@index([contactId])
   @@index([dealId])
-  @@index([twilioCallSid])
+  @@index([roomName])
   @@map("call_logs")
 }
 

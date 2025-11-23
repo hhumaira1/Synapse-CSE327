@@ -124,13 +124,27 @@ fun TicketsScreen(
                         items(uiState.tickets) { ticket ->
                             TicketCard(
                                 ticket = ticket,
-                                onClick = { onTicketClick(ticket.id) }
+                                onClick = { viewModel.loadTicketById(ticket.id) }
                             )
                         }
                     }
                 }
             }
         }
+    }
+
+    // Ticket Detail Dialog
+    if (uiState.showDetailDialog) {
+        TicketDetailDialog(
+            ticket = uiState.selectedTicket,
+            comments = uiState.comments,
+            onDismiss = { viewModel.hideTicketDetail() },
+            onAddComment = { content ->
+                val ticketId = uiState.selectedTicket?.id ?: ""
+                viewModel.addComment(ticketId, content)
+            },
+            isLoading = uiState.isLoadingDetail
+        )
     }
 }
 

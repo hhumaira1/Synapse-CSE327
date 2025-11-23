@@ -4,7 +4,6 @@ import { TicketsService } from './tickets/tickets.service';
 import { DatabaseModule } from '../database/database.module';
 import { AuthModule } from '../auth/auth.module';
 import { SupabaseAuthModule } from '../supabase-auth/supabase-auth.module';
-import { OsticketModule } from '../osticket/osticket.module';
 import { JiraModule } from '../jira/jira.module';
 
 @Module({
@@ -12,7 +11,6 @@ import { JiraModule } from '../jira/jira.module';
     DatabaseModule,
     AuthModule,
     SupabaseAuthModule,
-    OsticketModule,
     JiraModule,
   ],
   controllers: [TicketsController],
