@@ -40,6 +40,7 @@ import com.example.synapse.presentation.portal.PortalDashboardScreen
 import com.example.synapse.presentation.portal.PortalTicketsScreen
 import com.example.synapse.presentation.portal.PortalAcceptScreen
 import com.example.synapse.presentation.chatbot.ChatScreen
+import com.example.synapse.presentation.settings.SettingsScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -192,8 +193,7 @@ fun NavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
         composable("tickets") {
             TicketsScreen(
                 onTicketClick = { ticketId ->
-                    // TODO: Navigate to ticket details
-                    // navController.navigate("tickets/$ticketId")
+                    // Ticket detail is handled by dialog within TicketsScreen
                 },
                 onCreateTicket = {
                     navController.navigate("tickets/create")
@@ -260,9 +260,9 @@ fun NavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
             )
         }
         
+        // Settings screen
         composable("settings") {
-            OwnerDashboard(
-                isDarkMode = false,
+            com.example.synapse.presentation.settings.SettingsScreen(
                 navController = navController,
                 onBack = { navController.popBackStack() }
             )

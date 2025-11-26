@@ -25,7 +25,9 @@ import {
   LogOut,
   User as UserIcon,
   MessageSquare,
-  Send
+  Send,
+  Users2,
+  PhoneCall
 } from 'lucide-react';
 
 const navigation = [
@@ -35,7 +37,8 @@ const navigation = [
   { name: 'Leads', href: '/leads', icon: TrendingUp },
   { name: 'Deals', href: '/deals', icon: DollarSign },
   { name: 'Tickets', href: '/tickets', icon: Ticket },
-  { name: 'Calls', href: '/calls', icon: Phone },
+  { name: 'Online Customers', href: '/online-users', icon: Users2 },
+  { name: 'Call History', href: '/call-history', icon: PhoneCall },
   { name: 'Analytics', href: '/analytics', icon: BarChart3 },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];

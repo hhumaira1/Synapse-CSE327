@@ -20,7 +20,8 @@ data class PortalTicketsState(
     val showDetailDialog: Boolean = false,
     val selectedTicket: TicketDetail? = null,
     val isCreatingTicket: Boolean = false,
-    val isLoadingDetail: Boolean = false
+    val isLoadingDetail: Boolean = false,
+    val currentTenantId: String? = null
 )
 
 @HiltViewModel
@@ -32,7 +33,25 @@ class PortalTicketsViewModel @Inject constructor(
     val state: StateFlow<PortalTicketsState> = _state
 
     init {
-        loadTickets()
+        loadPortalAccess()
+    }
+
+    private fun loadPortalAccess() {
+        viewModelScope.launch {
+            portalRepository.getMyPortalAccess().fold(
+                onSuccess = { portalAccess ->
+                    val tenantId = portalAccess.firstOrNull()?.tenant?.id
+                    _state.value = _state.value.copy(currentTenantId = tenantId)
+                    loadTickets(tenantId)
+                },
+                onFailure = { error ->
+                    _state.value = _state.value.copy(
+                        error = error.message ?: "Failed to load portal access",
+                        isLoading = false
+                    )
+                }
+            )
+        }
     }
 
     fun loadTickets(tenantId: String? = null) {
@@ -87,10 +106,13 @@ class PortalTicketsViewModel @Inject constructor(
         viewModelScope.launch {
             _state.value = _state.value.copy(isCreatingTicket = true)
 
-            portalRepository.createTicket(request).fold(
-                onSuccess = { ticket ->
+            val tenantId = _state.value.currentTenantId
+            val updatedRequest = request.copy(tenantId = tenantId)
+            
+            portalRepository.createTicket(updatedRequest).fold(
+                onSuccess = { _ ->
                     // Reload tickets after creation
-                    loadTickets(request.tenantId)
+                    loadTickets(tenantId)
                     _state.value = _state.value.copy(
                         showCreateDialog = false,
                         isCreatingTicket = false
@@ -106,13 +128,14 @@ class PortalTicketsViewModel @Inject constructor(
         }
     }
 
-    fun showTicketDetail(ticketId: String, tenantId: String? = null) {
+    fun showTicketDetail(ticketId: String) {
         viewModelScope.launch {
             _state.value = _state.value.copy(
                 showDetailDialog = true,
                 isLoadingDetail = true
             )
 
+            val tenantId = _state.value.currentTenantId
             portalRepository.getTicketDetail(ticketId, tenantId).fold(
                 onSuccess = { ticketDetail ->
                     _state.value = _state.value.copy(
@@ -123,7 +146,8 @@ class PortalTicketsViewModel @Inject constructor(
                 onFailure = { error ->
                     _state.value = _state.value.copy(
                         error = error.message ?: "Failed to load ticket details",
-                        isLoadingDetail = false
+                        isLoadingDetail = false,
+                        showDetailDialog = false
                     )
                 }
             )
@@ -137,23 +161,37 @@ class PortalTicketsViewModel @Inject constructor(
         )
     }
 
-    fun addComment(ticketId: String, content: String, tenantId: String? = null) {
+    fun addComment(ticketId: String, content: String) {
         viewModelScope.launch {
-            val request = AddCommentRequest(content = content, tenantId = tenantId)
-            portalRepository.addComment(ticketId, request).fold(
-                onSuccess = { comment ->
-                    // Reload ticket details to show new comment
-                    val currentTicket = _state.value.selectedTicket
-                    if (currentTicket != null) {
-                        showTicketDetail(currentTicket.id, tenantId)
+            try {
+                // Show loading state
+                _state.value = _state.value.copy(isLoadingDetail = true, error = null)
+                
+                val tenantId = _state.value.currentTenantId
+                val request = AddCommentRequest(content = content, tenantId = tenantId)
+                portalRepository.addComment(ticketId, request).fold(
+                    onSuccess = { _ ->
+                        // Reload ticket details to show new comment
+                        val currentTicket = _state.value.selectedTicket
+                        if (currentTicket != null) {
+                            showTicketDetail(currentTicket.id)
+                        } else {
+                            _state.value = _state.value.copy(isLoadingDetail = false)
+                        }
+                    },
+                    onFailure = { error ->
+                        _state.value = _state.value.copy(
+                            error = error.message ?: "Failed to add comment",
+                            isLoadingDetail = false
+                        )
                     }
-                },
-                onFailure = { error ->
-                    _state.value = _state.value.copy(
-                        error = error.message ?: "Failed to add comment"
-                    )
-                }
-            )
+                )
+            } catch (e: Exception) {
+                _state.value = _state.value.copy(
+                    error = e.message ?: "An unexpected error occurred",
+                    isLoadingDetail = false
+                )
+            }
         }
     }
 }

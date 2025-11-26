@@ -24,18 +24,34 @@ export function useUserData() {
 
   useEffect(() => {
     if (!isLoaded || !isSignedIn) {
+      console.log('⏸️ useUserData waiting for auth...', { isLoaded, isSignedIn });
       setLoading(false);
       return;
     }
 
     const fetchUserData = async () => {
       try {
+        console.log('📞 Calling /auth/me...');
         const response = await apiClient.get('/auth/me');
-        setUserData(response.data);
+        console.log('🔍 Raw /auth/me response:', response.data);
+        
+        // Backend returns { supabaseUser, dbUser } - we need dbUser
+        let extractedData = response.data.dbUser || response.data;
+        
+        // Ensure we have the required fields
+        if (!extractedData.supabaseUserId || !extractedData.tenantId) {
+          console.error('❌ Invalid user data structure:', extractedData);
+          throw new Error('Invalid user data - missing supabaseUserId or tenantId');
+        }
+        
+        console.log('✅ Extracted user data:', extractedData);
+        
+        setUserData(extractedData);
         setError(null);
-      } catch (err) {
-        console.error('Failed to fetch user data:', err);
-        setError('Failed to load user data');
+      } catch (err: any) {
+        console.error('❌ Failed to fetch user data:', err);
+        setError(err?.message || 'Failed to load user data');
+        setUserData(null);
       } finally {
         setLoading(false);
       }

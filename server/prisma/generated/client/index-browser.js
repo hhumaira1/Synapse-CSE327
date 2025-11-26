@@ -142,6 +142,8 @@ exports.Prisma.UserScalarFieldEnum = {
   name: 'name',
   role: 'role',
   isActive: 'isActive',
+  fcmToken: 'fcmToken',
+  pushSubscription: 'pushSubscription',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -273,24 +275,18 @@ exports.Prisma.IntegrationScalarFieldEnum = {
 exports.Prisma.CallLogScalarFieldEnum = {
   id: 'id',
   tenantId: 'tenantId',
-  userId: 'userId',
-  contactId: 'contactId',
-  dealId: 'dealId',
+  roomName: 'roomName',
+  callerSupabaseId: 'callerSupabaseId',
+  calleeSupabaseId: 'calleeSupabaseId',
   direction: 'direction',
-  fromNumber: 'fromNumber',
-  toNumber: 'toNumber',
   status: 'status',
   duration: 'duration',
-  outcome: 'outcome',
-  recordingUrl: 'recordingUrl',
-  recordingSid: 'recordingSid',
-  twilioCallSid: 'twilioCallSid',
-  transcription: 'transcription',
-  summary: 'summary',
-  startedAt: 'startedAt',
-  endedAt: 'endedAt',
+  startTime: 'startTime',
+  endTime: 'endTime',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  contactId: 'contactId',
+  dealId: 'dealId'
 };
 
 exports.Prisma.PortalCustomerScalarFieldEnum = {
@@ -301,6 +297,8 @@ exports.Prisma.PortalCustomerScalarFieldEnum = {
   email: 'email',
   name: 'name',
   accessToken: 'accessToken',
+  fcmToken: 'fcmToken',
+  pushSubscription: 'pushSubscription',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -357,6 +355,65 @@ exports.Prisma.TelegramUserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.CallEventScalarFieldEnum = {
+  id: 'id',
+  tenantId: 'tenantId',
+  callerId: 'callerId',
+  calleeId: 'calleeId',
+  roomName: 'roomName',
+  eventType: 'eventType',
+  payload: 'payload',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.CallRecordingScalarFieldEnum = {
+  id: 'id',
+  callLogId: 'callLogId',
+  tenantId: 'tenantId',
+  fileUrl: 'fileUrl',
+  fileName: 'fileName',
+  fileSize: 'fileSize',
+  format: 'format',
+  duration: 'duration',
+  provider: 'provider',
+  providerId: 'providerId',
+  status: 'status',
+  recordingStartTime: 'recordingStartTime',
+  recordingEndTime: 'recordingEndTime',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CallTranscriptionScalarFieldEnum = {
+  id: 'id',
+  callLogId: 'callLogId',
+  tenantId: 'tenantId',
+  fullText: 'fullText',
+  segments: 'segments',
+  language: 'language',
+  confidence: 'confidence',
+  wordCount: 'wordCount',
+  summary: 'summary',
+  keywords: 'keywords',
+  sentiment: 'sentiment',
+  provider: 'provider',
+  providerId: 'providerId',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.UserPresenceScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  status: 'status',
+  lastSeen: 'lastSeen',
+  currentRoom: 'currentRoom',
+  tenantId: 'tenantId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -364,6 +421,10 @@ exports.Prisma.SortOrder = {
 
 exports.Prisma.NullableJsonNullValueInput = {
   DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
+};
+
+exports.Prisma.JsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
@@ -436,6 +497,52 @@ exports.CallDirection = exports.$Enums.CallDirection = {
   OUTBOUND: 'OUTBOUND'
 };
 
+exports.CallEventType = exports.$Enums.CallEventType = {
+  CALL_STARTED: 'CALL_STARTED',
+  RINGING: 'RINGING',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED',
+  ENDED: 'ENDED',
+  MISSED: 'MISSED'
+};
+
+exports.RecordingProvider = exports.$Enums.RecordingProvider = {
+  LIVEKIT: 'LIVEKIT',
+  AGORA: 'AGORA',
+  DAILY: 'DAILY',
+  CUSTOM: 'CUSTOM'
+};
+
+exports.RecordingStatus = exports.$Enums.RecordingStatus = {
+  REQUESTED: 'REQUESTED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  PROCESSING: 'PROCESSING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
+exports.TranscriptionProvider = exports.$Enums.TranscriptionProvider = {
+  DEEPGRAM: 'DEEPGRAM',
+  ASSEMBLYAI: 'ASSEMBLYAI',
+  GOOGLE_CLOUD: 'GOOGLE_CLOUD',
+  LIVEKIT: 'LIVEKIT',
+  AGORA: 'AGORA'
+};
+
+exports.TranscriptionStatus = exports.$Enums.TranscriptionStatus = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
+exports.PresenceStatus = exports.$Enums.PresenceStatus = {
+  ONLINE: 'ONLINE',
+  BUSY: 'BUSY',
+  AWAY: 'AWAY',
+  OFFLINE: 'OFFLINE'
+};
+
 exports.Prisma.ModelName = {
   Tenant: 'Tenant',
   User: 'User',
@@ -454,7 +561,11 @@ exports.Prisma.ModelName = {
   Conversation: 'Conversation',
   Message: 'Message',
   TelegramLinkRequest: 'TelegramLinkRequest',
-  TelegramUser: 'TelegramUser'
+  TelegramUser: 'TelegramUser',
+  CallEvent: 'CallEvent',
+  CallRecording: 'CallRecording',
+  CallTranscription: 'CallTranscription',
+  UserPresence: 'UserPresence'
 };
 
 /**

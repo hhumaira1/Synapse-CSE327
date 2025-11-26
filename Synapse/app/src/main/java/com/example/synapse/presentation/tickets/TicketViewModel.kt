@@ -21,7 +21,9 @@ data class TicketsUiState(
     val error: String? = null,
     val selectedTicket: Ticket? = null,
     val comments: List<TicketComment> = emptyList(),
-    val currentFilter: TicketStatus? = null
+    val currentFilter: TicketStatus? = null,
+    val showDetailDialog: Boolean = false,
+    val isLoadingDetail: Boolean = false
 )
 
 @HiltViewModel
@@ -62,23 +64,36 @@ class TicketViewModel @Inject constructor(
     
     fun loadTicketById(id: String) {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+            _uiState.value = _uiState.value.copy(
+                isLoadingDetail = true, 
+                showDetailDialog = true,
+                error = null
+            )
             
             repository.getTicketById(id)
                 .onSuccess { ticket ->
                     _uiState.value = _uiState.value.copy(
                         selectedTicket = ticket,
-                        isLoading = false
+                        comments = ticket.comments ?: emptyList(),
+                        isLoadingDetail = false
                     )
-                    loadComments(id)
                 }
                 .onFailure { error ->
                     _uiState.value = _uiState.value.copy(
-                        isLoading = false,
+                        isLoadingDetail = false,
+                        showDetailDialog = false,
                         error = error.message
                     )
                 }
         }
+    }
+
+    fun hideTicketDetail() {
+        _uiState.value = _uiState.value.copy(
+            showDetailDialog = false,
+            selectedTicket = null,
+            comments = emptyList()
+        )
     }
     
     fun createTicket(request: CreateTicketRequest, onSuccess: () -> Unit) {
@@ -155,26 +170,37 @@ class TicketViewModel @Inject constructor(
     
     fun addComment(ticketId: String, content: String) {
         viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoadingDetail = true)
+            
             repository.addComment(ticketId, content)
                 .onSuccess {
-                    loadComments(ticketId)
+                    // Reload the entire ticket to get updated comments
+                    repository.getTicketById(ticketId)
+                        .onSuccess { ticket ->
+                            _uiState.value = _uiState.value.copy(
+                                selectedTicket = ticket,
+                                comments = ticket.comments ?: emptyList(),
+                                isLoadingDetail = false
+                            )
+                        }
+                        .onFailure { error ->
+                            _uiState.value = _uiState.value.copy(
+                                error = error.message,
+                                isLoadingDetail = false
+                            )
+                        }
                 }
                 .onFailure { error ->
-                    _uiState.value = _uiState.value.copy(error = error.message)
+                    _uiState.value = _uiState.value.copy(
+                        error = error.message,
+                        isLoadingDetail = false
+                    )
                 }
         }
     }
     
     private fun loadComments(ticketId: String) {
-        viewModelScope.launch {
-            repository.getComments(ticketId)
-                .onSuccess { comments ->
-                    _uiState.value = _uiState.value.copy(comments = comments)
-                }
-                .onFailure { error ->
-                    _uiState.value = _uiState.value.copy(error = error.message)
-                }
-        }
+        // No longer needed - comments are included in the ticket object
     }
     
     fun filterByStatus(status: TicketStatus?) {

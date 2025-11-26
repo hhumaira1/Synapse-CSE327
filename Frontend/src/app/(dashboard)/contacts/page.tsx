@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { useApiClient } from "@/lib/api";
 import { CustomerPortalInviteButton } from "@/components/portal/CustomerPortalInviteButton";
+import { CallButton } from "@/components/voip";
 import {
   Dialog,
   DialogContent,
@@ -538,18 +539,16 @@ export default function ContactsPage() {
                     )}
                     
                     <div className="flex items-center gap-1">
-                      {/* Call Button */}
-                      {/* <CallButton
-                        phoneNumber={contact.phone}
-                        contactId={contact.id}
-                        contactName={`${contact.firstName} ${contact.lastName}`}
-                        onCall={(phone, id, name) => {
-                          setCurrentCallContact({ name: name || '', phone: phone || '' });
-                          initiateCall(phone, id, name);
-                        }}
-                        variant="ghost"
-                        size="sm"
-                      /> */}
+                      {/* Call Button - Only show if contact has portal customer with supabaseUserId */}
+                      {contact.portalCustomers?.length > 0 && 
+                       contact.portalCustomers.some(pc => pc.supabaseUserId) && (
+                        <CallButton
+                          supabaseUserId={contact.portalCustomers.find(pc => pc.supabaseUserId)?.supabaseUserId!}
+                          userName={`${contact.firstName} ${contact.lastName}`}
+                          variant="ghost"
+                          size="sm"
+                        />
+                      )}
                       
                       {canEdit && (
                         <Button 

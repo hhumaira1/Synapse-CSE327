@@ -60,6 +60,53 @@ enum InteractionType {
   TICKET
 }
 
+// NEW: VoIP Enums
+enum CallStatus {
+  INITIATED
+  RINGING
+  CONNECTED
+  ENDED
+  FAILED
+  MISSED
+}
+
+enum PresenceStatus {
+  ONLINE
+  BUSY // On another call
+  AWAY // Idle > 5 min
+  OFFLINE
+}
+
+enum RecordingProvider {
+  LIVEKIT
+  AGORA
+  DAILY
+  CUSTOM
+}
+
+enum RecordingStatus {
+  REQUESTED // Recording initiated
+  IN_PROGRESS // Currently recording
+  PROCESSING // Post-processing (encoding, uploading)
+  COMPLETED // Ready to play
+  FAILED // Recording failed
+}
+
+enum TranscriptionProvider {
+  DEEPGRAM
+  ASSEMBLYAI
+  GOOGLE_CLOUD
+  LIVEKIT
+  AGORA
+}
+
+enum TranscriptionStatus {
+  PENDING // Waiting for recording
+  PROCESSING // Transcribing
+  COMPLETED // Ready
+  FAILED // Transcription failed
+}
+
 // ==================== MULTI-TENANT FOUNDATION ====================
 
 model Tenant {
@@ -72,18 +119,21 @@ model Tenant {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
 
-  users           User[]
-  contacts        Contact[]
-  leads           Lead[]
-  pipelines       Pipeline[]
-  deals           Deal[]
-  interactions    Interaction[]
-  tickets         Ticket[]
-  integrations    Integration[]
-  callLogs        CallLog[]
-  portalCustomers PortalCustomer[]
-  userInvitations UserInvitation[]
-  conversations   Conversation[] // Chatbot conversations
+  users              User[]
+  contacts           Contact[]
+  leads              Lead[]
+  pipelines          Pipeline[]
+  deals              Deal[]
+  interactions       Interaction[]
+  tickets            Ticket[]
+  integrations       Integration[]
+  callLogs           CallLog[]
+  portalCustomers    PortalCustomer[]
+  userInvitations    UserInvitation[]
+  conversations      Conversation[] // Chatbot conversations
+  callEvents         CallEvent[] // VoIP call events
+  callRecordings     CallRecording[]
+  callTranscriptions CallTranscription[]
 
   @@map("tenants")
 }
@@ -94,24 +144,25 @@ model Tenant {
 // For multi-company access (consultants/contractors), use PortalCustomer instead
 
 model User {
-  id             String   @id @default(cuid())
-  tenantId       String // User belongs to ONE tenant (their employer)
-  supabaseUserId String   @unique @map("supabase_user_id") // Supabase Auth user ID
-  email          String   @unique // Global unique - one email = one internal user globally
-  firstName      String?  @map("first_name")
-  lastName       String?  @map("last_name")
-  name           String? // Deprecated - use firstName/lastName
-  role           UserRole @default(MEMBER) // Role in THIS tenant
-  isActive       Boolean  @default(true) // Soft delete support
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id               String   @id @default(cuid())
+  tenantId         String // User belongs to ONE tenant (their employer)
+  supabaseUserId   String   @unique @map("supabase_user_id") // Supabase Auth user ID
+  email            String   @unique // Global unique - one email = one internal user globally
+  firstName        String?  @map("first_name")
+  lastName         String?  @map("last_name")
+  name             String? // Deprecated - use firstName/lastName
+  role             UserRole @default(MEMBER) // Role in THIS tenant
+  isActive         Boolean  @default(true) // Soft delete support
+  fcmToken         String? // Firebase Cloud Messaging token (Android)
+  pushSubscription Json? // Web Push subscription object
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   tenant               Tenant                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   interactions         Interaction[]
   ticketsAssigned      Ticket[]              @relation("TicketAssignedUser")
   ticketComments       TicketComment[]       @relation("TicketComments")
   invitations          UserInvitation[] // Invitations sent to users
-  callLogs             CallLog[] // Call logs made by this user
   conversations        Conversation[] // Chatbot conversations
   telegramUsers        TelegramUser[] // Telegram bot connections
   telegramLinkRequests TelegramLinkRequest[] // Telegram deep link requests
@@ -354,54 +405,66 @@ enum CallDirection {
   OUTBOUND
 }
 
-model CallLog {
-  id            String        @id @default(cuid())
-  tenantId      String
-  userId        String?
-  contactId     String?
-  dealId        String?
-  direction     CallDirection @default(OUTBOUND)
-  fromNumber    String
-  toNumber      String
-  status        String        @default("INITIATED") // INITIATED, RINGING, ANSWERED, COMPLETED, FAILED
-  duration      Int? // seconds
-  outcome       String? // completed, missed, voicemail
-  recordingUrl  String?
-  recordingSid  String? // Twilio recording SID
-  twilioCallSid String?       @unique // Twilio call SID
-  transcription String?
-  summary       String?
-  startedAt     DateTime? // When call was answered
-  endedAt       DateTime? // When call ended
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+enum ParticipantType {
+  CRM_USER
+  PORTAL_CUSTOMER
+}
 
-  tenant  Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  user    User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  contact Contact? @relation(fields: [contactId], references: [id], onDelete: Restrict)
-  deal    Deal?    @relation(fields: [dealId], references: [id], onDelete: SetNull)
+model CallLog {
+  id       String @id @default(cuid())
+  tenantId String
+
+  // Simplified VoIP fields - just Supabase IDs!
+  roomName         String
+  callerSupabaseId String // NEW: Simple Supabase user ID
+  calleeSupabaseId String // NEW: Simple Supabase user ID
+
+  // Call metadata
+  direction CallDirection @default(OUTBOUND)
+  status    String        @default("INITIATED") // INITIATED, RINGING, CONNECTED, ENDED, FAILED, MISSED
+  duration  Int? // seconds
+
+  // Timestamps
+  startTime DateTime  @default(now())
+  endTime   DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // Relations
+  tenant        Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  contact       Contact?           @relation(fields: [contactId], references: [id], onDelete: Restrict)
+  deal          Deal?              @relation(fields: [dealId], references: [id], onDelete: SetNull)
+  recording     CallRecording? // 1-to-1 with recording
+  transcription CallTranscription? // 1-to-1 with transcription
+
+  // Optional contact/deal linking
+  contactId String?
+  dealId    String?
 
   @@index([tenantId])
-  @@index([userId])
+  @@index([callerSupabaseId])
+  @@index([calleeSupabaseId])
   @@index([contactId])
   @@index([dealId])
-  @@index([twilioCallSid])
+  @@index([roomName])
   @@map("call_logs")
 }
 
 // ==================== PORTAL CUSTOMERS ====================
 
 model PortalCustomer {
-  id             String   @id @default(cuid())
-  tenantId       String
-  contactId      String?
-  supabaseUserId String? // Nullable for invitation flow, filled on first login
-  email          String
-  name           String?
-  accessToken    String?  @unique // Token for initial portal access invitation
-  isActive       Boolean  @default(true) // Can deactivate portal access
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id               String   @id @default(cuid())
+  tenantId         String
+  contactId        String?
+  supabaseUserId   String? // Nullable for invitation flow, filled on first login
+  email            String
+  name             String?
+  accessToken      String?  @unique // Token for initial portal access invitation
+  fcmToken         String? // Firebase Cloud Messaging token (Android)
+  pushSubscription Json? // Web Push subscription object
+  isActive         Boolean  @default(true) // Can deactivate portal access
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   tenant         Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   contact        Contact?        @relation(fields: [contactId], references: [id], onDelete: SetNull)
@@ -510,4 +573,133 @@ model TelegramUser {
   @@index([telegramId])
   @@index([userId])
   @@map("telegram_users")
+}
+
+// ==================== VOIP CALL EVENTS ====================
+
+enum CallEventType {
+  CALL_STARTED
+  RINGING
+  ACCEPTED
+  REJECTED
+  ENDED
+  MISSED
+}
+
+model CallEvent {
+  id        String        @id @default(cuid())
+  tenantId  String        @map("tenant_id")
+  callerId  String?       @map("caller_id")
+  calleeId  String?       @map("callee_id")
+  roomName  String        @map("room_name")
+  eventType CallEventType @map("event_type")
+  payload   Json          @default("{}")
+  createdAt DateTime      @default(now()) @map("created_at")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([callerId])
+  @@index([calleeId])
+  @@index([roomName])
+  @@index([createdAt])
+  @@index([eventType])
+  @@index([tenantId, calleeId, createdAt])
+  @@map("call_events")
+}
+
+// ====================  NEW: Call Recording ====================
+
+model CallRecording {
+  id        String @id @default(cuid())
+  callLogId String @unique
+  tenantId  String
+
+  // Recording metadata
+  fileUrl  String // S3/Cloud storage URL
+  fileName String
+  fileSize Int? // bytes
+  format   String @default("webm") // webm, mp4, mp3
+  duration Int? // seconds
+
+  // Provider info
+  provider   RecordingProvider @default(LIVEKIT)
+  providerId String? // LiveKit egress ID or similar
+
+  // Status tracking
+  status RecordingStatus @default(REQUESTED)
+
+  // Timestamps
+  recordingStartTime DateTime?
+  recordingEndTime   DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  // Relations
+  callLog CallLog @relation(fields: [callLogId], references: [id], onDelete: Cascade)
+  tenant  Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([status])
+  @@map("call_recordings")
+}
+
+// ==================== NEW: Call Transcription ====================
+
+model CallTranscription {
+  id        String @id @default(cuid())
+  callLogId String @unique
+  tenantId  String
+
+  // Full transcript (can be large!)
+  fullText String @db.Text
+
+  // Structured transcript with timestamps
+  segments Json // Array of {speaker, text, startTime, endTime}
+
+  // Metadata
+  language   String @default("en")
+  confidence Float? // Average confidence score (0-1)
+  wordCount  Int?
+
+  // AI-generated extras
+  summary   String?  @db.Text
+  keywords  String[] @default([])
+  sentiment String? // POSITIVE, NEUTRAL, NEGATIVE
+
+  // Provider info
+  provider   TranscriptionProvider @default(ASSEMBLYAI)
+  providerId String?
+
+  // Status tracking
+  status TranscriptionStatus @default(PENDING)
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  callLog CallLog @relation(fields: [callLogId], references: [id], onDelete: Cascade)
+  tenant  Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([status])
+  @@map("call_transcriptions")
+}
+
+// ==================== NEW: User Presence ====================
+
+model UserPresence {
+  id          String         @id @default(cuid())
+  userId      String         @unique // Can be CRM user or portal customer Supabase ID
+  status      PresenceStatus @default(OFFLINE)
+  lastSeen    DateTime       @default(now())
+  currentRoom String? // If on call
+  tenantId    String // Current active tenant
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([status])
+  @@index([tenantId, status])
+  @@map("user_presence")
 }

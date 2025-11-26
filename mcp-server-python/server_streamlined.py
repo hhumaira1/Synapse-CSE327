@@ -77,7 +77,9 @@ def is_crm_related_query(text: str) -> tuple[bool, str]:
         "write code", "debug", "programming", "python", "javascript",
         "math", "calculate", "solve", "equation",
         "translate", "definition", "wikipedia",
-        "stock", "crypto", "bitcoin"
+        "stock", "crypto", "bitcoin", 
+        "travel", "flight", "hotel", "booking",
+        "game", "gaming", "video game",
     ]
     
     if any(pattern in text_lower for pattern in blocked_patterns):

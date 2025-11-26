@@ -237,7 +237,9 @@ fun PortalTicketDetailDialog(
                             } else {
                                 Column(
                                     verticalArrangement = Arrangement.spacedBy(12.dp),
-                                    modifier = Modifier.heightIn(max = 300.dp)
+                                    modifier = Modifier
+                                        .heightIn(max = 300.dp)
+                                        .verticalScroll(rememberScrollState())
                                 ) {
                                     ticket.comments.forEach { comment ->
                                         Card(

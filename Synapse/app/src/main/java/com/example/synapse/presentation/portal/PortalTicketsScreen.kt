@@ -41,6 +41,7 @@ fun PortalTicketsScreen(
 ) {
     val state by viewModel.state.collectAsState()
     var selectedStatusTab by remember { mutableStateOf(0) }
+    val snackbarHostState = remember { SnackbarHostState() }
 
     val statusTabs = listOf(
         "All" to null,
@@ -55,7 +56,18 @@ fun PortalTicketsScreen(
         viewModel.filterByStatus(statusTabs[selectedStatusTab].second)
     }
 
+    // Show error snackbar when error occurs
+    LaunchedEffect(state.error) {
+        state.error?.let { errorMessage ->
+            snackbarHostState.showSnackbar(
+                message = errorMessage,
+                duration = SnackbarDuration.Long
+            )
+        }
+    }
+
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = {
@@ -538,7 +550,10 @@ fun PortalTicketsScreen(
         PortalTicketDetailDialog(
             ticket = state.selectedTicket,
             onDismiss = { viewModel.hideTicketDetail() },
-            onAddComment = { content -> viewModel.addComment(state.selectedTicket?.id ?: "", content) },
+            onAddComment = { content -> 
+                val ticketId = state.selectedTicket?.id ?: ""
+                viewModel.addComment(ticketId, content)
+            },
             isLoading = state.isLoadingDetail
         )
     }

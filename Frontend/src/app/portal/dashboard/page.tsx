@@ -14,11 +14,13 @@ import {
   Plus,
   ArrowLeft,
   Users,
-  LayoutDashboard
+  LayoutDashboard,
+  Phone
 } from 'lucide-react';
 import { useApiClient } from '@/lib/api';
 import { useUserStatus } from '@/hooks/useUserStatus';
 import toast from 'react-hot-toast';
+import { AgentSelector } from '@/components/voip';
 
 interface PortalAccess {
   id: string;
@@ -127,6 +129,17 @@ export default function PortalDashboardPage() {
             </div>
             
             <div className="flex items-center gap-3">
+              {/* Call Support Button */}
+              <AgentSelector variant="outline" size="default">
+                <Button
+                  variant="outline"
+                  className="border-green-600 text-green-600 hover:bg-green-50"
+                >
+                  <Phone className="h-4 w-4 mr-2" />
+                  Call Support
+                </Button>
+              </AgentSelector>
+              
               {/* Context Switcher */}
               {hasWorkspace && (
                 <Button
@@ -454,12 +467,12 @@ export default function PortalDashboardPage() {
                   <div className="flex-1">
                     <h3 className="font-semibold text-gray-900 mb-2">Need Help?</h3>
                     <p className="text-sm text-gray-700 mb-4">
-                      If you have questions about your portal access or need support, please contact the respective vendor directly through their portal.
+                      If you have questions about your portal access or need support, use the &quot;Call Support&quot; button above to connect with an agent.
                     </p>
                     <div className="flex flex-wrap gap-2">
+                      <Badge variant="default" className="bg-green-600">✓ VoIP Calling Active</Badge>
                       <Badge variant="secondary">Feature Coming Soon: Live Chat</Badge>
                       <Badge variant="secondary">Feature Coming Soon: Ticket System</Badge>
-                      <Badge variant="secondary">Feature Coming Soon: VoIP Calling</Badge>
                     </div>
                   </div>
                 </div>
@@ -468,8 +481,6 @@ export default function PortalDashboardPage() {
           </div>
         )}
       </main>
-
-      
     </div>
   );
 }
