@@ -145,6 +145,11 @@ fun WorkspaceSelectorScreen(
                                 WorkspaceCard(
                                     workspace = workspace,
                                     onClick = {
+                                        // Connect VoIP socket if selecting CRM workspace
+                                        if (workspace.type == WorkspaceType.INTERNAL_CRM) {
+                                            viewModel.connectVoipSocket()
+                                        }
+                                        
                                         onWorkspaceSelected?.invoke(workspace.navigationTarget)
                                             ?: navController.navigate(workspace.navigationTarget) {
                                                 popUpTo("signin") { inclusive = true }

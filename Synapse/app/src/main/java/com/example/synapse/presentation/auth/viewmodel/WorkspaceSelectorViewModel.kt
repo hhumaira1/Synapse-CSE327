@@ -1,5 +1,6 @@
 package com.example.synapse.presentation.auth.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.synapse.data.api.ApiService
@@ -9,6 +10,8 @@ import com.example.synapse.data.model.WorkspaceOption
 import com.example.synapse.data.model.WorkspaceType
 import com.example.synapse.data.model.WorkspaceIcon
 import com.example.synapse.data.repository.portal.PortalRepository
+import com.example.synapse.data.repository.VoipRepository
+import com.example.synapse.data.preferences.PreferencesManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,7 +27,9 @@ data class WorkspaceSelectorState(
 @HiltViewModel
 class WorkspaceSelectorViewModel @Inject constructor(
     private val apiService: ApiService,
-    private val portalRepository: PortalRepository
+    private val portalRepository: PortalRepository,
+    private val voipRepository: VoipRepository,
+    private val preferencesManager: PreferencesManager
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(WorkspaceSelectorState())
@@ -116,7 +121,33 @@ class WorkspaceSelectorViewModel @Inject constructor(
         }
     }
 
+
     fun refresh() {
         loadWorkspaceOptions()
+    }
+    
+    /**
+     * Connect to VoIP WebSocket
+     * Call this when user enters CRM workspace
+     */
+    fun connectVoipSocket() {
+        viewModelScope.launch {
+            try {
+                val userId = preferencesManager.getUserId()
+                val tenantId = preferencesManager.getTenantId()
+                
+                if (userId.isNullOrEmpty() || tenantId.isNullOrEmpty()) {
+                    Log.w("WorkspaceSelectorVM", "⚠️ Cannot connect socket: userId or tenantId is null")
+                    return@launch
+                }
+                
+                Log.d("WorkspaceSelectorVM", "🔌 Connecting VoIP socket: userId=$userId, tenantId=$tenantId")
+                // Connect to the socket
+                voipRepository.connectSocket(userId, tenantId)
+                Log.d("WorkspaceSelectorVM", "✅ VoIP socket connected")
+            } catch (e: Exception) {
+                Log.e("WorkspaceSelectorVM", "❌ Failed to connect VoIP socket: ${e.message}", e)
+            }
+        }
     }
 }

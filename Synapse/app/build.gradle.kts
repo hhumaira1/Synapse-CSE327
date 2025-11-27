@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.gms.google-services")
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
 }
@@ -33,6 +34,10 @@ android {
         buildConfigField("String", "SUPABASE_ANON_KEY", "\"${localProperties.getProperty("supabase.anonKey", "")}\"")
         buildConfigField("String", "API_BASE_URL", "\"${localProperties.getProperty("api.baseUrl", "http://10.0.2.2:3001/api/")}\"")
         buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"${localProperties.getProperty("google.webClientId", "")}\"")
+        
+        // VoIP Configuration
+        buildConfigField("String", "API_URL", "\"${localProperties.getProperty("api.url", "http://10.0.2.2:3001")}\"")
+        buildConfigField("String", "LIVEKIT_URL", "\"${localProperties.getProperty("livekit.url", "wss://synapse-m8o8okr4.livekit.cloud")}\"")
     }
 
     buildTypes {
@@ -93,13 +98,18 @@ dependencies {
     // Supabase Kotlin SDK
     implementation("io.github.jan-tennert.supabase:postgrest-kt:2.6.0")
     implementation("io.github.jan-tennert.supabase:gotrue-kt:2.6.0")
-    implementation("io.github.jan-tennert.supabase:storage-kt:2.6.0")
+    implementation("io.github.jan-tennert.supabase:realtime-kt:2.6.0")
+    // SLF4J for Supabase logging
+    implementation("org.slf4j:slf4j-simple:2.0.9")
 //    implementation("io.github.jan-tennert.supabase:compose-auth:2.6.0")
 
     // Ktor (required by Supabase)
     implementation("io.ktor:ktor-client-android:2.3.12")
+    implementation("io.ktor:ktor-client-okhttp:2.3.12")
+    implementation("io.ktor:ktor-client-cio:2.3.12")
     implementation("io.ktor:ktor-client-core:2.3.12")
     implementation("io.ktor:ktor-utils:2.3.12")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.12")
     
     // Google Sign-In
     implementation("com.google.android.gms:play-services-auth:21.2.0")
@@ -154,5 +164,23 @@ dependencies {
     implementation("com.airbnb.android:lottie-compose:6.1.0")
 
     implementation("androidx.core:core-ktx:1.17.0")
-
+    
+    // ========== VoIP Dependencies ==========
+    
+    // Socket.IO for WebSocket connection
+    implementation("io.socket:socket.io-client:2.1.2")
+    
+    // LiveKit Android SDK (latest Nov 2025)
+    implementation("io.livekit:livekit-android:2.22.0")
+    implementation("io.livekit:livekit-android-compose-components:1.4.0")
+    
+    // Firebase Cloud Messaging
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation("com.google.firebase:firebase-messaging-ktx")
+    
+    // Coroutines Play Services (for FCM token)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.2")
+    
+    // Permissions handling for Jetpack Compose
+    implementation("com.google.accompanist:accompanist-permissions:0.32.0")
 }

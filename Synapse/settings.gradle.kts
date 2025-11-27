@@ -16,9 +16,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url = uri("https://jitpack.io") }  // Required for LiveKit's audioswitch dependency
     }
 }
 
 rootProject.name = "Synapse"
 include(":app")
- 

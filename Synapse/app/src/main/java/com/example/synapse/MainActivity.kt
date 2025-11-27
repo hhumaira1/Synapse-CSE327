@@ -42,6 +42,13 @@ import com.example.synapse.presentation.portal.PortalAcceptScreen
 import com.example.synapse.presentation.chatbot.ChatScreen
 import com.example.synapse.presentation.settings.SettingsScreen
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.compose.runtime.collectAsState
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.synapse.data.repository.VoipRepository
+import com.example.synapse.data.repository.UserRepository
+import com.example.synapse.presentation.voip.VoIPCallHandler
+import com.google.firebase.messaging.FirebaseMessaging
+import kotlinx.coroutines.tasks.await
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -61,6 +68,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         handleIntent(intent)
@@ -81,9 +89,15 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
 @Composable
-fun SynapseApp(pendingPortalToken: String? = null) {
+fun SynapseApp(
+    pendingPortalToken: String? = null
+) {
     val navController = rememberNavController()
+
+    // VoIP initialization will be handled separately when we have proper user session
+    // For now, skip VoIP until user is logged in
 
     // Handle pending portal token navigation
     LaunchedEffect(pendingPortalToken) {
@@ -102,7 +116,12 @@ fun SynapseApp(pendingPortalToken: String? = null) {
             modifier = Modifier.padding(paddingValues)
         )
     }
+    
+    // ========== VoIP Call Handler ==========
+    // This will show incoming call dialogs and active call screens
+    VoIPCallHandler()
 }
+
 
 @Composable
 fun NavGraph(navController: NavHostController, modifier: Modifier = Modifier) {

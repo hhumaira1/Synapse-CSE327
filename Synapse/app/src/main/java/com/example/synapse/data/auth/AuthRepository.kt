@@ -7,9 +7,16 @@ import com.example.synapse.data.preferences.PreferencesManager
 import io.github.jan.supabase.gotrue.providers.builtin.Email
 import io.github.jan.supabase.gotrue.user.UserInfo
 import io.github.jan.supabase.gotrue.user.UserSession
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import io.ktor.http.ContentType.Application.Json
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -116,18 +123,40 @@ class AuthRepository @Inject constructor(
     suspend fun signInWithGoogle(idToken: String): Result<UserSession> {
         return try {
             // Step 1: Authenticate with Supabase using Google ID token
-            val url = "${supabaseManager.supabase.supabaseUrl}/auth/v1/token?grant_type=id_token"
+            // USE STANDALONE CLIENT to bypass any SDK issues
+            // Switched to OkHttp engine as it handles Android TLS/Proxy configs better than CIO
+            val client = HttpClient(OkHttp) {
+                install(ContentNegotiation) {
+                    json(Json { ignoreUnknownKeys = true })
+                }
+            }
+            
+            // Ensure URL has protocol
+            var baseUrl = supabaseManager.supabase.supabaseUrl
+            if (!baseUrl.startsWith("http")) {
+                baseUrl = "https://$baseUrl"
+            }
+            
+            val url = "$baseUrl/auth/v1/token?grant_type=id_token"
+            Log.d("AuthRepository", "Exchanging token at: $url")
 
-            val response: HttpResponse = supabaseManager.supabase.httpClient.post(url) {
+            val response: HttpResponse = client.post(url) {
                 header("apikey", supabaseManager.supabase.supabaseKey)
                 contentType(ContentType.Application.Json)
                 setBody("""{"provider":"google","id_token":"$idToken"}""")
             }
-
-            // Wait a bit for session to be updated
-            kotlinx.coroutines.delay(500)
-
-            // Get the session
+            
+            Log.d("AuthRepository", "Token exchange response: ${response.status}")
+            
+            // Parse the response body to get session data
+            val responseBody = response.bodyAsText()
+            Log.d("AuthRepository", "Response body: $responseBody")
+            
+            // Parse and import the session into the Supabase SDK
+            val sessionData = Json { ignoreUnknownKeys = true }.decodeFromString<UserSession>(responseBody)
+            auth.importSession(sessionData)
+            
+            // Now get the session from the SDK
             val session = auth.currentSessionOrNull()
             if (session != null) {
                 // Step 2: Check if user exists in backend

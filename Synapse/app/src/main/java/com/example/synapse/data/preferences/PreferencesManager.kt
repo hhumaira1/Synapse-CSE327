@@ -102,4 +102,9 @@ class PreferencesManager @Inject constructor(
     suspend fun getTenantId(): String? {
         return dataStore.data.first()[TENANT_ID_KEY]
     }
+    
+    suspend fun getUserId(): String? {
+        // Get user ID from DataStore
+        return dataStore.data.first()[USER_ID_KEY]
+    }
 }
