@@ -26,29 +26,17 @@ class SupabaseManager @Inject constructor(
     private val tag = "SupabaseManager"
     
     val supabase: SupabaseClient by lazy {
-        // DEBUG: Log BuildConfig values to verify they're loaded correctly
-        Log.d(tag, "====== SUPABASE CONFIG DEBUG ======")
-        Log.d(tag, "BuildConfig.SUPABASE_URL = '${BuildConfig.SUPABASE_URL}'")
-        // Log character codes to check for invisible chars
-        BuildConfig.SUPABASE_URL.forEach { char ->
-            Log.d(tag, "Char: '$char' Code: ${char.code}")
-        }
-        
-        // HARDCODED URL FOR DEBUGGING
-        val hardcodedUrl = "https://rjwewskfdfylbgzxxfjf.supabase.co"
-        Log.d(tag, "Using Hardcoded URL: $hardcodedUrl")
-        
         createSupabaseClient(
-            supabaseUrl = hardcodedUrl, // Force hardcoded URL
+            supabaseUrl = BuildConfig.SUPABASE_URL,
             supabaseKey = BuildConfig.SUPABASE_ANON_KEY
         ) {
             install(Auth)
             install(Postgrest)
             
-            // CRITICAL FIX: Use CIO engine
-            // CIO is a pure Kotlin engine and may handle proxies differently than OkHttp
-            // We removed explicit proxy config because it caused a crash
-            httpEngine = CIO.create()
+            // CRITICAL FIX: Use OkHttp engine instead of CIO
+            // CIO doesn't properly handle Android's domain-specific SSL certificate validation
+            // OkHttp is the recommended engine for Android and handles TLS correctly
+            httpEngine = OkHttp.create()
         }
     }
 
