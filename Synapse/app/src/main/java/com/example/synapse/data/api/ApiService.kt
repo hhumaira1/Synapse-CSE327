@@ -13,7 +13,7 @@ interface ApiService {
     suspend fun onboardUser(@Body request: OnboardRequest): Response<OnboardResponse>
     
     @GET("auth/me")
-    suspend fun getCurrentUser(): Response<User>
+    suspend fun getCurrentUser(): Response<CurrentUserResponse>
     
     // ========== Users & Workspaces ==========
     @GET("users/my-tenants")
@@ -35,14 +35,12 @@ interface ApiService {
     suspend fun acceptTeamInvite(@Path("token") token: String): Response<AcceptInviteResponse>
     
     // ========== Invitations ==========
-    @GET("invitations")
-    suspend fun getInvitations(): Response<List<Invitation>>
-    
-    @POST("invitations")
+    // Backend uses /users/invite endpoint
+    @POST("users/invite")
     suspend fun sendInvitation(@Body request: InviteUserRequest): Response<Invitation>
     
-    @DELETE("invitations/{id}")
-    suspend fun cancelInvitation(@Path("id") invitationId: String): Response<Unit>
+    // Get pending invitations is done through getTeamMembers
+    // Cancel is done through DELETE /users/{id}
     
     // ========== Portal Customer ==========
     @GET("portal/customers/my-access")
@@ -249,4 +247,14 @@ interface ApiService {
     
     @POST("voip/token")
     suspend fun generateVoipToken(@Body request: okhttp3.RequestBody): Response<okhttp3.ResponseBody>
+   
+    // ========== Telegram Integration ==========
+    @POST("telegram/generate-link")
+    suspend fun generateTelegramLink(): Response<TelegramLinkResponse>
+    
+    @GET("telegram/status")
+    suspend fun getTelegramStatus(): Response<TelegramStatusResponse>
+    
+    @POST("telegram/disconnect")
+    suspend fun disconnectTelegram(): Response<Unit>
 }

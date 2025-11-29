@@ -92,6 +92,7 @@ export class AuthController {
           lastName,
           workspaceName || `${firstName}'s Workspace`,
           workspaceType || 'business',
+          data.user.user_metadata, // Pass Google OAuth metadata
         );
 
         return {
@@ -239,6 +240,7 @@ export class AuthController {
         lastName,
         tenantName,
         workspaceType || 'business',
+        user.user_metadata, // Pass Google OAuth metadata
       );
 
       return {

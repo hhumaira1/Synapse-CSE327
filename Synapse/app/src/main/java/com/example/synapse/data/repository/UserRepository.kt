@@ -37,24 +37,33 @@ class UserRepository @Inject constructor(
      * Get current user details from backend
      * Includes tenant information and role
      */
-    suspend fun getUserDetails(): Result<User> {
+    suspend fun getUserDetails(): Result<com.example.synapse.data.model.DbUser> {
         return try {
             val response = apiService.getCurrentUser()
             if (response.isSuccessful && response.body() != null) {
-                val user = response.body()!!
-                // Save user data to preferences
-                preferencesManager.saveTenantId(user.tenantId)
-                preferencesManager.saveUserRole(user.role.name)
-                preferencesManager.saveUserId(user.id)
-                preferencesManager.saveUserEmail(user.email)
+                val currentUserResponse = response.body()!!
+                val dbUser = currentUserResponse.dbUser
                 
-                val userName = "${user.firstName ?: ""} ${user.lastName ?: ""}".trim()
-                if (userName.isNotEmpty()) {
+                // Save user data to preferences
+                preferencesManager.saveTenantId(dbUser.tenantId)
+                dbUser.role?.let { role ->
+                    preferencesManager.saveUserRole(role.name)
+                }
+                preferencesManager.saveUserId(dbUser.id)
+                preferencesManager.saveUserEmail(dbUser.email)
+                
+                val userName = when {
+                    dbUser.name != null -> dbUser.name
+                    dbUser.firstName != null || dbUser.lastName != null -> 
+                        "${dbUser.firstName ?: ""} ${dbUser.lastName ?: ""}".trim()
+                    else -> null
+                }
+                if (userName?.isNotEmpty() == true) {
                     preferencesManager.saveUserName(userName)
                 }
                 
-                Log.d("UserRepository", "User details loaded: ${user.id}, tenant: ${user.tenantId}")
-                Result.success(user)
+                Log.d("UserRepository", "User details loaded: ${dbUser.id}, tenant: ${dbUser.tenantId}")
+                Result.success(dbUser)
             } else {
                 val errorBody = response.errorBody()?.string()
                 Log.e("UserRepository", "Failed to get user details: $errorBody")
@@ -149,5 +158,13 @@ class UserRepository @Inject constructor(
     suspend fun clearUserData() {
         preferencesManager.clearAll()
         Log.d("UserRepository", "User data cleared")
+    }
+    
+    /**
+     * Sign out the current user
+     */
+    suspend fun signOut() {
+        clearUserData()
+        Log.d("UserRepository", "User signed out")
     }
 }

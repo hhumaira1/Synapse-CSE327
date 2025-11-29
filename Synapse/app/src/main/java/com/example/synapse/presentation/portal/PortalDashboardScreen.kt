@@ -28,6 +28,7 @@ import com.example.synapse.presentation.portal.viewmodel.PortalDashboardState
 import com.example.synapse.presentation.portal.viewmodel.PortalStats
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,6 +39,7 @@ fun PortalDashboardScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val stats = viewModel.getStats()
+    val scope = rememberCoroutineScope()
 
     var showUserMenu by remember { mutableStateOf(false) }
 
@@ -116,7 +118,12 @@ fun PortalDashboardScreen(
                                 text = { Text("Sign Out") },
                                 onClick = {
                                     showUserMenu = false
-                                    // TODO: Implement sign out
+                                    scope.launch {
+                                        viewModel.signOut()
+                                        navController.navigate("signin") {
+                                            popUpTo(0) { inclusive = true }
+                                        }
+                                    }
                                 },
                                 leadingIcon = {
                                     Icon(Icons.Default.ExitToApp, contentDescription = null)
@@ -802,98 +809,161 @@ fun PortalDashboardScreen(
                                 fontWeight = FontWeight.Bold
                             )
 
-                            Row(
+                            // Grid of Action Cards
+                            Column(
                                 modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                                verticalArrangement = Arrangement.spacedBy(12.dp)
                             ) {
-                                // Create Ticket Action
+                                // First Row: Call Support
                                 Card(
                                     modifier = Modifier
-                                        .weight(1f)
-                                        .clickable { navController.navigate("portal_tickets") },
+                                        .fillMaxWidth()
+                                        .clickable { navController.navigate("available_agents") },
                                     shape = MaterialTheme.shapes.large,
                                     colors = CardDefaults.cardColors(
-                                        containerColor = Color(0xFFEEF2FF)
+                                        containerColor = Color(0xFFFEF3C7)
                                     ),
                                     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                                 ) {
-                                    Column(
-                                        modifier = Modifier.padding(20.dp),
-                                        verticalArrangement = Arrangement.spacedBy(12.dp),
-                                        horizontalAlignment = Alignment.Start
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(20.dp),
+                                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                                        verticalAlignment = Alignment.CenterVertically
                                     ) {
                                         Surface(
-                                            color = Color(0xFF6366F1),
+                                            color = Color(0xFFF59E0B),
                                             shape = MaterialTheme.shapes.medium,
-                                            modifier = Modifier.size(48.dp)
+                                            modifier = Modifier.size(56.dp)
                                         ) {
                                             Box(contentAlignment = Alignment.Center) {
                                                 Icon(
-                                                    Icons.Default.Add,
+                                                    Icons.Default.Phone,
                                                     contentDescription = null,
                                                     tint = Color.White,
-                                                    modifier = Modifier.size(24.dp)
+                                                    modifier = Modifier.size(28.dp)
                                                 )
                                             }
                                         }
-                                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                        Column(
+                                            modifier = Modifier.weight(1f),
+                                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                                        ) {
                                             Text(
-                                                text = "Create Ticket",
-                                                style = MaterialTheme.typography.titleMedium,
+                                                text = "Call Support",
+                                                style = MaterialTheme.typography.titleLarge,
                                                 fontWeight = FontWeight.Bold,
-                                                color = Color(0xFF1E40AF)
+                                                color = Color(0xFF92400E)
                                             )
                                             Text(
-                                                text = "Submit a support request",
-                                                style = MaterialTheme.typography.bodySmall,
-                                                color = Color(0xFF3730A3)
+                                                text = "Reach out to available agents",
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                color = Color(0xFFB45309)
                                             )
                                         }
+                                        Icon(
+                                            Icons.Default.ChevronRight,
+                                            contentDescription = null,
+                                            tint = Color(0xFFF59E0B)
+                                        )
                                     }
                                 }
 
-                                // View All Tickets Action
-                                Card(
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .clickable { navController.navigate("portal_tickets") },
-                                    shape = MaterialTheme.shapes.large,
-                                    colors = CardDefaults.cardColors(
-                                        containerColor = Color(0xFFDCFCE7)
-                                    ),
-                                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                                // Second Row: Create Ticket and View Tickets
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp)
                                 ) {
-                                    Column(
-                                        modifier = Modifier.padding(20.dp),
-                                        verticalArrangement = Arrangement.spacedBy(12.dp),
-                                        horizontalAlignment = Alignment.Start
+                                    // Create Ticket Action
+                                    Card(
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .clickable { navController.navigate("portal_tickets") },
+                                        shape = MaterialTheme.shapes.large,
+                                        colors = CardDefaults.cardColors(
+                                            containerColor = Color(0xFFEEF2FF)
+                                        ),
+                                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                                     ) {
-                                        Surface(
-                                            color = Color(0xFF10B981),
-                                            shape = MaterialTheme.shapes.medium,
-                                            modifier = Modifier.size(48.dp)
+                                        Column(
+                                            modifier = Modifier.padding(20.dp),
+                                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                                            horizontalAlignment = Alignment.Start
                                         ) {
-                                            Box(contentAlignment = Alignment.Center) {
-                                                Icon(
-                                                    Icons.Default.List,
-                                                    contentDescription = null,
-                                                    tint = Color.White,
-                                                    modifier = Modifier.size(24.dp)
+                                            Surface(
+                                                color = Color(0xFF6366F1),
+                                                shape = MaterialTheme.shapes.medium,
+                                                modifier = Modifier.size(48.dp)
+                                            ) {
+                                                Box(contentAlignment = Alignment.Center) {
+                                                    Icon(
+                                                        Icons.Default.Add,
+                                                        contentDescription = null,
+                                                        tint = Color.White,
+                                                        modifier = Modifier.size(24.dp)
+                                                    )
+                                                }
+                                            }
+                                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                                Text(
+                                                    text = "Create Ticket",
+                                                    style = MaterialTheme.typography.titleMedium,
+                                                    fontWeight = FontWeight.Bold,
+                                                    color = Color(0xFF1E40AF)
+                                                )
+                                                Text(
+                                                    text = "Submit a support request",
+                                                    style = MaterialTheme.typography.bodySmall,
+                                                    color = Color(0xFF3730A3)
                                                 )
                                             }
                                         }
-                                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                            Text(
-                                                text = "View Tickets",
-                                                style = MaterialTheme.typography.titleMedium,
-                                                fontWeight = FontWeight.Bold,
-                                                color = Color(0xFF065F46)
-                                            )
-                                            Text(
-                                                text = "Check your requests",
-                                                style = MaterialTheme.typography.bodySmall,
-                                                color = Color(0xFF047857)
-                                            )
+                                    }
+
+                                    // View All Tickets Action
+                                    Card(
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .clickable { navController.navigate("portal_tickets") },
+                                        shape = MaterialTheme.shapes.large,
+                                        colors = CardDefaults.cardColors(
+                                            containerColor = Color(0xFFDCFCE7)
+                                        ),
+                                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                                    ) {
+                                        Column(
+                                            modifier = Modifier.padding(20.dp),
+                                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                                            horizontalAlignment = Alignment.Start
+                                        ) {
+                                            Surface(
+                                                color = Color(0xFF10B981),
+                                                shape = MaterialTheme.shapes.medium,
+                                                modifier = Modifier.size(48.dp)
+                                            ) {
+                                                Box(contentAlignment = Alignment.Center) {
+                                                    Icon(
+                                                        Icons.Default.List,
+                                                        contentDescription = null,
+                                                        tint = Color.White,
+                                                        modifier = Modifier.size(24.dp)
+                                                    )
+                                                }
+                                            }
+                                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                                Text(
+                                                    text = "View Tickets",
+                                                    style = MaterialTheme.typography.titleMedium,
+                                                    fontWeight = FontWeight.Bold,
+                                                    color = Color(0xFF065F46)
+                                                )
+                                                Text(
+                                                    text = "Check your requests",
+                                                    style = MaterialTheme.typography.bodySmall,
+                                                    color = Color(0xFF047857)
+                                                )
+                                            }
                                         }
                                     }
                                 }

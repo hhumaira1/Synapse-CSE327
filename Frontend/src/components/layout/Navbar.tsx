@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useUser, useAuth } from "@/hooks/useUser";
-import { Sparkles, Menu, X, LayoutDashboard, LogOut } from "lucide-react";
+import { Sparkles, Menu, X, LayoutDashboard, LogOut, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useUserStatus } from "@/hooks/useUserStatus";
 import Link from "next/link";
@@ -81,14 +81,22 @@ export function Navbar() {
                 <LayoutDashboard className="h-4 w-4" />
                 Dashboard
               </Button>
-              
+
               {/* Custom User Button */}
               <div className="relative">
                 <button
                   onClick={() => setShowUserMenu(!showUserMenu)}
-                  className="h-8 w-8 rounded-full bg-linear-to-r from-[#6366f1] to-[#a855f7] flex items-center justify-center text-white font-semibold text-sm hover:shadow-lg transition-shadow"
+                  className="h-8 w-8 rounded-full overflow-hidden bg-linear-to-r from-[#6366f1] to-[#a855f7] flex items-center justify-center text-white font-semibold text-sm hover:shadow-lg transition-shadow"
                 >
-                  {(user?.user_metadata?.firstName?.[0] || user?.email?.[0] || 'U').toUpperCase()}
+                  {user?.user_metadata?.avatar_url || user?.user_metadata?.picture ? (
+                    <img
+                      src={user.user_metadata.avatar_url || user.user_metadata.picture}
+                      alt="Profile"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    (user?.user_metadata?.firstName?.[0] || user?.email?.[0] || 'U').toUpperCase()
+                  )}
                 </button>
 
                 {showUserMenu && (
@@ -96,19 +104,29 @@ export function Navbar() {
                     <div className="p-2">
                       <div className="px-4 py-2 border-b border-gray-100">
                         <p className="text-sm font-medium text-gray-900 truncate">
-                          {user?.user_metadata?.firstName && user?.user_metadata?.lastName 
+                          {user?.user_metadata?.firstName && user?.user_metadata?.lastName
                             ? `${user.user_metadata.firstName} ${user.user_metadata.lastName}`
                             : user?.email?.split('@')[0] || 'User'}
                         </p>
                         <p className="text-xs text-gray-500 truncate">{user?.email}</p>
                       </div>
                       <button
+                        onClick={() => {
+                          router.push('/profile');
+                          setShowUserMenu(false);
+                        }}
+                        className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                      >
+                        <User className="h-4 w-4" />
+                        View Profile
+                      </button>
+                      <button
                         onClick={async () => {
                           await signOut();
                           router.push('/');
                           setShowUserMenu(false);
                         }}
-                        className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors mt-2"
+                        className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors mt-1"
                       >
                         <LogOut className="h-4 w-4" />
                         Sign Out
@@ -173,12 +191,20 @@ export function Navbar() {
                   </Button>
                   <div className="flex items-center justify-between p-2 border border-gray-200 rounded-lg">
                     <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-full bg-linear-to-r from-[#6366f1] to-[#a855f7] flex items-center justify-center text-white font-semibold text-sm">
-                        {(user?.user_metadata?.firstName?.[0] || user?.email?.[0] || 'U').toUpperCase()}
+                      <div className="h-8 w-8 rounded-full overflow-hidden bg-linear-to-r from-[#6366f1] to-[#a855f7] flex items-center justify-center text-white font-semibold text-sm">
+                        {user?.user_metadata?.avatar_url || user?.user_metadata?.picture ? (
+                          <img
+                            src={user.user_metadata.avatar_url || user.user_metadata.picture}
+                            alt="Profile"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          (user?.user_metadata?.firstName?.[0] || user?.email?.[0] || 'U').toUpperCase()
+                        )}
                       </div>
                       <div>
                         <p className="text-sm font-medium text-gray-900 truncate">
-                          {user?.user_metadata?.firstName && user?.user_metadata?.lastName 
+                          {user?.user_metadata?.firstName && user?.user_metadata?.lastName
                             ? `${user.user_metadata.firstName} ${user.user_metadata.lastName}`
                             : user?.email?.split('@')[0] || 'User'}
                         </p>

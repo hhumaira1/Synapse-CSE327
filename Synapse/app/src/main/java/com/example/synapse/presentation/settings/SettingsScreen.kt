@@ -1,15 +1,22 @@
 package com.example.synapse.presentation.settings
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.example.synapse.presentation.settings.components.*
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -69,6 +76,70 @@ fun SettingsScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
+            // User Profile Card
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .clickable { navController.navigate("profile") },
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // Avatar
+                    if (uiState.currentUserAvatar != null) {
+                        AsyncImage(
+                            model = uiState.currentUserAvatar,
+                            contentDescription = "Profile picture",
+                            modifier = Modifier
+                                .size(56.dp)
+                                .clip(CircleShape)
+                        )
+                    } else {
+                        Box(
+                            modifier = Modifier
+                                .size(56.dp)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.colorScheme.primaryContainer),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                Icons.Default.Person,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    // User info
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = uiState.currentUserName ?: "User",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Text(
+                            text = uiState.currentUserEmail ?: "",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        val role = uiState.currentUserRole
+                        if (role != null) {
+                            Text(
+                                text = role.name,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+                }
+            }
+
             // Tabs
             TabRow(selectedTabIndex = uiState.selectedTab) {
                 Tab(
@@ -98,7 +169,13 @@ fun SettingsScreen(
                         canRemoveMember = { member -> viewModel.canRemoveMember(member) },
                         onInviteClick = { viewModel.showInviteDialog() }
                     )
-                    1 -> WorkspaceTab()
+                    1 -> WorkspaceTab(
+                        navController = navController,
+                        workspaceName = uiState.currentTenant?.name,
+                        workspaceType = uiState.currentTenant?.type,
+                        createdAt = uiState.currentTenant?.createdAt,
+                        memberCount = uiState.teamMembers.size
+                    )
                 }
             }
         }

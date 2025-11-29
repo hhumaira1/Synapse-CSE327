@@ -22,7 +22,7 @@ export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly authService: AuthService,
-  ) {}
+  ) { }
 
   /**
    * Invite a new employee to the tenant
@@ -184,6 +184,18 @@ export class UsersController {
       userId,
       newRole,
     );
+  }
+
+  @Get('me/profile')
+  async getMyProfile(@CurrentUser('id') id: string) {
+    const user = await this.authService.getUserBySupabaseId(id);
+    return { ...user, tenant: { id: user.tenant.id, name: user.tenant.name } };
+  }
+
+  @Patch('me/profile')
+  async updateMyProfile(@CurrentUser('id') id: string, @Body() data: { firstName?: string; lastName?: string }) {
+    const user = await this.authService.getUserBySupabaseId(id);
+    return this.usersService.updateUserProfile(user.id, data);
   }
 
   /**

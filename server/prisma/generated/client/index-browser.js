@@ -140,6 +140,7 @@ exports.Prisma.UserScalarFieldEnum = {
   firstName: 'firstName',
   lastName: 'lastName',
   name: 'name',
+  avatarUrl: 'avatarUrl',
   role: 'role',
   isActive: 'isActive',
   fcmToken: 'fcmToken',
@@ -296,6 +297,7 @@ exports.Prisma.PortalCustomerScalarFieldEnum = {
   supabaseUserId: 'supabaseUserId',
   email: 'email',
   name: 'name',
+  avatarUrl: 'avatarUrl',
   accessToken: 'accessToken',
   fcmToken: 'fcmToken',
   pushSubscription: 'pushSubscription',
@@ -350,6 +352,7 @@ exports.Prisma.TelegramUserScalarFieldEnum = {
   username: 'username',
   firstName: 'firstName',
   lastName: 'lastName',
+  avatarUrl: 'avatarUrl',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

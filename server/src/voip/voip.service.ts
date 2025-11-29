@@ -600,7 +600,8 @@ export class VoipService {
   }
 
   /**
-   * Get all online users in tenant (for CRM users to see who they can call)
+   * Get online portal customers in tenant (for CRM users to call customers)
+   * NOTE: This returns ONLY portal customers, not CRM staff
    */
   async getOnlineUsers(tenantId: string) {
     this.logger.log(`🔍 getOnlineUsers: tenantId=${tenantId}`);
@@ -621,63 +622,36 @@ export class VoipService {
 
     const userIds = onlinePresences.map((p) => p.userId);
 
-    // Get both CRM users and portal customers
-    const [crmUsers, portalCustomers] = await Promise.all([
-      this.prisma.user.findMany({
-        where: {
-          supabaseUserId: { in: userIds },
-          tenantId,
-        },
-        select: {
-          supabaseUserId: true,
-          name: true,
-          email: true,
-          role: true,
-        },
-      }),
-      this.prisma.portalCustomer.findMany({
-        where: {
-          supabaseUserId: { in: userIds },
-          tenantId,
-        },
-        select: {
-          supabaseUserId: true,
-          name: true,
-          email: true,
-        },
-      }),
-    ]);
+    // Get ONLY portal customers (not CRM users)
+    const portalCustomers = await this.prisma.portalCustomer.findMany({
+      where: {
+        supabaseUserId: { in: userIds },
+        tenantId,
+      },
+      select: {
+        supabaseUserId: true,
+        name: true,
+        email: true,
+      },
+    });
 
-    this.logger.log(`   Found ${crmUsers.length} CRM users, ${portalCustomers.length} portal customers`);
+    this.logger.log(`   Found ${portalCustomers.length} portal customers online`);
 
-    // Combine and format
-    const allUsers = [
-      ...crmUsers.map((u) => ({
-        id: u.supabaseUserId,
-        name: u.name,
-        email: u.email,
-        type: 'CRM_USER' as const,
-        role: u.role,
-      })),
-      ...portalCustomers.map((c) => ({
+    // Format portal customers
+    const result = portalCustomers.map((c) => {
+      const presence = onlinePresences.find((p) => p.userId === c.supabaseUserId);
+      return {
         id: c.supabaseUserId,
         name: c.name,
         email: c.email,
         type: 'PORTAL_CUSTOMER' as const,
-      })),
-    ];
-
-    // Add presence status
-    const result = allUsers.map((user) => {
-      const presence = onlinePresences.find((p) => p.userId === user.id);
-      return {
-        ...user,
+        role: null,
         status: presence?.status || 'OFFLINE',
         lastSeen: presence?.lastSeen?.toISOString(),
       };
     });
 
-    this.logger.log(`✅ Returning ${result.length} online users total`);
+    this.logger.log(`✅ Returning ${result.length} online portal customers`);
     return result;
   }
 }

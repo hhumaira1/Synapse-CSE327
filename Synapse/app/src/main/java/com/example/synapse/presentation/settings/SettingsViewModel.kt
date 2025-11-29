@@ -24,6 +24,9 @@ data class SettingsUiState(
     val pendingInvitations: List<Invitation> = emptyList(),
     val currentUserRole: UserRole? = null,
     val currentUserId: String? = null,
+    val currentUserName: String? = null,
+    val currentUserEmail: String? = null,
+    val currentUserAvatar: String? = null,
     val errorMessage: String? = null,
     val successMessage: String? = null,
     
@@ -34,7 +37,17 @@ data class SettingsUiState(
     val selectedMember: TeamMember? = null,
     
     // Selected tab
-    val selectedTab: Int = 0
+    val selectedTab: Int = 0,
+    
+    // Tenant info
+    val currentTenant: TenantInfo? = null
+)
+
+data class TenantInfo(
+    val id: String,
+    val name: String,
+    val type: String,
+    val createdAt: String
 )
 
 @HiltViewModel
@@ -60,7 +73,7 @@ class SettingsViewModel @Inject constructor(
                 // Get current user details from API
                 val currentUserResponse = apiService.getCurrentUser()
                 val currentUser = if (currentUserResponse.isSuccessful) {
-                    currentUserResponse.body()
+                    currentUserResponse.body()?.dbUser
                 } else null
                 
                 // Also get user role from preferences as fallback
@@ -87,6 +100,30 @@ class SettingsViewModel @Inject constructor(
                         pendingInvitations = invitations,
                         currentUserRole = currentUser?.role ?: userRole,
                         currentUserId = currentUser?.id,
+                        currentUserName = currentUser?.name ?: "${currentUser?.firstName ?: ""} ${currentUser?.lastName ?: ""}".trim(),
+                        currentUserEmail = currentUser?.email,
+                        currentUserAvatar = currentUser?.avatarUrl,
+                        currentTenant = try {
+                            val tenantId = preferencesManager.getTenantId()
+                            if (tenantId != null) {
+                                // Get tenant info from user's tenant
+                                val tenantResponse = apiService.getMyTenants()
+                                if (tenantResponse.isSuccessful && tenantResponse.body() != null) {
+                                    val tenants = tenantResponse.body()!!
+                                    val tenant = tenants.firstOrNull { it.id == tenantId }
+                                    tenant?.let {
+                                        TenantInfo(
+                                            id = it.id,
+                                            name = it.name,
+                                            type = it.type,
+                                            createdAt = "" // UserTenantInfo doesn't include creation date
+                                        )
+                                    }
+                                } else null
+                            } else null
+                        } catch (e: Exception) {
+                            null
+                        },
                         errorMessage = null
                     )
                 }

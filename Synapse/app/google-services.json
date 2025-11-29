@@ -12,7 +12,12 @@
           "package_name": "com.example.synapse"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "272825351322-0rnqto42lci06ieana7rplejklpvujnu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDSGMw8LjuO-t47qcsdLcJSBh2ia8nLqgQ"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "272825351322-0rnqto42lci06ieana7rplejklpvujnu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
