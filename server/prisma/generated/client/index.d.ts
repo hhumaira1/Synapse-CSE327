@@ -5088,6 +5088,7 @@ export namespace Prisma {
     firstName: string | null
     lastName: string | null
     name: string | null
+    avatarUrl: string | null
     role: $Enums.UserRole | null
     isActive: boolean | null
     fcmToken: string | null
@@ -5103,6 +5104,7 @@ export namespace Prisma {
     firstName: string | null
     lastName: string | null
     name: string | null
+    avatarUrl: string | null
     role: $Enums.UserRole | null
     isActive: boolean | null
     fcmToken: string | null
@@ -5118,6 +5120,7 @@ export namespace Prisma {
     firstName: number
     lastName: number
     name: number
+    avatarUrl: number
     role: number
     isActive: number
     fcmToken: number
@@ -5136,6 +5139,7 @@ export namespace Prisma {
     firstName?: true
     lastName?: true
     name?: true
+    avatarUrl?: true
     role?: true
     isActive?: true
     fcmToken?: true
@@ -5151,6 +5155,7 @@ export namespace Prisma {
     firstName?: true
     lastName?: true
     name?: true
+    avatarUrl?: true
     role?: true
     isActive?: true
     fcmToken?: true
@@ -5166,6 +5171,7 @@ export namespace Prisma {
     firstName?: true
     lastName?: true
     name?: true
+    avatarUrl?: true
     role?: true
     isActive?: true
     fcmToken?: true
@@ -5255,6 +5261,7 @@ export namespace Prisma {
     firstName: string | null
     lastName: string | null
     name: string | null
+    avatarUrl: string | null
     role: $Enums.UserRole
     isActive: boolean
     fcmToken: string | null
@@ -5288,6 +5295,7 @@ export namespace Prisma {
     firstName?: boolean
     lastName?: boolean
     name?: boolean
+    avatarUrl?: boolean
     role?: boolean
     isActive?: boolean
     fcmToken?: boolean
@@ -5313,6 +5321,7 @@ export namespace Prisma {
     firstName?: boolean
     lastName?: boolean
     name?: boolean
+    avatarUrl?: boolean
     role?: boolean
     isActive?: boolean
     fcmToken?: boolean
@@ -5330,6 +5339,7 @@ export namespace Prisma {
     firstName?: boolean
     lastName?: boolean
     name?: boolean
+    avatarUrl?: boolean
     role?: boolean
     isActive?: boolean
     fcmToken?: boolean
@@ -5347,6 +5357,7 @@ export namespace Prisma {
     firstName?: boolean
     lastName?: boolean
     name?: boolean
+    avatarUrl?: boolean
     role?: boolean
     isActive?: boolean
     fcmToken?: boolean
@@ -5355,7 +5366,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "supabaseUserId" | "email" | "firstName" | "lastName" | "name" | "role" | "isActive" | "fcmToken" | "pushSubscription" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "supabaseUserId" | "email" | "firstName" | "lastName" | "name" | "avatarUrl" | "role" | "isActive" | "fcmToken" | "pushSubscription" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
     interactions?: boolean | User$interactionsArgs<ExtArgs>
@@ -5394,6 +5405,7 @@ export namespace Prisma {
       firstName: string | null
       lastName: string | null
       name: string | null
+      avatarUrl: string | null
       role: $Enums.UserRole
       isActive: boolean
       fcmToken: string | null
@@ -5838,6 +5850,7 @@ export namespace Prisma {
     readonly firstName: FieldRef<"User", 'String'>
     readonly lastName: FieldRef<"User", 'String'>
     readonly name: FieldRef<"User", 'String'>
+    readonly avatarUrl: FieldRef<"User", 'String'>
     readonly role: FieldRef<"User", 'UserRole'>
     readonly isActive: FieldRef<"User", 'Boolean'>
     readonly fcmToken: FieldRef<"User", 'String'>
@@ -18735,6 +18748,7 @@ export namespace Prisma {
     supabaseUserId: string | null
     email: string | null
     name: string | null
+    avatarUrl: string | null
     accessToken: string | null
     fcmToken: string | null
     isActive: boolean | null
@@ -18749,6 +18763,7 @@ export namespace Prisma {
     supabaseUserId: string | null
     email: string | null
     name: string | null
+    avatarUrl: string | null
     accessToken: string | null
     fcmToken: string | null
     isActive: boolean | null
@@ -18763,6 +18778,7 @@ export namespace Prisma {
     supabaseUserId: number
     email: number
     name: number
+    avatarUrl: number
     accessToken: number
     fcmToken: number
     pushSubscription: number
@@ -18780,6 +18796,7 @@ export namespace Prisma {
     supabaseUserId?: true
     email?: true
     name?: true
+    avatarUrl?: true
     accessToken?: true
     fcmToken?: true
     isActive?: true
@@ -18794,6 +18811,7 @@ export namespace Prisma {
     supabaseUserId?: true
     email?: true
     name?: true
+    avatarUrl?: true
     accessToken?: true
     fcmToken?: true
     isActive?: true
@@ -18808,6 +18826,7 @@ export namespace Prisma {
     supabaseUserId?: true
     email?: true
     name?: true
+    avatarUrl?: true
     accessToken?: true
     fcmToken?: true
     pushSubscription?: true
@@ -18896,6 +18915,7 @@ export namespace Prisma {
     supabaseUserId: string | null
     email: string
     name: string | null
+    avatarUrl: string | null
     accessToken: string | null
     fcmToken: string | null
     pushSubscription: JsonValue | null
@@ -18928,6 +18948,7 @@ export namespace Prisma {
     supabaseUserId?: boolean
     email?: boolean
     name?: boolean
+    avatarUrl?: boolean
     accessToken?: boolean
     fcmToken?: boolean
     pushSubscription?: boolean
@@ -18948,6 +18969,7 @@ export namespace Prisma {
     supabaseUserId?: boolean
     email?: boolean
     name?: boolean
+    avatarUrl?: boolean
     accessToken?: boolean
     fcmToken?: boolean
     pushSubscription?: boolean
@@ -18965,6 +18987,7 @@ export namespace Prisma {
     supabaseUserId?: boolean
     email?: boolean
     name?: boolean
+    avatarUrl?: boolean
     accessToken?: boolean
     fcmToken?: boolean
     pushSubscription?: boolean
@@ -18982,6 +19005,7 @@ export namespace Prisma {
     supabaseUserId?: boolean
     email?: boolean
     name?: boolean
+    avatarUrl?: boolean
     accessToken?: boolean
     fcmToken?: boolean
     pushSubscription?: boolean
@@ -18990,7 +19014,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type PortalCustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "contactId" | "supabaseUserId" | "email" | "name" | "accessToken" | "fcmToken" | "pushSubscription" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["portalCustomer"]>
+  export type PortalCustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tenantId" | "contactId" | "supabaseUserId" | "email" | "name" | "avatarUrl" | "accessToken" | "fcmToken" | "pushSubscription" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["portalCustomer"]>
   export type PortalCustomerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     tenant?: boolean | TenantDefaultArgs<ExtArgs>
     contact?: boolean | PortalCustomer$contactArgs<ExtArgs>
@@ -19022,6 +19046,7 @@ export namespace Prisma {
       supabaseUserId: string | null
       email: string
       name: string | null
+      avatarUrl: string | null
       accessToken: string | null
       fcmToken: string | null
       pushSubscription: Prisma.JsonValue | null
@@ -19461,6 +19486,7 @@ export namespace Prisma {
     readonly supabaseUserId: FieldRef<"PortalCustomer", 'String'>
     readonly email: FieldRef<"PortalCustomer", 'String'>
     readonly name: FieldRef<"PortalCustomer", 'String'>
+    readonly avatarUrl: FieldRef<"PortalCustomer", 'String'>
     readonly accessToken: FieldRef<"PortalCustomer", 'String'>
     readonly fcmToken: FieldRef<"PortalCustomer", 'String'>
     readonly pushSubscription: FieldRef<"PortalCustomer", 'Json'>
@@ -24334,6 +24360,7 @@ export namespace Prisma {
     username: string | null
     firstName: string | null
     lastName: string | null
+    avatarUrl: string | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -24346,6 +24373,7 @@ export namespace Prisma {
     username: string | null
     firstName: string | null
     lastName: string | null
+    avatarUrl: string | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -24358,6 +24386,7 @@ export namespace Prisma {
     username: number
     firstName: number
     lastName: number
+    avatarUrl: number
     isActive: number
     createdAt: number
     updatedAt: number
@@ -24372,6 +24401,7 @@ export namespace Prisma {
     username?: true
     firstName?: true
     lastName?: true
+    avatarUrl?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -24384,6 +24414,7 @@ export namespace Prisma {
     username?: true
     firstName?: true
     lastName?: true
+    avatarUrl?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -24396,6 +24427,7 @@ export namespace Prisma {
     username?: true
     firstName?: true
     lastName?: true
+    avatarUrl?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -24481,6 +24513,7 @@ export namespace Prisma {
     username: string | null
     firstName: string | null
     lastName: string | null
+    avatarUrl: string | null
     isActive: boolean
     createdAt: Date
     updatedAt: Date
@@ -24510,6 +24543,7 @@ export namespace Prisma {
     username?: boolean
     firstName?: boolean
     lastName?: boolean
+    avatarUrl?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -24523,6 +24557,7 @@ export namespace Prisma {
     username?: boolean
     firstName?: boolean
     lastName?: boolean
+    avatarUrl?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -24536,6 +24571,7 @@ export namespace Prisma {
     username?: boolean
     firstName?: boolean
     lastName?: boolean
+    avatarUrl?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -24549,12 +24585,13 @@ export namespace Prisma {
     username?: boolean
     firstName?: boolean
     lastName?: boolean
+    avatarUrl?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type TelegramUserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "telegramId" | "userId" | "username" | "firstName" | "lastName" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["telegramUser"]>
+  export type TelegramUserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "telegramId" | "userId" | "username" | "firstName" | "lastName" | "avatarUrl" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["telegramUser"]>
   export type TelegramUserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -24577,6 +24614,7 @@ export namespace Prisma {
       username: string | null
       firstName: string | null
       lastName: string | null
+      avatarUrl: string | null
       isActive: boolean
       createdAt: Date
       updatedAt: Date
@@ -25010,6 +25048,7 @@ export namespace Prisma {
     readonly username: FieldRef<"TelegramUser", 'String'>
     readonly firstName: FieldRef<"TelegramUser", 'String'>
     readonly lastName: FieldRef<"TelegramUser", 'String'>
+    readonly avatarUrl: FieldRef<"TelegramUser", 'String'>
     readonly isActive: FieldRef<"TelegramUser", 'Boolean'>
     readonly createdAt: FieldRef<"TelegramUser", 'DateTime'>
     readonly updatedAt: FieldRef<"TelegramUser", 'DateTime'>
@@ -30063,6 +30102,7 @@ export namespace Prisma {
     firstName: 'firstName',
     lastName: 'lastName',
     name: 'name',
+    avatarUrl: 'avatarUrl',
     role: 'role',
     isActive: 'isActive',
     fcmToken: 'fcmToken',
@@ -30252,6 +30292,7 @@ export namespace Prisma {
     supabaseUserId: 'supabaseUserId',
     email: 'email',
     name: 'name',
+    avatarUrl: 'avatarUrl',
     accessToken: 'accessToken',
     fcmToken: 'fcmToken',
     pushSubscription: 'pushSubscription',
@@ -30321,6 +30362,7 @@ export namespace Prisma {
     username: 'username',
     firstName: 'firstName',
     lastName: 'lastName',
+    avatarUrl: 'avatarUrl',
     isActive: 'isActive',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -30866,6 +30908,7 @@ export namespace Prisma {
     firstName?: StringNullableFilter<"User"> | string | null
     lastName?: StringNullableFilter<"User"> | string | null
     name?: StringNullableFilter<"User"> | string | null
+    avatarUrl?: StringNullableFilter<"User"> | string | null
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
     isActive?: BoolFilter<"User"> | boolean
     fcmToken?: StringNullableFilter<"User"> | string | null
@@ -30890,6 +30933,7 @@ export namespace Prisma {
     firstName?: SortOrderInput | SortOrder
     lastName?: SortOrderInput | SortOrder
     name?: SortOrderInput | SortOrder
+    avatarUrl?: SortOrderInput | SortOrder
     role?: SortOrder
     isActive?: SortOrder
     fcmToken?: SortOrderInput | SortOrder
@@ -30918,6 +30962,7 @@ export namespace Prisma {
     firstName?: StringNullableFilter<"User"> | string | null
     lastName?: StringNullableFilter<"User"> | string | null
     name?: StringNullableFilter<"User"> | string | null
+    avatarUrl?: StringNullableFilter<"User"> | string | null
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
     isActive?: BoolFilter<"User"> | boolean
     fcmToken?: StringNullableFilter<"User"> | string | null
@@ -30942,6 +30987,7 @@ export namespace Prisma {
     firstName?: SortOrderInput | SortOrder
     lastName?: SortOrderInput | SortOrder
     name?: SortOrderInput | SortOrder
+    avatarUrl?: SortOrderInput | SortOrder
     role?: SortOrder
     isActive?: SortOrder
     fcmToken?: SortOrderInput | SortOrder
@@ -30964,6 +31010,7 @@ export namespace Prisma {
     firstName?: StringNullableWithAggregatesFilter<"User"> | string | null
     lastName?: StringNullableWithAggregatesFilter<"User"> | string | null
     name?: StringNullableWithAggregatesFilter<"User"> | string | null
+    avatarUrl?: StringNullableWithAggregatesFilter<"User"> | string | null
     role?: EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
     isActive?: BoolWithAggregatesFilter<"User"> | boolean
     fcmToken?: StringNullableWithAggregatesFilter<"User"> | string | null
@@ -31944,6 +31991,7 @@ export namespace Prisma {
     supabaseUserId?: StringNullableFilter<"PortalCustomer"> | string | null
     email?: StringFilter<"PortalCustomer"> | string
     name?: StringNullableFilter<"PortalCustomer"> | string | null
+    avatarUrl?: StringNullableFilter<"PortalCustomer"> | string | null
     accessToken?: StringNullableFilter<"PortalCustomer"> | string | null
     fcmToken?: StringNullableFilter<"PortalCustomer"> | string | null
     pushSubscription?: JsonNullableFilter<"PortalCustomer">
@@ -31963,6 +32011,7 @@ export namespace Prisma {
     supabaseUserId?: SortOrderInput | SortOrder
     email?: SortOrder
     name?: SortOrderInput | SortOrder
+    avatarUrl?: SortOrderInput | SortOrder
     accessToken?: SortOrderInput | SortOrder
     fcmToken?: SortOrderInput | SortOrder
     pushSubscription?: SortOrderInput | SortOrder
@@ -31988,6 +32037,7 @@ export namespace Prisma {
     supabaseUserId?: StringNullableFilter<"PortalCustomer"> | string | null
     email?: StringFilter<"PortalCustomer"> | string
     name?: StringNullableFilter<"PortalCustomer"> | string | null
+    avatarUrl?: StringNullableFilter<"PortalCustomer"> | string | null
     fcmToken?: StringNullableFilter<"PortalCustomer"> | string | null
     pushSubscription?: JsonNullableFilter<"PortalCustomer">
     isActive?: BoolFilter<"PortalCustomer"> | boolean
@@ -32006,6 +32056,7 @@ export namespace Prisma {
     supabaseUserId?: SortOrderInput | SortOrder
     email?: SortOrder
     name?: SortOrderInput | SortOrder
+    avatarUrl?: SortOrderInput | SortOrder
     accessToken?: SortOrderInput | SortOrder
     fcmToken?: SortOrderInput | SortOrder
     pushSubscription?: SortOrderInput | SortOrder
@@ -32027,6 +32078,7 @@ export namespace Prisma {
     supabaseUserId?: StringNullableWithAggregatesFilter<"PortalCustomer"> | string | null
     email?: StringWithAggregatesFilter<"PortalCustomer"> | string
     name?: StringNullableWithAggregatesFilter<"PortalCustomer"> | string | null
+    avatarUrl?: StringNullableWithAggregatesFilter<"PortalCustomer"> | string | null
     accessToken?: StringNullableWithAggregatesFilter<"PortalCustomer"> | string | null
     fcmToken?: StringNullableWithAggregatesFilter<"PortalCustomer"> | string | null
     pushSubscription?: JsonNullableWithAggregatesFilter<"PortalCustomer">
@@ -32310,6 +32362,7 @@ export namespace Prisma {
     username?: StringNullableFilter<"TelegramUser"> | string | null
     firstName?: StringNullableFilter<"TelegramUser"> | string | null
     lastName?: StringNullableFilter<"TelegramUser"> | string | null
+    avatarUrl?: StringNullableFilter<"TelegramUser"> | string | null
     isActive?: BoolFilter<"TelegramUser"> | boolean
     createdAt?: DateTimeFilter<"TelegramUser"> | Date | string
     updatedAt?: DateTimeFilter<"TelegramUser"> | Date | string
@@ -32323,6 +32376,7 @@ export namespace Prisma {
     username?: SortOrderInput | SortOrder
     firstName?: SortOrderInput | SortOrder
     lastName?: SortOrderInput | SortOrder
+    avatarUrl?: SortOrderInput | SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -32339,6 +32393,7 @@ export namespace Prisma {
     username?: StringNullableFilter<"TelegramUser"> | string | null
     firstName?: StringNullableFilter<"TelegramUser"> | string | null
     lastName?: StringNullableFilter<"TelegramUser"> | string | null
+    avatarUrl?: StringNullableFilter<"TelegramUser"> | string | null
     isActive?: BoolFilter<"TelegramUser"> | boolean
     createdAt?: DateTimeFilter<"TelegramUser"> | Date | string
     updatedAt?: DateTimeFilter<"TelegramUser"> | Date | string
@@ -32352,6 +32407,7 @@ export namespace Prisma {
     username?: SortOrderInput | SortOrder
     firstName?: SortOrderInput | SortOrder
     lastName?: SortOrderInput | SortOrder
+    avatarUrl?: SortOrderInput | SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -32370,6 +32426,7 @@ export namespace Prisma {
     username?: StringNullableWithAggregatesFilter<"TelegramUser"> | string | null
     firstName?: StringNullableWithAggregatesFilter<"TelegramUser"> | string | null
     lastName?: StringNullableWithAggregatesFilter<"TelegramUser"> | string | null
+    avatarUrl?: StringNullableWithAggregatesFilter<"TelegramUser"> | string | null
     isActive?: BoolWithAggregatesFilter<"TelegramUser"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"TelegramUser"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"TelegramUser"> | Date | string
@@ -32881,6 +32938,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     name?: string | null
+    avatarUrl?: string | null
     role?: $Enums.UserRole
     isActive?: boolean
     fcmToken?: string | null
@@ -32905,6 +32963,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     name?: string | null
+    avatarUrl?: string | null
     role?: $Enums.UserRole
     isActive?: boolean
     fcmToken?: string | null
@@ -32927,6 +32986,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isActive?: BoolFieldUpdateOperationsInput | boolean
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32951,6 +33011,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isActive?: BoolFieldUpdateOperationsInput | boolean
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32974,6 +33035,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     name?: string | null
+    avatarUrl?: string | null
     role?: $Enums.UserRole
     isActive?: boolean
     fcmToken?: string | null
@@ -32989,6 +33051,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isActive?: BoolFieldUpdateOperationsInput | boolean
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33005,6 +33068,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isActive?: BoolFieldUpdateOperationsInput | boolean
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34043,6 +34107,7 @@ export namespace Prisma {
     supabaseUserId?: string | null
     email: string
     name?: string | null
+    avatarUrl?: string | null
     accessToken?: string | null
     fcmToken?: string | null
     pushSubscription?: NullableJsonNullValueInput | InputJsonValue
@@ -34062,6 +34127,7 @@ export namespace Prisma {
     supabaseUserId?: string | null
     email: string
     name?: string | null
+    avatarUrl?: string | null
     accessToken?: string | null
     fcmToken?: string | null
     pushSubscription?: NullableJsonNullValueInput | InputJsonValue
@@ -34077,6 +34143,7 @@ export namespace Prisma {
     supabaseUserId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     accessToken?: NullableStringFieldUpdateOperationsInput | string | null
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
     pushSubscription?: NullableJsonNullValueInput | InputJsonValue
@@ -34096,6 +34163,7 @@ export namespace Prisma {
     supabaseUserId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     accessToken?: NullableStringFieldUpdateOperationsInput | string | null
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
     pushSubscription?: NullableJsonNullValueInput | InputJsonValue
@@ -34113,6 +34181,7 @@ export namespace Prisma {
     supabaseUserId?: string | null
     email: string
     name?: string | null
+    avatarUrl?: string | null
     accessToken?: string | null
     fcmToken?: string | null
     pushSubscription?: NullableJsonNullValueInput | InputJsonValue
@@ -34126,6 +34195,7 @@ export namespace Prisma {
     supabaseUserId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     accessToken?: NullableStringFieldUpdateOperationsInput | string | null
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
     pushSubscription?: NullableJsonNullValueInput | InputJsonValue
@@ -34141,6 +34211,7 @@ export namespace Prisma {
     supabaseUserId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     accessToken?: NullableStringFieldUpdateOperationsInput | string | null
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
     pushSubscription?: NullableJsonNullValueInput | InputJsonValue
@@ -34426,6 +34497,7 @@ export namespace Prisma {
     username?: string | null
     firstName?: string | null
     lastName?: string | null
+    avatarUrl?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34439,6 +34511,7 @@ export namespace Prisma {
     username?: string | null
     firstName?: string | null
     lastName?: string | null
+    avatarUrl?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34450,6 +34523,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34463,6 +34537,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34475,6 +34550,7 @@ export namespace Prisma {
     username?: string | null
     firstName?: string | null
     lastName?: string | null
+    avatarUrl?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34486,6 +34562,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34498,6 +34575,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35314,6 +35392,7 @@ export namespace Prisma {
     firstName?: SortOrder
     lastName?: SortOrder
     name?: SortOrder
+    avatarUrl?: SortOrder
     role?: SortOrder
     isActive?: SortOrder
     fcmToken?: SortOrder
@@ -35330,6 +35409,7 @@ export namespace Prisma {
     firstName?: SortOrder
     lastName?: SortOrder
     name?: SortOrder
+    avatarUrl?: SortOrder
     role?: SortOrder
     isActive?: SortOrder
     fcmToken?: SortOrder
@@ -35345,6 +35425,7 @@ export namespace Prisma {
     firstName?: SortOrder
     lastName?: SortOrder
     name?: SortOrder
+    avatarUrl?: SortOrder
     role?: SortOrder
     isActive?: SortOrder
     fcmToken?: SortOrder
@@ -36129,6 +36210,7 @@ export namespace Prisma {
     supabaseUserId?: SortOrder
     email?: SortOrder
     name?: SortOrder
+    avatarUrl?: SortOrder
     accessToken?: SortOrder
     fcmToken?: SortOrder
     pushSubscription?: SortOrder
@@ -36144,6 +36226,7 @@ export namespace Prisma {
     supabaseUserId?: SortOrder
     email?: SortOrder
     name?: SortOrder
+    avatarUrl?: SortOrder
     accessToken?: SortOrder
     fcmToken?: SortOrder
     isActive?: SortOrder
@@ -36158,6 +36241,7 @@ export namespace Prisma {
     supabaseUserId?: SortOrder
     email?: SortOrder
     name?: SortOrder
+    avatarUrl?: SortOrder
     accessToken?: SortOrder
     fcmToken?: SortOrder
     isActive?: SortOrder
@@ -36314,6 +36398,7 @@ export namespace Prisma {
     username?: SortOrder
     firstName?: SortOrder
     lastName?: SortOrder
+    avatarUrl?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -36326,6 +36411,7 @@ export namespace Prisma {
     username?: SortOrder
     firstName?: SortOrder
     lastName?: SortOrder
+    avatarUrl?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -36338,6 +36424,7 @@ export namespace Prisma {
     username?: SortOrder
     firstName?: SortOrder
     lastName?: SortOrder
+    avatarUrl?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -39677,6 +39764,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     name?: string | null
+    avatarUrl?: string | null
     role?: $Enums.UserRole
     isActive?: boolean
     fcmToken?: string | null
@@ -39699,6 +39787,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     name?: string | null
+    avatarUrl?: string | null
     role?: $Enums.UserRole
     isActive?: boolean
     fcmToken?: string | null
@@ -40063,6 +40152,7 @@ export namespace Prisma {
     supabaseUserId?: string | null
     email: string
     name?: string | null
+    avatarUrl?: string | null
     accessToken?: string | null
     fcmToken?: string | null
     pushSubscription?: NullableJsonNullValueInput | InputJsonValue
@@ -40080,6 +40170,7 @@ export namespace Prisma {
     supabaseUserId?: string | null
     email: string
     name?: string | null
+    avatarUrl?: string | null
     accessToken?: string | null
     fcmToken?: string | null
     pushSubscription?: NullableJsonNullValueInput | InputJsonValue
@@ -40309,6 +40400,7 @@ export namespace Prisma {
     firstName?: StringNullableFilter<"User"> | string | null
     lastName?: StringNullableFilter<"User"> | string | null
     name?: StringNullableFilter<"User"> | string | null
+    avatarUrl?: StringNullableFilter<"User"> | string | null
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
     isActive?: BoolFilter<"User"> | boolean
     fcmToken?: StringNullableFilter<"User"> | string | null
@@ -40615,6 +40707,7 @@ export namespace Prisma {
     supabaseUserId?: StringNullableFilter<"PortalCustomer"> | string | null
     email?: StringFilter<"PortalCustomer"> | string
     name?: StringNullableFilter<"PortalCustomer"> | string | null
+    avatarUrl?: StringNullableFilter<"PortalCustomer"> | string | null
     accessToken?: StringNullableFilter<"PortalCustomer"> | string | null
     fcmToken?: StringNullableFilter<"PortalCustomer"> | string | null
     pushSubscription?: JsonNullableFilter<"PortalCustomer">
@@ -41027,6 +41120,7 @@ export namespace Prisma {
     username?: string | null
     firstName?: string | null
     lastName?: string | null
+    avatarUrl?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -41038,6 +41132,7 @@ export namespace Prisma {
     username?: string | null
     firstName?: string | null
     lastName?: string | null
+    avatarUrl?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -41261,6 +41356,7 @@ export namespace Prisma {
     username?: StringNullableFilter<"TelegramUser"> | string | null
     firstName?: StringNullableFilter<"TelegramUser"> | string | null
     lastName?: StringNullableFilter<"TelegramUser"> | string | null
+    avatarUrl?: StringNullableFilter<"TelegramUser"> | string | null
     isActive?: BoolFilter<"TelegramUser"> | boolean
     createdAt?: DateTimeFilter<"TelegramUser"> | Date | string
     updatedAt?: DateTimeFilter<"TelegramUser"> | Date | string
@@ -41570,6 +41666,7 @@ export namespace Prisma {
     supabaseUserId?: string | null
     email: string
     name?: string | null
+    avatarUrl?: string | null
     accessToken?: string | null
     fcmToken?: string | null
     pushSubscription?: NullableJsonNullValueInput | InputJsonValue
@@ -41587,6 +41684,7 @@ export namespace Prisma {
     supabaseUserId?: string | null
     email: string
     name?: string | null
+    avatarUrl?: string | null
     accessToken?: string | null
     fcmToken?: string | null
     pushSubscription?: NullableJsonNullValueInput | InputJsonValue
@@ -43134,6 +43232,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     name?: string | null
+    avatarUrl?: string | null
     role?: $Enums.UserRole
     isActive?: boolean
     fcmToken?: string | null
@@ -43157,6 +43256,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     name?: string | null
+    avatarUrl?: string | null
     role?: $Enums.UserRole
     isActive?: boolean
     fcmToken?: string | null
@@ -43357,6 +43457,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isActive?: BoolFieldUpdateOperationsInput | boolean
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43380,6 +43481,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isActive?: BoolFieldUpdateOperationsInput | boolean
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43501,6 +43603,7 @@ export namespace Prisma {
     supabaseUserId?: string | null
     email: string
     name?: string | null
+    avatarUrl?: string | null
     accessToken?: string | null
     fcmToken?: string | null
     pushSubscription?: NullableJsonNullValueInput | InputJsonValue
@@ -43519,6 +43622,7 @@ export namespace Prisma {
     supabaseUserId?: string | null
     email: string
     name?: string | null
+    avatarUrl?: string | null
     accessToken?: string | null
     fcmToken?: string | null
     pushSubscription?: NullableJsonNullValueInput | InputJsonValue
@@ -43583,6 +43687,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     name?: string | null
+    avatarUrl?: string | null
     role?: $Enums.UserRole
     isActive?: boolean
     fcmToken?: string | null
@@ -43606,6 +43711,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     name?: string | null
+    avatarUrl?: string | null
     role?: $Enums.UserRole
     isActive?: boolean
     fcmToken?: string | null
@@ -43787,6 +43893,7 @@ export namespace Prisma {
     supabaseUserId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     accessToken?: NullableStringFieldUpdateOperationsInput | string | null
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
     pushSubscription?: NullableJsonNullValueInput | InputJsonValue
@@ -43805,6 +43912,7 @@ export namespace Prisma {
     supabaseUserId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     accessToken?: NullableStringFieldUpdateOperationsInput | string | null
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
     pushSubscription?: NullableJsonNullValueInput | InputJsonValue
@@ -43881,6 +43989,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isActive?: BoolFieldUpdateOperationsInput | boolean
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43904,6 +44013,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isActive?: BoolFieldUpdateOperationsInput | boolean
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43984,6 +44094,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     name?: string | null
+    avatarUrl?: string | null
     role?: $Enums.UserRole
     isActive?: boolean
     fcmToken?: string | null
@@ -44007,6 +44118,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     name?: string | null
+    avatarUrl?: string | null
     role?: $Enums.UserRole
     isActive?: boolean
     fcmToken?: string | null
@@ -44031,6 +44143,7 @@ export namespace Prisma {
     supabaseUserId?: string | null
     email: string
     name?: string | null
+    avatarUrl?: string | null
     accessToken?: string | null
     fcmToken?: string | null
     pushSubscription?: NullableJsonNullValueInput | InputJsonValue
@@ -44049,6 +44162,7 @@ export namespace Prisma {
     supabaseUserId?: string | null
     email: string
     name?: string | null
+    avatarUrl?: string | null
     accessToken?: string | null
     fcmToken?: string | null
     pushSubscription?: NullableJsonNullValueInput | InputJsonValue
@@ -44130,6 +44244,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isActive?: BoolFieldUpdateOperationsInput | boolean
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -44153,6 +44268,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isActive?: BoolFieldUpdateOperationsInput | boolean
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -44183,6 +44299,7 @@ export namespace Prisma {
     supabaseUserId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     accessToken?: NullableStringFieldUpdateOperationsInput | string | null
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
     pushSubscription?: NullableJsonNullValueInput | InputJsonValue
@@ -44201,6 +44318,7 @@ export namespace Prisma {
     supabaseUserId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     accessToken?: NullableStringFieldUpdateOperationsInput | string | null
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
     pushSubscription?: NullableJsonNullValueInput | InputJsonValue
@@ -45196,6 +45314,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     name?: string | null
+    avatarUrl?: string | null
     role?: $Enums.UserRole
     isActive?: boolean
     fcmToken?: string | null
@@ -45219,6 +45338,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     name?: string | null
+    avatarUrl?: string | null
     role?: $Enums.UserRole
     isActive?: boolean
     fcmToken?: string | null
@@ -45317,6 +45437,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isActive?: BoolFieldUpdateOperationsInput | boolean
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45340,6 +45461,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isActive?: BoolFieldUpdateOperationsInput | boolean
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45385,6 +45507,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     name?: string | null
+    avatarUrl?: string | null
     role?: $Enums.UserRole
     isActive?: boolean
     fcmToken?: string | null
@@ -45408,6 +45531,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     name?: string | null
+    avatarUrl?: string | null
     role?: $Enums.UserRole
     isActive?: boolean
     fcmToken?: string | null
@@ -45527,6 +45651,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isActive?: BoolFieldUpdateOperationsInput | boolean
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45550,6 +45675,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isActive?: BoolFieldUpdateOperationsInput | boolean
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45684,6 +45810,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     name?: string | null
+    avatarUrl?: string | null
     role?: $Enums.UserRole
     isActive?: boolean
     fcmToken?: string | null
@@ -45707,6 +45834,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     name?: string | null
+    avatarUrl?: string | null
     role?: $Enums.UserRole
     isActive?: boolean
     fcmToken?: string | null
@@ -45744,6 +45872,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isActive?: BoolFieldUpdateOperationsInput | boolean
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45767,6 +45896,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isActive?: BoolFieldUpdateOperationsInput | boolean
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45788,6 +45918,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     name?: string | null
+    avatarUrl?: string | null
     role?: $Enums.UserRole
     isActive?: boolean
     fcmToken?: string | null
@@ -45811,6 +45942,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     name?: string | null
+    avatarUrl?: string | null
     role?: $Enums.UserRole
     isActive?: boolean
     fcmToken?: string | null
@@ -45848,6 +45980,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isActive?: BoolFieldUpdateOperationsInput | boolean
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45871,6 +46004,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isActive?: BoolFieldUpdateOperationsInput | boolean
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -46416,6 +46550,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     name?: string | null
+    avatarUrl?: string | null
     role?: $Enums.UserRole
     isActive?: boolean
     fcmToken?: string | null
@@ -46542,6 +46677,7 @@ export namespace Prisma {
     supabaseUserId?: string | null
     email: string
     name?: string | null
+    avatarUrl?: string | null
     accessToken?: string | null
     fcmToken?: string | null
     pushSubscription?: NullableJsonNullValueInput | InputJsonValue
@@ -46622,6 +46758,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isActive?: BoolFieldUpdateOperationsInput | boolean
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -46644,6 +46781,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isActive?: BoolFieldUpdateOperationsInput | boolean
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -46666,6 +46804,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     isActive?: BoolFieldUpdateOperationsInput | boolean
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47045,6 +47184,7 @@ export namespace Prisma {
     supabaseUserId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     accessToken?: NullableStringFieldUpdateOperationsInput | string | null
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
     pushSubscription?: NullableJsonNullValueInput | InputJsonValue
@@ -47062,6 +47202,7 @@ export namespace Prisma {
     supabaseUserId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     accessToken?: NullableStringFieldUpdateOperationsInput | string | null
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
     pushSubscription?: NullableJsonNullValueInput | InputJsonValue
@@ -47078,6 +47219,7 @@ export namespace Prisma {
     supabaseUserId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     accessToken?: NullableStringFieldUpdateOperationsInput | string | null
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
     pushSubscription?: NullableJsonNullValueInput | InputJsonValue
@@ -47351,6 +47493,7 @@ export namespace Prisma {
     username?: string | null
     firstName?: string | null
     lastName?: string | null
+    avatarUrl?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -47560,6 +47703,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47571,6 +47715,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47582,6 +47727,7 @@ export namespace Prisma {
     username?: NullableStringFieldUpdateOperationsInput | string | null
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -47693,6 +47839,7 @@ export namespace Prisma {
     supabaseUserId?: string | null
     email: string
     name?: string | null
+    avatarUrl?: string | null
     accessToken?: string | null
     fcmToken?: string | null
     pushSubscription?: NullableJsonNullValueInput | InputJsonValue
@@ -47948,6 +48095,7 @@ export namespace Prisma {
     supabaseUserId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     accessToken?: NullableStringFieldUpdateOperationsInput | string | null
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
     pushSubscription?: NullableJsonNullValueInput | InputJsonValue
@@ -47965,6 +48113,7 @@ export namespace Prisma {
     supabaseUserId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     accessToken?: NullableStringFieldUpdateOperationsInput | string | null
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
     pushSubscription?: NullableJsonNullValueInput | InputJsonValue
@@ -47981,6 +48130,7 @@ export namespace Prisma {
     supabaseUserId?: NullableStringFieldUpdateOperationsInput | string | null
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     accessToken?: NullableStringFieldUpdateOperationsInput | string | null
     fcmToken?: NullableStringFieldUpdateOperationsInput | string | null
     pushSubscription?: NullableJsonNullValueInput | InputJsonValue

@@ -4,7 +4,7 @@ import { UserRole, TenantType } from 'prisma/generated/client';
 
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   /**
    * Create a new user and tenant from Supabase signup
@@ -16,6 +16,7 @@ export class AuthService {
     lastName?: string,
     workspaceName?: string,
     workspaceType?: string,
+    userMetadata?: any, // NEW: Google OAuth metadata
   ) {
     // Check if user already exists
     const existingUser = await this.prisma.user.findUnique({
@@ -27,16 +28,30 @@ export class AuthService {
       return existingUser;
     }
 
+    // Extract Google OAuth data if available
+    const googleName = userMetadata?.full_name || userMetadata?.name;
+    const googleAvatar = userMetadata?.avatar_url || userMetadata?.picture;
+
+    // Parse name: use provided values, fallback to Google, fallback to empty
+    let finalFirstName = firstName;
+    let finalLastName = lastName;
+
+    if (!finalFirstName && googleName) {
+      const nameParts = googleName.split(' ');
+      finalFirstName = nameParts[0];
+      finalLastName = nameParts.slice(1).join(' ');
+    }
+
     // Map workspace type to TenantType enum
     const tenantType = this.mapToTenantType(workspaceType);
 
     // Generate slug from workspace name
-    const slug = this.generateSlug(workspaceName || `${firstName}'s Workspace`);
+    const slug = this.generateSlug(workspaceName || `${finalFirstName}'s Workspace`);
 
     // Create tenant first
     const tenant = await this.prisma.tenant.create({
       data: {
-        name: workspaceName || `${firstName}'s Workspace`,
+        name: workspaceName || `${finalFirstName}'s Workspace`,
         slug,
         type: tenantType,
         domain: email.split('@')[1], // Use email domain as tenant domain
@@ -48,8 +63,10 @@ export class AuthService {
       data: {
         supabaseUserId,
         email,
-        firstName: firstName || '',
-        lastName: lastName || '',
+        firstName: finalFirstName || '',
+        lastName: finalLastName || '',
+        name: googleName, // Store full name
+        avatarUrl: googleAvatar, // Save Google avatar
         role: UserRole.ADMIN, // First user is admin
         tenantId: tenant.id,
       },

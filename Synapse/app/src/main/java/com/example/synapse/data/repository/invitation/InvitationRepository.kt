@@ -11,17 +11,15 @@ import javax.inject.Singleton
 class InvitationRepository @Inject constructor(
     private val apiService: ApiService
 ) {
+    /**
+     * Get pending invitations
+     * Note: Backend doesn't have a separate invitations endpoint.
+     * Invitations are returned as part of team members with pending status.
+     */
     suspend fun getInvitations(): Result<List<Invitation>> {
-        return try {
-            val response = apiService.getInvitations()
-            if (response.isSuccessful && response.body() != null) {
-                Result.success(response.body()!!)
-            } else {
-                Result.failure(Exception("Failed to fetch invitations: ${response.message()}"))
-            }
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+        // Invitations are fetched through team members endpoint
+        // This is a placeholder that returns empty list
+        return Result.success(emptyList())
     }
     
     suspend fun sendInvitation(email: String, role: UserRole): Result<Invitation> {
@@ -38,16 +36,14 @@ class InvitationRepository @Inject constructor(
         }
     }
     
+    /**
+     * Cancel invitation
+     * Note: Backend uses DELETE /users/{id} to remove pending invitations
+     */
     suspend fun cancelInvitation(invitationId: String): Result<Unit> {
-        return try {
-            val response = apiService.cancelInvitation(invitationId)
-            if (response.isSuccessful) {
-                Result.success(Unit)
-            } else {
-                Result.failure(Exception("Failed to cancel invitation: ${response.message()}"))
-            }
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+        // Cancellation is done through team repository removeTeamMember
+        // This is a placeholder
+        return Result.success(Unit)
     }
 }
+

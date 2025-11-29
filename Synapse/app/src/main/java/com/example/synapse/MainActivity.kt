@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavHostController
@@ -41,6 +42,8 @@ import com.example.synapse.presentation.portal.PortalTicketsScreen
 import com.example.synapse.presentation.portal.PortalAcceptScreen
 import com.example.synapse.presentation.chatbot.ChatScreen
 import com.example.synapse.presentation.settings.SettingsScreen
+import com.example.synapse.presentation.profile.UserProfileScreen
+import com.example.synapse.presentation.telegram.TelegramIntegrationScreen
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -95,9 +98,10 @@ fun SynapseApp(
     pendingPortalToken: String? = null
 ) {
     val navController = rememberNavController()
-
-    // VoIP initialization will be handled separately when we have proper user session
-    // For now, skip VoIP until user is logged in
+    
+    // ✅ Create a SINGLE shared CallViewModel instance for the entire app
+    // This instance will be scoped to the Activity/SynapseApp and shared
+    val callViewModel: com.example.synapse.presentation.voip.CallViewModel = hiltViewModel()
 
     // Handle pending portal token navigation
     LaunchedEffect(pendingPortalToken) {
@@ -113,18 +117,23 @@ fun SynapseApp(
     Scaffold(modifier = Modifier.fillMaxSize()) { paddingValues ->
         NavGraph(
             navController = navController,
-            modifier = Modifier.padding(paddingValues)
+            modifier = Modifier.padding(paddingValues),
+            callViewModel = callViewModel
         )
     }
     
     // ========== VoIP Call Handler ==========
-    // This will show incoming call dialogs and active call screens
-    VoIPCallHandler()
+    // Pass the shared ViewModel instance so it observes the SAME state
+    VoIPCallHandler(viewModel = callViewModel)
 }
 
 
 @Composable
-fun NavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
+fun NavGraph(
+    navController: NavHostController, 
+    modifier: Modifier = Modifier,
+    callViewModel: com.example.synapse.presentation.voip.CallViewModel
+) {
     NavHost(
         navController = navController,
         startDestination = "landing",
@@ -225,34 +234,37 @@ fun NavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
                 onNavigateBack = { navController.popBackStack() }
             )
         }
-        
-        // Deals screen
+
+        // Deals screens
         composable("deals") {
             DealsScreen(
                 navController = navController,
                 onBack = { navController.popBackStack() }
             )
         }
-        
-        // Pipelines and Leads screens
+
+        // Pipelines screens
         composable("pipelines") {
             PipelinesScreen(
+                viewModel = hiltViewModel(),
                 navController = navController,
                 isDarkMode = false,
                 onBack = { navController.popBackStack() }
             )
         }
-        
+
         composable("pipelines/{pipelineId}") { backStackEntry ->
             val pipelineId = backStackEntry.arguments?.getString("pipelineId") ?: return@composable
             PipelineDetailScreen(
                 pipelineId = pipelineId,
+                viewModel = hiltViewModel(),
                 navController = navController,
                 isDarkMode = false,
                 onBack = { navController.popBackStack() }
             )
         }
-        
+
+        // Leads screens
         composable("leads") {
             LeadsScreen(
                 navController = navController,
@@ -260,7 +272,7 @@ fun NavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
                 onBack = { navController.popBackStack() }
             )
         }
-        
+
         composable("leads/{leadId}") { backStackEntry ->
             val leadId = backStackEntry.arguments?.getString("leadId") ?: return@composable
             LeadDetailScreen(
@@ -271,26 +283,35 @@ fun NavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
             )
         }
         
-        composable("analytics") {
-            OwnerDashboard(
-                isDarkMode = false,
+        // Settings
+        composable("settings") {
+            SettingsScreen(
                 navController = navController,
                 onBack = { navController.popBackStack() }
             )
         }
         
-        // Settings screen
-        composable("settings") {
-            com.example.synapse.presentation.settings.SettingsScreen(
-                navController = navController,
-                onBack = { navController.popBackStack() }
-            )
-        }
-
         // ========== AI Chatbot ==========
         composable("chatbot") {
             ChatScreen(
                 onNavigateBack = { navController.popBackStack() }
+            )
+        }
+        
+        // ========== VoIP Screens ==========
+        composable("online_users") {
+            com.example.synapse.presentation.voip.OnlineUsersScreen(
+                navController = navController,
+                isPortalUser = false,
+                callViewModel = callViewModel
+            )
+        }
+        
+        composable("available_agents") {
+            com.example.synapse.presentation.voip.OnlineUsersScreen(
+                navController = navController,
+                isPortalUser = true,
+                callViewModel = callViewModel
             )
         }
 
@@ -317,7 +338,18 @@ fun NavGraph(navController: NavHostController, modifier: Modifier = Modifier) {
                 onBack = { navController.popBackStack() }
             )
         }
+        // Profile screen
+        composable("profile") {
+            UserProfileScreen(
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        // Telegram integration screen
+        composable("telegram") {
+            TelegramIntegrationScreen(
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
     }
 }
-
-

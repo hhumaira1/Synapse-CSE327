@@ -63,11 +63,16 @@ class AuthRepository @Inject constructor(
                 try {
                     val backendUser = apiService.getCurrentUser()
                     if (backendUser.isSuccessful && backendUser.body() != null) {
-                        // User exists in backend, save full user data
-                        val user = backendUser.body()!!
-                        preferencesManager.saveTenantId(user.tenantId)
-                        preferencesManager.saveUserRole(user.role.name)
-                        Log.d("AuthRepository", "User loaded from backend: ${user.id}")
+                        // User exists in backend, save full user data from nested dbUser
+                        val response = backendUser.body()!!
+                        val dbUser = response.dbUser
+                        
+                        preferencesManager.saveTenantId(dbUser.tenantId)
+                        // Save role safely - might be null for portal customers  
+                        dbUser.role?.let { role ->
+                            preferencesManager.saveUserRole(role.name)
+                        }
+                        Log.d("AuthRepository", "User loaded from backend: ${dbUser.id}")
                     }
                 } catch (e: Exception) {
                     Log.w("AuthRepository", "User not in backend database yet - may need onboarding", e)
@@ -163,10 +168,16 @@ class AuthRepository @Inject constructor(
                 try {
                     val backendUser = apiService.getCurrentUser()
                     if (backendUser.isSuccessful && backendUser.body() != null) {
-                        // User exists in backend
-                        val user = backendUser.body()!!
-                        preferencesManager.saveTenantId(user.tenantId)
-                        preferencesManager.saveUserRole(user.role.name)
+                        // User exists in backend - extract from nested dbUser object
+                        val response = backendUser.body()!!
+                        val dbUser = response.dbUser
+                        
+                        Log.d("AuthRepository", "📦 Backend user data: tenantId=${dbUser.tenantId}, role=${dbUser.role}")
+                        preferencesManager.saveTenantId(dbUser.tenantId)
+                        // Save role safely - might be null for portal customers
+                        dbUser.role?.let { role ->
+                            preferencesManager.saveUserRole(role.name)
+                        }
                         Log.d("AuthRepository", "Existing user signed in with Google")
                     } else {
                         // User doesn't exist in backend - will need onboarding

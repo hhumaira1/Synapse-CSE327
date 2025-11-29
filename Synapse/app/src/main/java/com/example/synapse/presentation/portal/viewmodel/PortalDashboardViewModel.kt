@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.synapse.data.api.response.PortalAccessResponse
 import com.example.synapse.data.repository.portal.PortalRepository
+import com.example.synapse.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,7 +19,8 @@ data class PortalDashboardState(
 
 @HiltViewModel
 class PortalDashboardViewModel @Inject constructor(
-    private val portalRepository: PortalRepository
+    private val portalRepository: PortalRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(PortalDashboardState())
@@ -64,6 +66,13 @@ class PortalDashboardViewModel @Inject constructor(
                 diffInDays.toInt()
             } ?: 0
         )
+    }
+    
+    /**
+     * Sign out the current user
+     */
+    suspend fun signOut() {
+        userRepository.signOut()
     }
 }
 

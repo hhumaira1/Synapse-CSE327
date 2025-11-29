@@ -75,12 +75,16 @@ class SocketIOManager @Inject constructor(
                     Log.d(tag, "✅ Connected to VoIP WebSocket")
                     Log.d(tag, "   Socket ID: ${id()}")
                     _isConnected.value = true
+                    
+                    // Start heartbeat
+                    startHeartbeat()
                 }
                 
                 on(Socket.EVENT_DISCONNECT) { args ->
                     val reason = if (args.isNotEmpty()) args[0] as? String else "unknown"
                     Log.d(tag, "❌ Disconnected from VoIP WebSocket: $reason")
                     _isConnected.value = false
+                    stopHeartbeat()
                 }
                 
                 on(Socket.EVENT_CONNECT_ERROR) { args ->
@@ -93,18 +97,28 @@ class SocketIOManager @Inject constructor(
                 on("incomingCall") { args ->
                     try {
                         val json = args[0] as JSONObject
-                        Log.d(tag, "📞 Incoming call: ${json.getString("callerName")}")
+                        Log.d(tag, "════════════════════════════════════════")
+                        Log.d(tag, "📞 SOCKET EVENT: incomingCall")
+                        Log.d(tag, "📦 Raw JSON: $json")
+                        Log.d(tag, "   - from: ${json.getString("from")}")
+                        Log.d(tag, "   - callerName: ${json.getString("callerName")}")
+                        Log.d(tag, "   - roomName: ${json.getString("roomName")}")
+                        Log.d(tag, "   - callLogId: ${json.getString("callLogId")}")
                         
                         CoroutineScope(Dispatchers.IO).launch {
-                            _callEvents.emit(CallEvent.IncomingCall(
+                            val event = CallEvent.IncomingCall(
                                 from = json.getString("from"),
                                 callerName = json.getString("callerName"),
                                 roomName = json.getString("roomName"),
                                 callLogId = json.getString("callLogId")
-                            ))
+                            )
+                            Log.d(tag, "🚀 Emitting to Flow: $event")
+                            _callEvents.emit(event)
+                            Log.d(tag, "✅ Event emitted successfully")
                         }
+                        Log.d(tag, "════════════════════════════════════════")
                     } catch (e: Exception) {
-                        Log.e(tag, "Error parsing incomingCall: ${e.message}")
+                        Log.e(tag, "❌ Error parsing incomingCall: ${e.message}", e)
                     }
                 }
                 
@@ -141,16 +155,24 @@ class SocketIOManager @Inject constructor(
                 on("callEnded") { args ->
                     try {
                         val json = args[0] as JSONObject
-                        Log.d(tag, "📴 Call ended: ${json.getString("roomName")}")
+                        Log.d(tag, "════════════════════════════════════════")
+                        Log.d(tag, "📴 SOCKET EVENT: callEnded")
+                        Log.d(tag, "📦 Raw JSON: $json")
+                        Log.d(tag, "   - roomName: ${json.getString("roomName")}")
+                        Log.d(tag, "   - endedBy: ${json.getString("endedBy")}")
                         
                         CoroutineScope(Dispatchers.IO).launch {
-                            _callEvents.emit(CallEvent.CallEnded(
+                            val event = CallEvent.CallEnded(
                                 roomName = json.getString("roomName"),
                                 endedBy = json.getString("endedBy")
-                            ))
+                            )
+                            Log.d(tag, "🚀 Emitting to Flow: $event")
+                            _callEvents.emit(event)
+                            Log.d(tag, "✅ Event emitted successfully")
                         }
+                        Log.d(tag, "════════════════════════════════════════")
                     } catch (e: Exception) {
-                        Log.e(tag, "Error parsing callEnded: ${e.message}")
+                        Log.e(tag, "❌ Error parsing callEnded: ${e.message}", e)
                     }
                 }
                 
@@ -193,5 +215,29 @@ class SocketIOManager @Inject constructor(
      */
     fun isSocketConnected(): Boolean {
         return socket?.connected() == true
+    }
+    
+    // ========== Heartbeat ==========
+    
+    private var heartbeatJob: kotlinx.coroutines.Job? = null
+    
+    private fun startHeartbeat() {
+        stopHeartbeat()
+        heartbeatJob = CoroutineScope(Dispatchers.IO).launch {
+            while (true) {
+                kotlinx.coroutines.delay(30000) // 30 seconds
+                if (socket?.connected() == true) {
+                    Log.d(tag, "💓 Sending heartbeat")
+                    socket?.emit("heartbeat")
+                } else {
+                    break
+                }
+            }
+        }
+    }
+    
+    private fun stopHeartbeat() {
+        heartbeatJob?.cancel()
+        heartbeatJob = null
     }
 }

@@ -36,7 +36,9 @@ class PreferencesManager @Inject constructor(
     }
     
     val tenantId: Flow<String?> = dataStore.data.map { prefs ->
-        prefs[TENANT_ID_KEY]
+        val value = prefs[TENANT_ID_KEY]
+        android.util.Log.d("PreferencesManager", "📖 tenantId Flow emitting: $value")
+        value
     }
     
     val userId: Flow<String?> = dataStore.data.map { prefs ->
@@ -54,9 +56,14 @@ class PreferencesManager @Inject constructor(
     }
     
     suspend fun saveTenantId(tenantId: String) {
+        android.util.Log.d("PreferencesManager", "💾 SAVING tenantId: $tenantId")
         dataStore.edit { prefs ->
             prefs[TENANT_ID_KEY] = tenantId
+            android.util.Log.d("PreferencesManager", "✅ tenantId SAVED to DataStore")
         }
+        // Verify it was saved
+        val saved = dataStore.data.first()[TENANT_ID_KEY]
+        android.util.Log.d("PreferencesManager", "🔍 Verification read: tenantId=$saved")
     }
     
     suspend fun saveUserId(userId: String) {

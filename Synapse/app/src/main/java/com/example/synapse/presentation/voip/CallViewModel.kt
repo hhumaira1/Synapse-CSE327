@@ -26,7 +26,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CallViewModel @Inject constructor(
     private val repository: VoipRepository,
-    private val liveKitManager: LiveKitManager
+    private val liveKitManager: LiveKitManager,
+    private val preferencesManager: com.example.synapse.data.preferences.PreferencesManager
 ) : ViewModel() {
     
     private val tag = "CallViewModel"
@@ -41,8 +42,50 @@ class CallViewModel @Inject constructor(
     private var callStartTime: Long = 0
     
     init {
+        Log.d(tag, "🚀 CallViewModel INITIALIZED")
+        
+        // Monitor user session and connect socket
+        viewModelScope.launch {
+            Log.d(tag, "📡 Starting user session monitor...")
+            
+            kotlinx.coroutines.flow.combine(
+                preferencesManager.userId,
+                preferencesManager.tenantId
+            ) { userId, tenantId ->
+                Log.d(tag, "🔄 Session Flow emitted: userId=$userId, tenantId=$tenantId")
+                Pair(userId, tenantId)
+            }.collect { (userId, tenantId) ->
+                Log.d(tag, "════════════════════════════════════════")
+                Log.d(tag, "📊 USER SESSION CHECK:")
+                Log.d(tag, "   - userId: ${userId ?: "NULL"}")
+                Log.d(tag, "   - tenantId: ${tenantId ?: "NULL"}")
+                Log.d(tag, "   - Both valid? ${!userId.isNullOrEmpty() && !tenantId.isNullOrEmpty()}")
+                Log.d(tag, "   - Socket connected? ${repository.isSocketConnected()}")
+                
+                if (!userId.isNullOrEmpty() && !tenantId.isNullOrEmpty()) {
+                    Log.d(tag, "✅ Valid session - Attempting socket connection...")
+                    if (!repository.isSocketConnected()) {
+                        Log.d(tag, "🔌 Calling repository.connectSocket($userId, $tenantId)")
+                        try {
+                            repository.connectSocket(userId, tenantId)
+                            Log.d(tag, "✅ connectSocket() call completed")
+                        } catch (e: Exception) {
+                            Log.e(tag, "❌ connectSocket() threw exception: ${e.message}", e)
+                        }
+                    } else {
+                        Log.d(tag, "⏭️ Socket already connected, skipping")
+                    }
+                } else {
+                    Log.w(tag, "⚠️ Invalid session - Disconnecting socket")
+                    repository.disconnectSocket()
+                }
+                Log.d(tag, "════════════════════════════════════════")
+            }
+        }
+
         // Listen to WebSocket call events
         viewModelScope.launch {
+            Log.d(tag, "👂 Starting event listener...")
             repository.observeCallEvents().collect { event ->
                 handleCallEvent(event)
             }
@@ -60,16 +103,26 @@ class CallViewModel @Inject constructor(
                 }
             }
         }
+        
+        Log.d(tag, "✅ CallViewModel init complete - all coroutines launched")
     }
     
     /**
      * Handle WebSocket call events
      */
     private fun handleCallEvent(event: CallEvent) {
-        Log.d(tag, "📞 Handling call event: ${event::class.simpleName}")
+        Log.d(tag, "═══════════════════════════════════════════")
+        Log.d(tag, "📞 CALL EVENT RECEIVED: ${event::class.simpleName}")
+        Log.d(tag, "📊 Current State BEFORE: ${_callState.value::class.simpleName}")
         
         when (event) {
             is CallEvent.IncomingCall -> {
+                Log.d(tag, "📥 IncomingCall Details:")
+                Log.d(tag, "   - Caller: ${event.callerName}")
+                Log.d(tag, "   - From: ${event.from}")
+                Log.d(tag, "   - Room: ${event.roomName}")
+                Log.d(tag, "   - CallLogId: ${event.callLogId}")
+                
                 // Incoming call - show ringing dialog
                 _callState.value = CallState.Ringing(
                     callerName = event.callerName,
@@ -77,20 +130,34 @@ class CallViewModel @Inject constructor(
                     roomName = event.roomName,
                     callerAvatar = null // TODO: Get from API if needed
                 )
-                Log.d(tag, "📞 Incoming call from ${event.callerName}")
+                Log.d(tag, "✅ State UPDATED to Ringing")
+                Log.d(tag, "📊 Current State AFTER: ${_callState.value::class.simpleName}")
             }
             
             is CallEvent.CallAccepted -> {
+                Log.d(tag, "✅ CallAccepted Details:")
+                Log.d(tag, "   - From: ${event.from}")
+                Log.d(tag, "   - Room: ${event.roomName}")
+                
                 // Other party accepted our call
                 val state = _callState.value
+                Log.d(tag, "   - Current state type: ${state::class.simpleName}")
+                
                 if (state is CallState.Active) {
                     callStartTime = System.currentTimeMillis()
                     _callState.value = state.copy(isConnected = true)
                     Log.d(tag, "✅ Call accepted - now connected")
+                    Log.d(tag, "⏱️ Timer started at $callStartTime")
+                } else {
+                    Log.w(tag, "⚠️ Received CallAccepted but state is not Active: ${state::class.simpleName}")
                 }
+                Log.d(tag, "📊 Current State AFTER: ${_callState.value::class.simpleName}")
             }
             
             is CallEvent.CallRejected -> {
+                Log.d(tag, "❌ CallRejected Details:")
+                Log.d(tag, "   - Reason: ${event.reason}")
+                
                 // Other party rejected our call
                 liveKitManager.disconnect()
                 _callState.value = CallState.Error("Call was rejected")
@@ -100,19 +167,29 @@ class CallViewModel @Inject constructor(
                 viewModelScope.launch {
                     delay(2000)
                     _callState.value = CallState.Idle
+                    Log.d(tag, "🔄 State reset to Idle after rejection")
                 }
             }
             
             is CallEvent.CallEnded -> {
+                Log.d(tag, "📴 CallEnded Details:")
+                Log.d(tag, "   - Room: ${event.roomName}")
+                Log.d(tag, "   - Ended by: ${event.endedBy}")
+                
                 // Call ended by either party
                 liveKitManager.disconnect()
                 _callState.value = CallState.Idle
                 currentCallLogId = null
                 currentRoomName = null
-                Log.d(tag, "📴 Call ended by ${event.endedBy}")
+                Log.d(tag, "📴 Call ended - state reset to Idle")
+                Log.d(tag, "📊 Current State AFTER: ${_callState.value::class.simpleName}")
             }
             
             is CallEvent.MissedCall -> {
+                Log.d(tag, "📵 MissedCall Details:")
+                Log.d(tag, "   - Caller: ${event.callerName}")
+                Log.d(tag, "   - Time: ${event.callTime}")
+                
                 // Call timed out (30s)
                 liveKitManager.disconnect()
                 _callState.value = CallState.Error("${event.callerName} didn't answer")
@@ -122,9 +199,12 @@ class CallViewModel @Inject constructor(
                 viewModelScope.launch {
                     delay(3000)
                     _callState.value = CallState.Idle
+                    Log.d(tag, "🔄 State reset to Idle after missed call")
                 }
             }
         }
+        
+        Log.d(tag, "═══════════════════════════════════════════")
     }
     
     /**

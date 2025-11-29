@@ -1,8 +1,11 @@
 package com.example.synapse.presentation.voip
 
+import android.util.Log
 import androidx.compose.runtime.*
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 
 /**
@@ -31,15 +34,30 @@ fun VoIPCallHandler(
     val isMuted by viewModel.isMuted().collectAsState()
     val isSpeakerOn by viewModel.isSpeakerOn().collectAsState()
     
+    // Debug logging - track state changes
+    LaunchedEffect(callState) {
+        Log.d("VoIPCallHandler", "🎨 Call state changed: ${callState::class.simpleName}")
+    }
+    
     when (val state = callState) {
         is CallState.Ringing -> {
             // Show incoming call dialog
-            IncomingCallDialog(
-                callerName = state.callerName,
-                callerAvatar = state.callerAvatar,
-                onAccept = { viewModel.acceptCall() },
-                onReject = { viewModel.rejectCall() }
-            )
+            Log.d("VoIPCallHandler", "📞 Showing incoming call dialog for: ${state.callerName}")
+            Dialog(
+                onDismissRequest = {},  // Prevent dismissal during call
+                properties = DialogProperties(
+                    dismissOnBackPress = false,
+                    dismissOnClickOutside = false,
+                    usePlatformDefaultWidth = false  // Full screen
+                )
+            ) {
+                IncomingCallDialog(
+                    callerName = state.callerName,
+                    callerAvatar = state.callerAvatar,
+                    onAccept = { viewModel.acceptCall() },
+                    onReject = { viewModel.rejectCall() }
+                )
+            }
         }
         
         is CallState.Calling,
@@ -66,30 +84,39 @@ fun VoIPCallHandler(
                 else -> 0
             }
             
-            ActiveCallScreen(
-                participantName = participantName,
-                participantAvatar = participantAvatar,
-                isConnected = isConnected,
-                duration = duration,
-                isMuted = isMuted,
-                isSpeakerOn = isSpeakerOn,
-                onMuteToggle = { viewModel.toggleMute() },
-                onSpeakerToggle = { viewModel.toggleSpeaker() },
-                onEndCall = { viewModel.endCall() }
-            )
+            Log.d("VoIPCallHandler", "📱 Showing active call screen - Participant: $participantName, Connected: $isConnected")
+            Dialog(
+                onDismissRequest = {},  // Prevent dismissal during call
+                properties = DialogProperties(
+                    dismissOnBackPress = false,
+                    dismissOnClickOutside = false,
+                    usePlatformDefaultWidth = false  // Full screen
+                )
+            ) {
+                ActiveCallScreen(
+                    participantName = participantName,
+                    participantAvatar = participantAvatar,
+                    isConnected = isConnected,
+                    duration = duration,
+                    isMuted = isMuted,
+                    isSpeakerOn = isSpeakerOn,
+                    onMuteToggle = { viewModel.toggleMute() },
+                    onSpeakerToggle = { viewModel.toggleSpeaker() },
+                    onEndCall = { viewModel.endCall() }
+                )
+            }
         }
         
         is CallState.Error -> {
-            // Could show a toast or snackbar here
-            // For now, just log it
+            // Log errors
             LaunchedEffect(state.message) {
-                // In production, show a toast/snackbar
-                android.util.Log.e("VoIPCallHandler", "Call error: ${state.message}")
+                Log.e("VoIPCallHandler", "❌ Call error: ${state.message}")
             }
         }
         
         CallState.Idle -> {
             // No UI needed
+            Log.d("VoIPCallHandler", "⏹️ Call state is Idle - no UI displayed")
         }
     }
 }

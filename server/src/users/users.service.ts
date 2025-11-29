@@ -442,4 +442,10 @@ export class UsersService {
 
     return updatedUser;
   }
+  async updateUserProfile(userId: string, data: { firstName?: string; lastName?: string }) {
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: { firstName: data.firstName, lastName: data.lastName },
+    });
+  } 
 }

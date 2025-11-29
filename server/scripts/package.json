@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "backfill:users": "tsx scripts/backfill-user-names.ts"
+  }
+}

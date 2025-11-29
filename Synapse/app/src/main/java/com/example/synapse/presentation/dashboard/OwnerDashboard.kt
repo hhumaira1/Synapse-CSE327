@@ -21,11 +21,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.compose.ui.draw.clip
+import coil.compose.AsyncImage
 import com.example.synapse.ui.theme.*
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,7 +64,9 @@ fun OwnerDashboard(
         topBar = {
             OwnerDashboardTopBar(
                 isDarkMode = isDarkMode,
-                onBackClick = onBack
+                onBackClick = onBack,
+                viewModel = viewModel,
+                navController = navController
             )
         },
         floatingActionButton = {
@@ -134,8 +139,13 @@ fun OwnerDashboard(
 @Composable
 fun OwnerDashboardTopBar(
     isDarkMode: Boolean,
-    onBackClick: (() -> Unit)? = null
+    onBackClick: (() -> Unit)? = null,
+    viewModel: DashboardViewModel,
+    navController: NavHostController
 ) {
+    val scope = rememberCoroutineScope()
+    var showUserMenu by remember { mutableStateOf(false) }
+    
     TopAppBar(
         title = {
             Column {
@@ -177,8 +187,56 @@ fun OwnerDashboardTopBar(
                     )
                 }
             }
-            IconButton(onClick = { /* Profile */ }) {
-                Icon(Icons.Default.AccountCircle, "Profile", tint = Color.White)
+            
+            // User menu with avatar and sign-out
+            Box {
+                val uiState by viewModel.uiState.collectAsState()
+                
+                IconButton(onClick = { showUserMenu = !showUserMenu }) {
+                    // Show avatar if available, otherwise show icon
+                    if (uiState.currentUserAvatar != null) {
+                        AsyncImage(
+                            model = uiState.currentUserAvatar,
+                            contentDescription = "Profile",
+                            modifier = Modifier
+                                .size(32.dp)
+                                .clip(CircleShape)
+                        )
+                    } else {
+                        Icon(Icons.Default.AccountCircle, "Profile", tint = Color.White)
+                    }
+                }
+                
+                DropdownMenu(
+                    expanded = showUserMenu,
+                    onDismissRequest = { showUserMenu = false }
+                ) {
+                    DropdownMenuItem(
+                        text = { Text("Profile") },
+                        onClick = {
+                            showUserMenu = false
+                            navController.navigate("profile")
+                        },
+                        leadingIcon = {
+                            Icon(Icons.Default.Person, contentDescription = null)
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("Sign Out") },
+                        onClick = {
+                            showUserMenu = false
+                            scope.launch {
+                                viewModel.signOut()
+                                navController.navigate("signin") {
+                                    popUpTo(0) { inclusive = true }
+                                }
+                            }
+                        },
+                        leadingIcon = {
+                            Icon(Icons.Default.ExitToApp, contentDescription = null)
+                        }
+                    )
+                }
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
@@ -440,6 +498,7 @@ fun QuickActionsSpeedDials(
     // Define all navigation items
     val actions = listOf(
         NavigationItem("AI Assistant", Icons.Default.Psychology, "chatbot", Purple1),
+        NavigationItem("Call Users", Icons.Default.Phone, "online_users", Purple4),
         NavigationItem("Contacts", Icons.Default.Contacts, "contacts", Purple1),
         NavigationItem("Pipelines", Icons.Default.Leaderboard, "pipelines", Purple2),
         NavigationItem("Leads", Icons.AutoMirrored.Filled.TrendingUp, "leads", Purple5),

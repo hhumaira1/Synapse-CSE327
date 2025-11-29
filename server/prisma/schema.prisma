@@ -151,6 +151,7 @@ model User {
   firstName       String?  @map("first_name")
   lastName        String?  @map("last_name")
   name            String?  // Deprecated - use firstName/lastName
+  avatarUrl       String?  // Google OAuth avatar URL
   role            UserRole @default(MEMBER) // Role in THIS tenant
   isActive        Boolean  @default(true) // Soft delete support
   fcmToken        String?  // Firebase Cloud Messaging token (Android)
@@ -459,6 +460,7 @@ model PortalCustomer {
   supabaseUserId String?  // Nullable for invitation flow, filled on first login
   email          String
   name           String?
+  avatarUrl      String?  // Google OAuth avatar URL
   accessToken    String?  @unique // Token for initial portal access invitation
   fcmToken       String?  // Firebase Cloud Messaging token (Android)
   pushSubscription Json?  // Web Push subscription object
@@ -564,6 +566,7 @@ model TelegramUser {
   username   String?  // Telegram username (@username)
   firstName  String?  // Telegram first name
   lastName   String?  // Telegram last name
+  avatarUrl  String?  // Telegram profile photo URL
   isActive   Boolean  @default(true)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
