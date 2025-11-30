@@ -32,5 +32,6 @@ data class DashboardStats(
     val totalTickets: Int,
     val totalPipelineValue: Double,
     val openTickets: Int,
-    val inProgressTickets: Int
+    val inProgressTickets: Int,
+    val recentContacts: List<String> = emptyList()
 )
