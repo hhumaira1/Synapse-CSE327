@@ -17,34 +17,45 @@ export class TelegramService implements OnModuleInit {
   ) {
     let token = this.configService.get<string>('TELEGRAM_BOT_TOKEN');
 
-    this.logger.log(`Initializing Telegram bot... Token found: ${!!token}`);
+    this.logger.log(`🔧 Initializing Telegram bot... Token found: ${!!token}`);
 
     if (!token) {
-      this.logger.warn('TELEGRAM_BOT_TOKEN not found. Telegram bot disabled.');
+      this.logger.warn('⚠️ TELEGRAM_BOT_TOKEN not found in environment. Telegram bot disabled.');
+      this.logger.warn('   Add TELEGRAM_BOT_TOKEN to .env file to enable Telegram bot');
       return;
     }
 
     // Remove quotes if present (ConfigService might read them as part of the value)
     token = token.replace(/^["']|["']$/g, '');
-    this.logger.log(`Token length: ${token.length} characters`);
+    this.logger.log(`✅ Token loaded (${token.length} characters)`);
 
-    this.logger.log('Creating Telegraf instance...');
-    this.bot = new Telegraf(token, {
-      telegram: {
-        apiRoot: 'https://api.telegram.org',
-      },
-    });
-    this.setupHandlers();
-    this.logger.log('Telegram bot handlers configured');
+    try {
+      this.logger.log('🤖 Creating Telegraf instance...');
+      this.bot = new Telegraf(token, {
+        telegram: {
+          apiRoot: 'https://api.telegram.org',
+        },
+      });
+      this.logger.log('✅ Telegraf instance created successfully');
+      
+      this.setupHandlers();
+      this.logger.log('✅ Telegram bot handlers configured');
+    } catch (error) {
+      this.logger.error('❌ Failed to create Telegraf instance:', error.message);
+      this.logger.error('   Token may be invalid or malformed');
+      this.bot = null;
+    }
   }
 
   onModuleInit() {
-    this.logger.log('onModuleInit called');
+    this.logger.log('🚀 Telegram onModuleInit called');
 
     if (!this.bot) {
-      this.logger.warn('Telegram bot not initialized - skipping launch');
+      this.logger.warn('⚠️ Telegram bot not initialized - skipping launch (check TELEGRAM_BOT_TOKEN in .env)');
       return;
     }
+
+    this.logger.log('✅ Bot instance exists, proceeding with launch...');
 
     // Check if webhook URL is configured
     const webhookDomain = this.configService.get<string>('TELEGRAM_WEBHOOK_DOMAIN');
@@ -214,17 +225,17 @@ export class TelegramService implements OnModuleInit {
         const telegramConversationId = `telegram_${telegramId}`;
 
         // Call ChatbotService (SAME AS WEB!)
+        // Note: Telegram passes 'telegram:userId:tenantId' as a pseudo-JWT for MCP identification
+        const telegramJwt = `telegram:${user.userId}:${user.tenantId}`;
         const response = await this.chatbotService.chat(
           { message, conversationId: telegramConversationId },
           user.userId,
           user.tenantId,
+          telegramJwt, // Special JWT format for Telegram - MCP will recognize and extract userId/tenantId
         );
 
-        // Format response for Telegram
-        const formattedResponse = this.formatResponse(response.response);
-
-        // Send response
-        await ctx.reply(formattedResponse, { parse_mode: 'Markdown' });
+        // Send response (no formatting needed - keep clean professional format)
+        await ctx.reply(response.response);
 
         // Send suggested actions as inline keyboard (if any)
         if (response.suggestedActions && response.suggestedActions.length > 0) {
@@ -277,14 +288,17 @@ export class TelegramService implements OnModuleInit {
           // Use same Telegram conversation ID for consistency
           const telegramConversationId = `telegram_${telegramId}`;
 
+          // Use same Telegram pseudo-JWT for callback queries
+          const telegramJwt = `telegram:${user.userId}:${user.tenantId}`;
+          
           const response = await this.chatbotService.chat(
             { message: prompt, conversationId: telegramConversationId },
             user.userId,
             user.tenantId,
+            telegramJwt, // Use pseudo-JWT for MCP routing
           );
 
-          const formattedResponse = this.formatResponse(response.response);
-          await ctx.reply(formattedResponse, { parse_mode: 'Markdown' });
+          await ctx.reply(response.response);
         }
       }
     });

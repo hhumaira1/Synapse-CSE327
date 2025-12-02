@@ -18,7 +18,16 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "backfill:users": "ts-node scripts/backfill-user-names.ts"
+    "backfill:users": "ts-node scripts/backfill-user-names.ts",
+    "setup:superadmin": "ts-node scripts/setup-super-admin.ts",
+    "verify:superadmin": "ts-node scripts/verify-super-admin.ts",
+    "migrate:zammad": "ts-node -r tsconfig-paths/register src/scripts/migrate-zammad.ts",
+    "migrate:zammad-groups": "ts-node -r tsconfig-paths/register src/scripts/migrate-zammad-groups.ts",
+    "migrate:zammad-users": "ts-node -r tsconfig-paths/register src/scripts/migrate-zammad-users.ts",
+    "migrate:zammad-customers": "ts-node -r tsconfig-paths/register src/scripts/migrate-zammad-customers.ts",
+    "promote:zammad-agents": "ts-node -r tsconfig-paths/register src/scripts/promote-to-agents.ts",
+    "verify:zammad": "ts-node -r tsconfig-paths/register src/scripts/verify-zammad.ts",
+    "migrate:zammad-all": "npm run migrate:zammad && npm run migrate:zammad-groups && npm run migrate:zammad-users && npm run migrate:zammad-customers"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

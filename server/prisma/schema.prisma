@@ -9,7 +9,545 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-// ==================== ENUMS ====================
+model Tenant {
+  id                 String              @id @default(cuid())
+  name               String
+  slug               String              @unique
+  domain             String?
+  type               TenantType          @default(ORGANIZATION)
+  settings           Json?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  isActive           Boolean             @default(true)
+  callEvents         CallEvent[]
+  callLogs           CallLog[]
+  callRecordings     CallRecording[]
+  callTranscriptions CallTranscription[]
+  contacts           Contact[]
+  conversations      Conversation[]
+  deals              Deal[]
+  integrations       Integration[]
+  interactions       Interaction[]
+  leads              Lead[]
+  pipelines          Pipeline[]
+  portalCustomers    PortalCustomer[]
+  tickets            Ticket[]
+  userInvitations    UserInvitation[]
+  users              User[]
+
+  @@index([isActive])
+  @@map("tenants")
+}
+
+model User {
+  id                   String                @id @default(cuid())
+  tenantId             String?
+  supabaseUserId       String                @unique @map("supabase_user_id")
+  email                String                @unique
+  firstName            String?               @map("first_name")
+  lastName             String?               @map("last_name")
+  name                 String?
+  role                 UserRole              @default(MEMBER)
+  isActive             Boolean               @default(true)
+  fcmToken             String?
+  pushSubscription     Json?
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  avatarUrl            String?
+  zammadEmail          String?
+  zammadUserId         String?
+  conversations        Conversation[]
+  interactions         Interaction[]
+  telegramLinkRequests TelegramLinkRequest[]
+  telegramUsers        TelegramUser[]
+  ticketComments       TicketComment[]       @relation("TicketComments")
+  ticketsAssigned      Ticket[]              @relation("TicketAssignedUser")
+  invitations          UserInvitation[]
+  tenant               Tenant?               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, supabaseUserId])
+  @@index([tenantId])
+  @@index([email])
+  @@map("users")
+}
+
+model Contact {
+  id              String           @id @default(cuid())
+  tenantId        String
+  firstName       String
+  lastName        String
+  email           String?
+  phone           String?
+  company         String?
+  jobTitle        String?
+  source          String?
+  notes           String?
+  customFields    Json?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  callLogs        CallLog[]
+  tenant          Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  deals           Deal[]
+  interactions    Interaction[]
+  leads           Lead[]
+  portalCustomers PortalCustomer[]
+  tickets         Ticket[]
+
+  @@index([tenantId])
+  @@index([email])
+  @@map("contacts")
+}
+
+model Lead {
+  id          String     @id @default(cuid())
+  tenantId    String
+  contactId   String?
+  title       String
+  source      String
+  status      LeadStatus @default(NEW)
+  value       Decimal?
+  notes       String?
+  convertedAt DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  deals       Deal[]
+  contact     Contact?   @relation(fields: [contactId], references: [id])
+  tenant      Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([contactId])
+  @@index([status])
+  @@map("leads")
+}
+
+model Pipeline {
+  id          String   @id @default(cuid())
+  tenantId    String
+  name        String
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deals       Deal[]
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  stages      Stage[]
+
+  @@index([tenantId])
+  @@map("pipelines")
+}
+
+model Stage {
+  id         String   @id @default(cuid())
+  pipelineId String
+  name       String
+  order      Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  deals      Deal[]
+  pipeline   Pipeline @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
+
+  @@unique([pipelineId, order])
+  @@index([pipelineId])
+  @@map("stages")
+}
+
+model Deal {
+  id                String        @id @default(cuid())
+  tenantId          String
+  contactId         String
+  leadId            String?
+  pipelineId        String
+  stageId           String
+  title             String
+  description       String?
+  value             Decimal?
+  probability       Decimal?
+  expectedCloseDate DateTime?
+  notes             String?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  callLogs          CallLog[]
+  contact           Contact       @relation(fields: [contactId], references: [id])
+  lead              Lead?         @relation(fields: [leadId], references: [id])
+  pipeline          Pipeline      @relation(fields: [pipelineId], references: [id])
+  stage             Stage         @relation(fields: [stageId], references: [id])
+  tenant            Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  interactions      Interaction[]
+  tickets           Ticket[]
+
+  @@index([tenantId])
+  @@index([contactId])
+  @@index([leadId])
+  @@index([pipelineId])
+  @@index([stageId])
+  @@map("deals")
+}
+
+model Interaction {
+  id        String          @id @default(cuid())
+  tenantId  String
+  contactId String
+  dealId    String?
+  userId    String?
+  type      InteractionType
+  subject   String?
+  content   String
+  dateTime  DateTime        @default(now())
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  contact   Contact         @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  deal      Deal?           @relation(fields: [dealId], references: [id])
+  tenant    Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user      User?           @relation(fields: [userId], references: [id])
+
+  @@index([tenantId])
+  @@index([contactId])
+  @@index([dealId])
+  @@index([userId])
+  @@index([type])
+  @@map("interactions")
+}
+
+model Ticket {
+  id                        String          @id @default(cuid())
+  tenantId                  String
+  contactId                 String
+  portalCustomerId          String?
+  dealId                    String?
+  externalId                String?
+  externalSystem            String?
+  title                     String
+  description               String?
+  status                    TicketStatus    @default(OPEN)
+  priority                  TicketPriority  @default(MEDIUM)
+  source                    TicketSource    @default(INTERNAL)
+  submittedByPortalCustomer Boolean         @default(false)
+  createdAt                 DateTime        @default(now())
+  updatedAt                 DateTime        @updatedAt
+  assignedUserId            String?
+  comments                  TicketComment[]
+  assignedUser              User?           @relation("TicketAssignedUser", fields: [assignedUserId], references: [id])
+  contact                   Contact         @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  deal                      Deal?           @relation(fields: [dealId], references: [id])
+  portalCustomer            PortalCustomer? @relation(fields: [portalCustomerId], references: [id])
+  tenant                    Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, externalId, externalSystem])
+  @@index([tenantId])
+  @@index([contactId])
+  @@index([portalCustomerId])
+  @@index([dealId])
+  @@index([assignedUserId])
+  @@index([status])
+  @@index([priority])
+  @@map("tickets")
+}
+
+model TicketComment {
+  id               String          @id @default(cuid())
+  ticketId         String
+  userId           String?
+  portalCustomerId String?
+  content          String
+  authorName       String?
+  isInternal       Boolean         @default(true)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  portalCustomer   PortalCustomer? @relation(fields: [portalCustomerId], references: [id], onDelete: Restrict)
+  ticket           Ticket          @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  user             User?           @relation("TicketComments", fields: [userId], references: [id], onDelete: Restrict)
+
+  @@index([ticketId])
+  @@index([userId])
+  @@index([portalCustomerId])
+  @@map("ticket_comments")
+}
+
+model Integration {
+  id           String    @id @default(cuid())
+  tenantId     String
+  serviceName  String
+  isActive     Boolean   @default(false)
+  config       Json?
+  lastSyncAt   DateTime?
+  syncStatus   String?
+  errorMessage String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  tenant       Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, serviceName])
+  @@index([tenantId])
+  @@map("integrations")
+}
+
+model CallLog {
+  id               String             @id @default(cuid())
+  tenantId         String
+  roomName         String
+  callerSupabaseId String
+  calleeSupabaseId String
+  direction        CallDirection      @default(OUTBOUND)
+  status           String             @default("INITIATED")
+  duration         Int?
+  startTime        DateTime           @default(now())
+  endTime          DateTime?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  contactId        String?
+  dealId           String?
+  contact          Contact?           @relation(fields: [contactId], references: [id], onDelete: Restrict)
+  deal             Deal?              @relation(fields: [dealId], references: [id])
+  tenant           Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  recording        CallRecording?
+  transcription    CallTranscription?
+
+  @@index([tenantId])
+  @@index([callerSupabaseId])
+  @@index([calleeSupabaseId])
+  @@index([contactId])
+  @@index([dealId])
+  @@index([roomName])
+  @@map("call_logs")
+}
+
+model PortalCustomer {
+  id               String          @id @default(cuid())
+  tenantId         String
+  contactId        String?
+  supabaseUserId   String?
+  email            String
+  name             String?
+  accessToken      String?         @unique
+  fcmToken         String?
+  pushSubscription Json?
+  isActive         Boolean         @default(true)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  avatarUrl        String?
+  zammadEmail      String?
+  zammadUserId     String?
+  contact          Contact?        @relation(fields: [contactId], references: [id])
+  tenant           Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  ticketComments   TicketComment[]
+  tickets          Ticket[]
+
+  @@unique([tenantId, supabaseUserId])
+  @@unique([tenantId, email])
+  @@index([supabaseUserId])
+  @@index([tenantId])
+  @@index([contactId])
+  @@index([accessToken])
+  @@map("portal_customers")
+}
+
+model UserInvitation {
+  id            String    @id @default(cuid())
+  tenantId      String
+  email         String
+  role          UserRole  @default(MEMBER)
+  invitedBy     String
+  token         String    @unique
+  expiresAt     DateTime
+  acceptedAt    DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  invitedByUser User      @relation(fields: [invitedBy], references: [id], onDelete: Cascade)
+  tenant        Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, email])
+  @@index([tenantId])
+  @@index([email])
+  @@index([token])
+  @@index([expiresAt])
+  @@map("user_invitations")
+}
+
+model Conversation {
+  id        String    @id @default(cuid())
+  userId    String
+  tenantId  String
+  title     String?
+  metadata  Json?     // Stores entity context: { contacts: {}, leads: {}, deals: {}, lastSearchResults: {} }
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  tenant    Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages  Message[]
+
+  @@index([userId])
+  @@index([tenantId])
+  @@index([updatedAt])
+  @@map("conversations")
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  role           String
+  content        String
+  createdAt      DateTime     @default(now())
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId])
+  @@index([createdAt])
+  @@map("messages")
+}
+
+model TelegramLinkRequest {
+  id        String    @id @default(cuid())
+  code      String    @unique
+  userId    String
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([code])
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("telegram_link_requests")
+}
+
+model TelegramUser {
+  id         String   @id @default(cuid())
+  telegramId String   @unique
+  userId     String
+  username   String?
+  firstName  String?
+  lastName   String?
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  avatarUrl  String?
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([telegramId])
+  @@index([userId])
+  @@map("telegram_users")
+}
+
+model CallEvent {
+  id        String        @id @default(cuid())
+  tenantId  String        @map("tenant_id")
+  callerId  String?       @map("caller_id")
+  calleeId  String?       @map("callee_id")
+  roomName  String        @map("room_name")
+  eventType CallEventType @map("event_type")
+  payload   Json          @default("{}")
+  createdAt DateTime      @default(now()) @map("created_at")
+  tenant    Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([callerId])
+  @@index([calleeId])
+  @@index([roomName])
+  @@index([createdAt])
+  @@index([eventType])
+  @@index([tenantId, calleeId, createdAt])
+  @@map("call_events")
+}
+
+model CallRecording {
+  id                 String            @id @default(cuid())
+  callLogId          String            @unique
+  tenantId           String
+  fileUrl            String
+  fileName           String
+  fileSize           Int?
+  format             String            @default("webm")
+  duration           Int?
+  provider           RecordingProvider @default(LIVEKIT)
+  providerId         String?
+  status             RecordingStatus   @default(REQUESTED)
+  recordingStartTime DateTime?
+  recordingEndTime   DateTime?
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  callLog            CallLog           @relation(fields: [callLogId], references: [id], onDelete: Cascade)
+  tenant             Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([status])
+  @@map("call_recordings")
+}
+
+model CallTranscription {
+  id         String                @id @default(cuid())
+  callLogId  String                @unique
+  tenantId   String
+  fullText   String
+  segments   Json
+  language   String                @default("en")
+  confidence Float?
+  wordCount  Int?
+  summary    String?
+  keywords   String[]              @default([])
+  sentiment  String?
+  provider   TranscriptionProvider @default(ASSEMBLYAI)
+  providerId String?
+  status     TranscriptionStatus   @default(PENDING)
+  createdAt  DateTime              @default(now())
+  updatedAt  DateTime              @updatedAt
+  callLog    CallLog               @relation(fields: [callLogId], references: [id], onDelete: Cascade)
+  tenant     Tenant                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([status])
+  @@map("call_transcriptions")
+}
+
+model UserPresence {
+  id          String         @id @default(cuid())
+  userId      String         @unique
+  status      PresenceStatus @default(OFFLINE)
+  lastSeen    DateTime       @default(now())
+  currentRoom String?
+  tenantId    String
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([status])
+  @@index([tenantId, status])
+  @@map("user_presence")
+}
+
+model SuperAdmin {
+  id             String     @id @default(cuid())
+  supabaseUserId String     @unique @map("supabase_user_id")
+  email          String     @unique
+  firstName      String?    @map("first_name")
+  lastName       String?    @map("last_name")
+  isActive       Boolean    @default(true)
+  lastLoginAt    DateTime?  @map("last_login_at")
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt @map("updated_at")
+  auditLogs      AuditLog[]
+
+  @@index([email])
+  @@index([isActive])
+  @@map("super_admins")
+}
+
+model AuditLog {
+  id           String     @id @default(cuid())
+  superAdminId String     @map("super_admin_id")
+  action       String
+  targetType   String     @map("target_type")
+  targetId     String?    @map("target_id")
+  metadata     Json?
+  ipAddress    String?    @map("ip_address")
+  userAgent    String?    @map("user_agent")
+  createdAt    DateTime   @default(now()) @map("created_at")
+  superAdmin   SuperAdmin @relation(fields: [superAdminId], references: [id], onDelete: Cascade)
+
+  @@index([superAdminId])
+  @@index([action])
+  @@index([targetType])
+  @@index([targetId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
 
 enum UserRole {
   ADMIN
@@ -20,7 +558,7 @@ enum UserRole {
 enum TenantType {
   ORGANIZATION
   PERSONAL
-  BUSINESS // Added for Supabase migration compatibility
+  BUSINESS
 }
 
 enum LeadStatus {
@@ -60,7 +598,6 @@ enum InteractionType {
   TICKET
 }
 
-// NEW: VoIP Enums
 enum CallStatus {
   INITIATED
   RINGING
@@ -72,8 +609,8 @@ enum CallStatus {
 
 enum PresenceStatus {
   ONLINE
-  BUSY       // On another call
-  AWAY       // Idle > 5 min
+  BUSY
+  AWAY
   OFFLINE
 }
 
@@ -85,11 +622,11 @@ enum RecordingProvider {
 }
 
 enum RecordingStatus {
-  REQUESTED      // Recording initiated
-  IN_PROGRESS    // Currently recording
-  PROCESSING     // Post-processing (encoding, uploading)
-  COMPLETED      // Ready to play
-  FAILED         // Recording failed
+  REQUESTED
+  IN_PROGRESS
+  PROCESSING
+  COMPLETED
+  FAILED
 }
 
 enum TranscriptionProvider {
@@ -101,305 +638,11 @@ enum TranscriptionProvider {
 }
 
 enum TranscriptionStatus {
-  PENDING        // Waiting for recording
-  PROCESSING     // Transcribing
-  COMPLETED      // Ready
-  FAILED         // Transcription failed
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
 }
-
-// ==================== MULTI-TENANT FOUNDATION ====================
-
-model Tenant {
-  id        String     @id @default(cuid())
-  name      String
-  slug      String     @unique
-  domain    String? // Optional domain for tenant
-  type      TenantType @default(ORGANIZATION)
-  settings  Json?
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-
-  users              User[]
-  contacts           Contact[]
-  leads              Lead[]
-  pipelines          Pipeline[]
-  deals              Deal[]
-  interactions       Interaction[]
-  tickets            Ticket[]
-  integrations       Integration[]
-  callLogs           CallLog[]
-  portalCustomers    PortalCustomer[]
-  userInvitations    UserInvitation[]
-  conversations      Conversation[] // Chatbot conversations
-  callEvents         CallEvent[]    // VoIP call events
-  callRecordings     CallRecording[]
-  callTranscriptions CallTranscription[]
-
-  @@map("tenants")
-}
-
-// ==================== INTERNAL CRM USERS ====================
-// ARCHITECTURE: One internal user belongs to ONE tenant only
-// Rationale: Simpler security model, matches 95% of CRM use cases
-// For multi-company access (consultants/contractors), use PortalCustomer instead
-
-model User {
-  id              String   @id @default(cuid())
-  tenantId        String   // User belongs to ONE tenant (their employer)
-  supabaseUserId  String   @unique @map("supabase_user_id") // Supabase Auth user ID
-  email           String   @unique // Global unique - one email = one internal user globally
-  firstName       String?  @map("first_name")
-  lastName        String?  @map("last_name")
-  name            String?  // Deprecated - use firstName/lastName
-  avatarUrl       String?  // Google OAuth avatar URL
-  role            UserRole @default(MEMBER) // Role in THIS tenant
-  isActive        Boolean  @default(true) // Soft delete support
-  fcmToken        String?  // Firebase Cloud Messaging token (Android)
-  pushSubscription Json?   // Web Push subscription object
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  tenant               Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  interactions         Interaction[]
-  ticketsAssigned      Ticket[]             @relation("TicketAssignedUser")
-  ticketComments       TicketComment[]      @relation("TicketComments")
-  invitations          UserInvitation[]     // Invitations sent to users
-  conversations        Conversation[]       // Chatbot conversations
-  telegramUsers        TelegramUser[]       // Telegram bot connections
-  telegramLinkRequests TelegramLinkRequest[] // Telegram deep link requests
-
-  @@unique([tenantId, supabaseUserId])
-  @@index([tenantId])
-  @@index([email]) // Fast lookup for global uniqueness check
-  @@map("users")
-}
-
-// ==================== CORE CRM ENTITIES ====================
-
-model Contact {
-  id           String   @id @default(cuid())
-  tenantId     String
-  firstName    String
-  lastName     String
-  email        String?
-  phone        String?
-  company      String?
-  jobTitle     String?
-  source       String?
-  notes        String?
-  customFields Json?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  tenant          Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  leads           Lead[]
-  interactions    Interaction[]
-  deals           Deal[]
-  tickets         Ticket[]
-  callLogs        CallLog[]
-  portalCustomers PortalCustomer[]
-
-  @@index([tenantId])
-  @@index([email])
-  @@map("contacts")
-}
-
-model Lead {
-  id          String     @id @default(cuid())
-  tenantId    String
-  contactId   String?
-  title       String
-  source      String
-  status      LeadStatus @default(NEW)
-  value       Decimal?
-  notes       String?    @db.Text
-  convertedAt DateTime?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-
-  tenant  Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  contact Contact? @relation(fields: [contactId], references: [id], onDelete: SetNull)
-  deals   Deal[]
-
-  @@index([tenantId])
-  @@index([contactId])
-  @@index([status])
-  @@map("leads")
-}
-
-model Pipeline {
-  id          String   @id @default(cuid())
-  tenantId    String
-  name        String
-  description String?
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  tenant Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  stages Stage[]
-  deals  Deal[]
-
-  @@index([tenantId])
-  @@map("pipelines")
-}
-
-model Stage {
-  id         String   @id @default(cuid())
-  pipelineId String
-  name       String
-  order      Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  pipeline Pipeline @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
-  deals    Deal[]
-
-  @@unique([pipelineId, order])
-  @@index([pipelineId])
-  @@map("stages")
-}
-
-model Deal {
-  id                String    @id @default(cuid())
-  tenantId          String
-  contactId         String
-  leadId            String?
-  pipelineId        String
-  stageId           String
-  title             String
-  description       String?
-  value             Decimal?
-  probability       Decimal? // 0.0 to 1.0
-  expectedCloseDate DateTime?
-  notes             String?    @db.Text
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-
-  tenant       Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  contact      Contact       @relation(fields: [contactId], references: [id], onDelete: Restrict)
-  lead         Lead?         @relation(fields: [leadId], references: [id], onDelete: SetNull)
-  pipeline     Pipeline      @relation(fields: [pipelineId], references: [id], onDelete: Restrict)
-  stage        Stage         @relation(fields: [stageId], references: [id], onDelete: Restrict)
-  interactions Interaction[]
-  tickets      Ticket[]
-  callLogs     CallLog[]
-
-  @@index([tenantId])
-  @@index([contactId])
-  @@index([leadId])
-  @@index([pipelineId])
-  @@index([stageId])
-  @@map("deals")
-}
-
-model Interaction {
-  id        String          @id @default(cuid())
-  tenantId  String
-  contactId String
-  dealId    String?
-  userId    String?
-  type      InteractionType
-  subject   String?
-  content   String
-  dateTime  DateTime        @default(now())
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @updatedAt
-
-  tenant  Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  contact Contact  @relation(fields: [contactId], references: [id], onDelete: Cascade)
-  deal    Deal?    @relation(fields: [dealId], references: [id], onDelete: SetNull)
-  user    User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-
-  @@index([tenantId])
-  @@index([contactId])
-  @@index([dealId])
-  @@index([userId])
-  @@index([type])
-  @@map("interactions")
-}
-
-// ==================== TICKETS / ISSUE TRACKING ====================
-
-model Ticket {
-  id                        String         @id @default(cuid())
-  tenantId                  String
-  contactId                 String
-  portalCustomerId          String?
-  dealId                    String?
-  externalId                String?
-  externalSystem            String?
-  title                     String
-  description               String?
-  status                    TicketStatus   @default(OPEN)
-  priority                  TicketPriority @default(MEDIUM)
-  source                    TicketSource   @default(INTERNAL)
-  submittedByPortalCustomer Boolean        @default(false)
-  createdAt                 DateTime       @default(now())
-  updatedAt                 DateTime       @updatedAt
-  assignedUserId            String?
-
-  tenant         Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  contact        Contact         @relation(fields: [contactId], references: [id], onDelete: Cascade)
-  portalCustomer PortalCustomer? @relation(fields: [portalCustomerId], references: [id], onDelete: SetNull)
-  deal           Deal?           @relation(fields: [dealId], references: [id], onDelete: SetNull)
-  assignedUser   User?           @relation("TicketAssignedUser", fields: [assignedUserId], references: [id], onDelete: SetNull)
-  comments       TicketComment[]
-
-  @@unique([tenantId, externalId, externalSystem])
-  @@index([tenantId])
-  @@index([contactId])
-  @@index([portalCustomerId])
-  @@index([dealId])
-  @@index([assignedUserId])
-  @@index([status])
-  @@index([priority])
-  @@map("tickets")
-}
-
-model TicketComment {
-  id               String   @id @default(cuid())
-  ticketId         String
-  userId           String?
-  portalCustomerId String?
-  content          String
-  authorName       String?  // Name of the person who commented (from Clerk)
-  isInternal       Boolean  @default(true) // true = internal user, false = portal customer
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-
-  ticket         Ticket          @relation(fields: [ticketId], references: [id], onDelete: Cascade)
-  user           User?           @relation("TicketComments", fields: [userId], references: [id], onDelete: Restrict)
-  portalCustomer PortalCustomer? @relation(fields: [portalCustomerId], references: [id], onDelete: Restrict)
-
-  @@index([ticketId])
-  @@index([userId])
-  @@index([portalCustomerId])
-  @@map("ticket_comments")
-}
-
-// ==================== INTEGRATIONS ====================
-
-model Integration {
-  id           String    @id @default(cuid())
-  tenantId     String
-  serviceName  String // gmail, calendar, voip, osticket
-  isActive     Boolean   @default(false)
-  config       Json? // OAuth tokens, API keys, scopes
-  lastSyncAt   DateTime?
-  syncStatus   String? // success, failed, in_progress
-  errorMessage String?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-
-  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  @@unique([tenantId, serviceName])
-  @@index([tenantId])
-  @@map("integrations")
-}
-
-// ==================== CALL LOGS ====================
 
 enum CallDirection {
   INBOUND
@@ -411,175 +654,6 @@ enum ParticipantType {
   PORTAL_CUSTOMER
 }
 
-model CallLog {
-  id            String         @id @default(cuid())
-  tenantId      String
-  
-  // Simplified VoIP fields - just Supabase IDs!
-  roomName          String
-  callerSupabaseId  String  // NEW: Simple Supabase user ID
-  calleeSupabaseId  String  // NEW: Simple Supabase user ID
-  
-  // Call metadata
-  direction     CallDirection  @default(OUTBOUND)
-  status        String         @default("INITIATED") // INITIATED, RINGING, CONNECTED, ENDED, FAILED, MISSED
-  duration      Int?           // seconds
-  
-  // Timestamps
-  startTime     DateTime       @default(now())
-  endTime       DateTime?
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-
-  // Relations
-  tenant        Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  contact       Contact?            @relation(fields: [contactId], references: [id], onDelete: Restrict)
-  deal          Deal?               @relation(fields: [dealId], references: [id], onDelete: SetNull)
-  recording     CallRecording?      // 1-to-1 with recording
-  transcription CallTranscription?  // 1-to-1 with transcription
-  
-  // Optional contact/deal linking
-  contactId     String?
-  dealId        String?
-
-  @@index([tenantId])
-  @@index([callerSupabaseId])
-  @@index([calleeSupabaseId])
-  @@index([contactId])
-  @@index([dealId])
-  @@index([roomName])
-  @@map("call_logs")
-}
-
-// ==================== PORTAL CUSTOMERS ====================
-
-model PortalCustomer {
-  id             String   @id @default(cuid())
-  tenantId       String
-  contactId      String?
-  supabaseUserId String?  // Nullable for invitation flow, filled on first login
-  email          String
-  name           String?
-  avatarUrl      String?  // Google OAuth avatar URL
-  accessToken    String?  @unique // Token for initial portal access invitation
-  fcmToken       String?  // Firebase Cloud Messaging token (Android)
-  pushSubscription Json?  // Web Push subscription object
-  isActive       Boolean  @default(true) // Can deactivate portal access
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  tenant         Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  contact        Contact?        @relation(fields: [contactId], references: [id], onDelete: SetNull)
-  tickets        Ticket[]
-  ticketComments TicketComment[]
-
-  @@unique([tenantId, supabaseUserId]) // One user can belong to multiple tenants
-  @@unique([tenantId, email])          // Prevent duplicate emails per tenant
-  @@index([supabaseUserId])            // Fast lookup of all user's tenants
-  @@index([tenantId])
-  @@index([contactId])
-  @@index([accessToken])
-  @@map("portal_customers")
-}
-
-// ==================== USER INVITATIONS ====================
-
-model UserInvitation {
-  id         String    @id @default(cuid())
-  tenantId   String
-  email      String
-  role       UserRole  @default(MEMBER)
-  invitedBy  String    // User ID who sent the invitation
-  token      String    @unique // Unique invitation token
-  expiresAt  DateTime
-  acceptedAt DateTime?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-
-  tenant       Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  invitedByUser User   @relation(fields: [invitedBy], references: [id], onDelete: Cascade)
-
-  @@unique([tenantId, email]) // One pending invitation per email per tenant
-  @@index([tenantId])
-  @@index([email])
-  @@index([token])
-  @@index([expiresAt])
-  @@map("user_invitations")
-}
-
-// ==================== CHATBOT ====================
-
-model Conversation {
-  id        String    @id @default(cuid())
-  userId    String
-  tenantId  String
-  title     String?   // First message or custom title
-  messages  Message[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([tenantId])
-  @@index([updatedAt])
-  @@map("conversations")
-}
-
-model Message {
-  id             String   @id @default(cuid())
-  conversationId String
-  role           String   // 'user' | 'assistant'
-  content        String   @db.Text
-  createdAt      DateTime @default(now())
-
-  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-
-  @@index([conversationId])
-  @@index([createdAt])
-  @@map("messages")
-}
-
-// ==================== TELEGRAM BOT ====================
-
-model TelegramLinkRequest {
-  id        String    @id @default(cuid())
-  code      String    @unique // One-time code for deep link
-  userId    String
-  expiresAt DateTime
-  usedAt    DateTime?
-  createdAt DateTime  @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([code])
-  @@index([userId])
-  @@index([expiresAt])
-  @@map("telegram_link_requests")
-}
-
-model TelegramUser {
-  id         String   @id @default(cuid())
-  telegramId String   @unique // Telegram user ID (e.g., "123456789")
-  userId     String   // Links to User model
-  username   String?  // Telegram username (@username)
-  firstName  String?  // Telegram first name
-  lastName   String?  // Telegram last name
-  avatarUrl  String?  // Telegram profile photo URL
-  isActive   Boolean  @default(true)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([telegramId])
-  @@index([userId])
-  @@map("telegram_users")
-}
-
-// ==================== VOIP CALL EVENTS ====================
-
 enum CallEventType {
   CALL_STARTED
   RINGING
@@ -587,122 +661,4 @@ enum CallEventType {
   REJECTED
   ENDED
   MISSED
-}
-
-model CallEvent {
-  id        String        @id @default(cuid())
-  tenantId  String        @map("tenant_id")
-  callerId  String?       @map("caller_id")
-  calleeId  String?       @map("callee_id")
-  roomName  String        @map("room_name")
-  eventType CallEventType @map("event_type")
-  payload   Json          @default("{}")
-  createdAt DateTime      @default(now()) @map("created_at")
-
-  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  @@index([tenantId])
-  @@index([callerId])
-  @@index([calleeId])
-  @@index([roomName])
-  @@index([createdAt])
-  @@index([eventType])
-  @@index([tenantId, calleeId, createdAt])
-  @@map("call_events")
-}
-
-// ====================  NEW: Call Recording ====================
-
-model CallRecording {
-  id                String            @id @default(cuid())
-  callLogId         String            @unique
-  tenantId          String
-  
-  // Recording metadata
-  fileUrl           String            // S3/Cloud storage URL
-  fileName          String
-  fileSize          Int?              // bytes
-  format            String            @default("webm") // webm, mp4, mp3
-  duration          Int?              // seconds
-  
-  // Provider info
-  provider          RecordingProvider @default(LIVEKIT)
-  providerId        String?           // LiveKit egress ID or similar
-  
-  // Status tracking
-  status            RecordingStatus   @default(REQUESTED)
-  
-  // Timestamps
-  recordingStartTime DateTime?
-  recordingEndTime   DateTime?
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
-  
-  // Relations
-  callLog           CallLog           @relation(fields: [callLogId], references: [id], onDelete: Cascade)
-  tenant            Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  
-  @@index([tenantId])
-  @@index([status])
-  @@map("call_recordings")
-}
-
-// ==================== NEW: Call Transcription ====================
-
-model CallTranscription {
-  id                String                  @id @default(cuid())
-  callLogId         String                  @unique
-  tenantId          String
-  
-  // Full transcript (can be large!)
-  fullText          String                  @db.Text
-  
-  // Structured transcript with timestamps
-  segments          Json                    // Array of {speaker, text, startTime, endTime}
-  
-  // Metadata
-  language          String                  @default("en")
-  confidence        Float?                  // Average confidence score (0-1)
-  wordCount         Int?
-  
-  // AI-generated extras
-  summary           String?                 @db.Text
-  keywords          String[]                @default([])
-  sentiment         String?                 // POSITIVE, NEUTRAL, NEGATIVE
-  
-  // Provider info
-  provider          TranscriptionProvider   @default(ASSEMBLYAI)
-  providerId        String?
-  
-  // Status tracking
-  status            TranscriptionStatus     @default(PENDING)
-  
-  // Timestamps
-  createdAt         DateTime                @default(now())
-  updatedAt         DateTime                @updatedAt
-  
-  // Relations
-  callLog           CallLog                 @relation(fields: [callLogId], references: [id], onDelete: Cascade)
-  tenant            Tenant                  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  
-  @@index([tenantId])
-  @@index([status])
-  @@map("call_transcriptions")
-}
-
-// ==================== NEW: User Presence ====================
-
-model UserPresence {
-  id           String         @id @default(cuid())
-  userId       String         @unique // Can be CRM user or portal customer Supabase ID
-  status       PresenceStatus @default(OFFLINE)
-  lastSeen     DateTime       @default(now())
-  currentRoom  String?        // If on call
-  tenantId     String         // Current active tenant
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  
-  @@index([status])
-  @@index([tenantId, status])
-  @@map("user_presence")
 }

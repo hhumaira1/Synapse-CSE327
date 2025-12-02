@@ -16,10 +16,12 @@ import { LeadsModule } from './leads/leads.module';
 import { DealsModule } from './deals/deals.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { TicketsModule } from './tickets/tickets.module';
-import { JiraModule } from './jira/jira.module';
+import { JiraModule } from './jira/jira.module'; // Kept for backward compatibility
+import { ZammadModule } from './zammad/zammad.module'; // NEW - Zammad integration
 import { ChatbotModule } from './chatbot/chatbot.module';
 import { TelegramModule } from './telegram/telegram.module';
 import { VoipModule } from './voip/voip.module';
+import { SuperAdminModule } from './super-admin/super-admin.module';
 
 @Module({
   imports: [
@@ -40,12 +42,14 @@ import { VoipModule } from './voip/voip.module';
     DealsModule,
     AnalyticsModule,
     TicketsModule,
-    JiraModule,
+    JiraModule, // Kept for backward compatibility
+    ZammadModule, // NEW - Zammad integration
     ChatbotModule,
     TelegramModule,
     VoipModule,
+    SuperAdminModule, // NEW - Super Admin dashboard
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

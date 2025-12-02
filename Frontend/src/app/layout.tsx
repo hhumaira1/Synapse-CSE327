@@ -41,8 +41,8 @@ export default async function RootLayout({
       
       if (token) {
         // Call backend API to get user data
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001';
-        const response = await fetch(`${apiUrl}/api/auth/me`, {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+        const response = await fetch(`${apiUrl}/auth/me`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -76,7 +76,8 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
-          {user ? (
+          {user && tenantId ? (
+            // Only initialize VoIP for tenant users (not super admins)
             <VoIPProvider userId={user.id} tenantId={tenantId}>
               {children}
             </VoIPProvider>

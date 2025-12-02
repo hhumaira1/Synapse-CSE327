@@ -9,6 +9,10 @@ import { ChatSidebar } from './ChatSidebar';
 import { SuggestedActions } from './SuggestedActions';
 import { useUser } from '@/hooks/useUser';
 import { cn } from '@/lib/utils';
+import { GeminiMCPClient } from '@/lib/gemini/client';
+import { createClient } from '@/lib/supabase/client';
+
+const supabase = createClient();
 
 interface ChatWindowProps {
   isOpen: boolean;
@@ -27,6 +31,7 @@ export function ChatWindow({ isOpen, onClose }: ChatWindowProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [conversationId, setConversationId] = useState<string | undefined>();
   const [suggestedActions, setSuggestedActions] = useState<SuggestedAction[]>([]);
+  const [sidebarRefreshTrigger, setSidebarRefreshTrigger] = useState(0);
   const { user } = useUser();
 
   // Load conversation from localStorage on mount
@@ -45,7 +50,7 @@ export function ChatWindow({ isOpen, onClose }: ChatWindowProps) {
         // Show welcome message for new chat
         const welcomeMessage: ChatMessage = {
           role: 'assistant',
-          content: '👋 Hello! I\'m your AI assistant. I can help you manage your CRM:\n\n• View and search contacts, leads, deals, and tickets\n• Create new records with natural language\n• Get analytics and insights\n• Answer questions about your data\n\nWhat would you like to do today?',
+          content: '👋 Hello! I\'m your **SynapseCRM AI Assistant** powered by **Gemini 2.0 Flash** + **MCP Tools**.\n\nI can help you with:\n\n📇 **Contacts** (6 operations) - List, create, update, search, view details\n💼 **Deals** (6 operations) - Create, move through pipeline, track revenue\n🎯 **Leads** (5 operations) - Qualify, convert to deals, manage status\n🎫 **Tickets** (7 operations) - Create, assign, comment, resolve\n📊 **Analytics** (5 dashboards) - Revenue forecasts, pipeline metrics, team performance\n👥 **Users** (5 operations) - Invite, manage roles (ADMIN only)\n🔄 **Pipelines** - Configure sales workflows\n\n**Ask me in natural language!** Examples:\n• "Show all my contacts"\n• "Create a $50k deal with Acme Corp"\n• "What\'s my revenue forecast?"\n• "Convert lead ABC to a deal"\n• "Create a high-priority support ticket"\n\n💡 **Tip**: I have access to 56 specialized CRM tools and can handle complex multi-step operations.\n\nWhat would you like to do today?',
           timestamp: new Date(),
         };
         setMessages([welcomeMessage]);
@@ -66,7 +71,19 @@ export function ChatWindow({ isOpen, onClose }: ChatWindowProps) {
 
   const handleSelectConversation = async (id: string) => {
     try {
-      const response = await fetch(`/api/chat/${id}`);
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session?.access_token) {
+        console.error('Not authenticated');
+        return;
+      }
+
+      const response = await fetch(`http://localhost:3001/api/chatbot/conversations/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+      });
+
       if (response.ok) {
         const data = await response.json();
         setConversationId(id);
@@ -88,11 +105,11 @@ export function ChatWindow({ isOpen, onClose }: ChatWindowProps) {
     setConversationId(undefined);
     setSuggestedActions([]);
     localStorage.removeItem('chatbot_conversation');
-    
+
     // Show welcome message
     const welcomeMessage: ChatMessage = {
       role: 'assistant',
-      content: '👋 Hello! I\'m your AI assistant. I can help you manage your CRM:\n\n• View and search contacts, leads, deals, and tickets\n• Create new records with natural language\n• Get analytics and insights\n• Answer questions about your data\n\nWhat would you like to do today?',
+      content: '👋 Hello! I\'m your **SynapseCRM AI Assistant** powered by **Gemini 2.0 Flash** + **MCP Tools**.\n\nI can help you with:\n\n📇 **Contacts** - List, create, update, search\n💼 **Deals** - Create, move through pipeline, track revenue\n🎯 **Leads** - Qualify, convert to deals\n🎫 **Tickets** - Create, assign, resolve\n📊 **Analytics** - Revenue forecasts, pipeline metrics\n\n**Ask me in natural language!** Examples:\n• "Show all my contacts"\n• "Create a deal for Acme Corp"\n• "What\'s my revenue this month?"\n\nWhat would you like to do today?',
       timestamp: new Date(),
     };
     setMessages([welcomeMessage]);
@@ -103,6 +120,8 @@ export function ChatWindow({ isOpen, onClose }: ChatWindowProps) {
     if (conversationId === deletedId) {
       handleNewChat();
     }
+    // Trigger sidebar refresh after deletion
+    setSidebarRefreshTrigger((prev) => prev + 1);
   };
 
   const handleSend = async (message: string) => {
@@ -116,40 +135,57 @@ export function ChatWindow({ isOpen, onClose }: ChatWindowProps) {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/chat', {
+      // Get Supabase session for JWT
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session?.access_token) {
+        throw new Error('Not authenticated');
+      }
+
+      // Call backend chatbot API (which uses MCP server and stores messages)
+      const response = await fetch('http://localhost:3001/api/chatbot/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message, conversationId }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          message,
+          conversationId: conversationId || undefined,
+        }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to get response');
+        throw new Error(`API error: ${response.statusText}`);
       }
 
       const data = await response.json();
+
+      // Update conversation ID if this is a new conversation
+      if (data.conversationId && data.conversationId !== conversationId) {
+        setConversationId(data.conversationId);
+        // Trigger sidebar refresh when new conversation is created
+        setSidebarRefreshTrigger((prev) => prev + 1);
+      }
 
       // Add assistant message
       const assistantMessage: ChatMessage = {
         role: 'assistant',
         content: data.response,
-        timestamp: new Date(),
-        toolsUsed: data.toolsUsed,
+        timestamp: new Date(data.timestamp),
       };
       setMessages((prev) => [...prev, assistantMessage]);
-      
-      // Update suggested actions
+
+      // Update suggested actions if provided
       if (data.suggestedActions) {
         setSuggestedActions(data.suggestedActions);
       }
-      
-      if (data.conversationId) {
-        setConversationId(data.conversationId);
-      }
+
     } catch (error) {
       console.error('Chat error:', error);
       const errorMessage: ChatMessage = {
         role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again.',
+        content: '❌ Sorry, I encountered an error. Please make sure the backend server is running and you are authenticated.',
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);
@@ -174,6 +210,7 @@ export function ChatWindow({ isOpen, onClose }: ChatWindowProps) {
         onSelectConversation={handleSelectConversation}
         onNewChat={handleNewChat}
         onDeleteConversation={handleDeleteConversation}
+        refreshTrigger={sidebarRefreshTrigger}
       />
 
       {/* Main Chat Area */}
@@ -218,14 +255,14 @@ export function ChatWindow({ isOpen, onClose }: ChatWindowProps) {
         </div>
 
         {/* Messages */}
-        <MessageList 
-          messages={messages} 
+        <MessageList
+          messages={messages}
           isLoading={isLoading}
           onSendMessage={handleSend}
         />
 
         {/* Suggested Actions */}
-        <SuggestedActions 
+        <SuggestedActions
           suggestions={suggestedActions}
           onAction={handleSend}
         />

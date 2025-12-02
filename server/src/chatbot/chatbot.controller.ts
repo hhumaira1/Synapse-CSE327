@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Delete, Body, UseGuards, Param } from '@nestjs/common';
+import { Controller, Post, Get, Delete, Body, UseGuards, Param, Headers } from '@nestjs/common';
 import { ChatbotService } from './chatbot.service';
 import { SupabaseAuthGuard } from '../supabase-auth/guards/supabase-auth/supabase-auth.guard';
 import { CurrentUser } from '../supabase-auth/decorators/current-user.decorator';
@@ -17,11 +17,15 @@ export class ChatbotController {
   async chat(
     @Body() chatDto: ChatMessageDto,
     @CurrentUser('id') supabaseUserId: string,
+    @Headers('authorization') authorization: string,
   ): Promise<ChatResponseDto> {
     // Get user details (userId + tenantId)
     const user = await this.authService.getUserDetails(supabaseUserId);
 
-    return await this.chatbotService.chat(chatDto, user.id, user.tenantId);
+    // Extract JWT token from Authorization header
+    const jwt = authorization?.replace('Bearer ', '') || '';
+
+    return await this.chatbotService.chat(chatDto, user.id, user.tenantId, jwt);
   }
 
   @Get('conversations')

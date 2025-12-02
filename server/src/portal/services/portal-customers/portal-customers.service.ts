@@ -6,6 +6,8 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma/prisma.service';
 import { EmailService } from 'src/common/services/email/email.service';
+import { ZammadService } from 'src/zammad/services/zammad.service';
+import { ZammadIdentityService } from 'src/zammad/services/zammad-identity.service';
 import { randomBytes } from 'crypto';
 
 @Injectable()
@@ -15,7 +17,9 @@ export class PortalCustomersService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly emailService: EmailService,
-  ) {}
+    private readonly zammadService: ZammadService,
+    private readonly zammadIdentity: ZammadIdentityService,
+  ) { }
 
   /**
    * Invite a customer to access the portal
@@ -119,6 +123,30 @@ export class PortalCustomersService {
       );
     }
 
+    // ✨ AUTO-CREATE ZAMMAD CUSTOMER ACCOUNT (with dual-role support) ✨
+    try {
+      const zammadAccount = await this.zammadIdentity.getOrCreateCustomerAccount(
+        contact.email,
+        contact.firstName || 'Customer',
+        contact.lastName || '',
+        tenantId,
+      );
+
+      // Store Zammad user ID for SSO
+      await this.prisma.portalCustomer.update({
+        where: { id: portalCustomer.id },
+        data: {
+          zammadUserId: zammadAccount.zammadUserId.toString(),
+          zammadEmail: zammadAccount.zammadEmail,
+        },
+      });
+
+      this.logger.log(`✅ Auto-created Zammad customer account for ${contact.email} (ID: ${zammadAccount.zammadUserId})`);
+    } catch (zammadError) {
+      // Don't fail the whole invitation if Zammad fails
+      this.logger.warn(`Failed to create Zammad customer for ${contact.email}:`, zammadError.message);
+    }
+
     return {
       message: 'Portal invitation sent successfully',
       portalCustomer: {
@@ -177,7 +205,7 @@ export class PortalCustomersService {
 
     const contactName = updated.contact
       ? updated.contact.firstName +
-        (updated.contact.lastName ? ` ${updated.contact.lastName}` : '')
+      (updated.contact.lastName ? ` ${updated.contact.lastName}` : '')
       : updated.email.split('@')[0];
 
     return {

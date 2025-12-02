@@ -106,13 +106,45 @@ export default function TicketsPage() {
           <h1 className="text-3xl font-bold text-gray-900">Tickets</h1>
           <p className="text-gray-600 mt-1">Manage customer support tickets</p>
         </div>
-        <Button
-          onClick={() => setCreateDialogOpen(true)}
-          className="bg-linear-to-r from-[#6366f1] to-[#a855f7] hover:from-[#5558e3] hover:to-[#9333ea]"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Create Ticket
-        </Button>
+        <div className="flex gap-2">
+          {/* Zammad Dashboard Auto-Login Button */}
+          <Button
+            variant="outline"
+            onClick={async () => {
+              try {
+                const response = await apiClient.get('/zammad/sso/agent-login');
+                window.open(response.data.loginUrl, "_blank");
+                toast.success("Opening Zammad...");
+              } catch (error) {
+                console.error("Failed to open Zammad:", error);
+                toast.error("Failed to access Zammad. Please try again.");
+              }
+            }}
+          >
+            <svg
+              className="h-4 w-4 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+              />
+            </svg>
+            Open Zammad (Auto-Login)
+          </Button>
+
+          <Button
+            onClick={() => setCreateDialogOpen(true)}
+            className="bg-linear-to-r from-[#6366f1] to-[#a855f7] hover:from-[#5558e3] hover:to-[#9333ea]"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Create Ticket
+          </Button>
+        </div>
       </div>
 
       {/* Kanban Board */}

@@ -1,6 +1,6 @@
 'use client';
 
-import { UserProfile } from '@/pages/UserProfile';
+import { UserProfile } from '@/page-components/UserProfile';
 
 export default function ProfilePage() {
     return <UserProfile />;

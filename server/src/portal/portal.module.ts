@@ -7,11 +7,19 @@ import { SupabaseAuthModule } from 'src/supabase-auth/supabase-auth.module';
 import { TicketsController } from './tickets/tickets.controller';
 import { TicketsModule } from 'src/tickets/tickets.module';
 import { PortalAuthModule } from './auth/portal-auth.module';
+import { ZammadModule } from 'src/zammad/zammad.module';
 
 @Module({
-  imports: [DatabaseModule, AuthModule, SupabaseAuthModule, TicketsModule, PortalAuthModule],
+  imports: [
+    DatabaseModule,
+    AuthModule,
+    SupabaseAuthModule,
+    TicketsModule,
+    PortalAuthModule,
+    ZammadModule,  // Add Zammad for auto-provisioning
+  ],
   providers: [PortalCustomersService],
   controllers: [PortalCustomersController, TicketsController],
   exports: [PortalCustomersService],
 })
-export class PortalModule {}
+export class PortalModule { }

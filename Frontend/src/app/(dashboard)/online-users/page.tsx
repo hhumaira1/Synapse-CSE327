@@ -26,7 +26,7 @@ export default function OnlineCustomersPage() {
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/voip/online-users`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/voip/online-users`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,

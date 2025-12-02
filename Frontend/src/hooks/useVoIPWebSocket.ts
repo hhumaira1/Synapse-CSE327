@@ -33,7 +33,8 @@ export function useVoIPWebSocket({ userId, tenantId }: UseVoIPWebSocketOptions) 
       return;
     }
 
-    const serverUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+    // WebSocket connects directly to backend server (not /api prefix)
+    const serverUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001';
     
     console.log('🔌 VoIP WebSocket: Initiating connection...', {
       serverUrl,
@@ -190,7 +191,7 @@ export function useVoIPWebSocket({ userId, tenantId }: UseVoIPWebSocketOptions) 
         return null;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/voip/start-call`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/voip/start-call`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -237,7 +238,7 @@ export function useVoIPWebSocket({ userId, tenantId }: UseVoIPWebSocketOptions) 
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/voip/accept`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/voip/accept`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -280,7 +281,7 @@ export function useVoIPWebSocket({ userId, tenantId }: UseVoIPWebSocketOptions) 
     if (!incomingCall || !socketRef.current) return;
 
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/voip/reject`, {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/voip/reject`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -309,7 +310,7 @@ export function useVoIPWebSocket({ userId, tenantId }: UseVoIPWebSocketOptions) 
       const { data: { session } } = await supabase.auth.getSession();
       const token = session?.access_token;
 
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/voip/end`, {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/voip/end`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

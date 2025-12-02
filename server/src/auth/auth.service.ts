@@ -1,10 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../database/prisma/prisma.service';
 import { UserRole, TenantType } from 'prisma/generated/client';
+import { ZammadService } from '../zammad/services/zammad.service';
+import { ZammadIdentityService } from '../zammad/services/zammad-identity.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService) { }
+  private readonly logger = new Logger(AuthService.name);
+
+  constructor(
+    private prisma: PrismaService,
+    private zammadService: ZammadService,
+    private zammadIdentity: ZammadIdentityService,
+  ) { }
 
   /**
    * Create a new user and tenant from Supabase signup
@@ -58,6 +66,15 @@ export class AuthService {
       },
     });
 
+    // ✨ AUTO-PROVISION ZAMMAD ORGANIZATION ✨
+    try {
+      await this.zammadService.createOrganizationForTenant(tenant);
+      this.logger.log(`Auto-provisioned Zammad organization for tenant: ${tenant.name}`);
+    } catch (error) {
+      this.logger.warn(`Failed to create Zammad organization for tenant ${tenant.id}:`, error.message);
+      // Continue anyway - user can still use the app without Zammad
+    }
+
     // Create user and associate with tenant
     const user = await this.prisma.user.create({
       data: {
@@ -72,6 +89,31 @@ export class AuthService {
       },
       include: { tenant: true },
     });
+
+    // ✨ AUTO-PROVISION ZAMMAD AGENT ACCOUNT (with dual-role support) ✨
+    try {
+      const zammadAccount = await this.zammadIdentity.getOrCreateAgentAccount(
+        email,
+        finalFirstName || 'User',
+        finalLastName || '',
+        tenant.id,
+        UserRole.ADMIN,  // First user is always ADMIN
+      );
+
+      // Store Zammad user ID for SSO
+      await this.prisma.user.update({
+        where: { id: user.id },
+        data: {
+          zammadUserId: zammadAccount.zammadUserId.toString(),
+          zammadEmail: zammadAccount.zammadEmail,
+        },
+      });
+
+      this.logger.log(`✅ Auto-provisioned Zammad agent for: ${email} (ID: ${zammadAccount.zammadUserId})`);
+    } catch (error) {
+      this.logger.warn(`⚠️ Failed to create Zammad agent for ${email}:`, error.message);
+      // Continue anyway - user can still use CRM
+    }
 
     return user;
   }

@@ -199,6 +199,34 @@ export function TicketDetailDialog({
                 <AlertCircle className="h-5 w-5 text-red-500" />
               )}
             </DialogTitle>
+            {ticket.externalSystem === "zammad" && (
+              <div className="flex items-center gap-2">
+                <Badge variant="outline" className="bg-blue-100 text-blue-700 border-blue-200">
+                  🎫 Zammad #{ticket.externalId}
+                </Badge>
+                {ticket.externalId && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-6 text-xs"
+                    onClick={async () => {
+                      try {
+                        const response = await apiClient.get('/zammad/sso/agent-login', {
+                          params: { ticketId: ticket.id }
+                        });
+                        window.open(response.data.loginUrl, "_blank");
+                        toast.success("Opening ticket in Zammad...");
+                      } catch (error) {
+                        console.error("Failed to open Zammad:", error);
+                        toast.error("Failed to access Zammad");
+                      }
+                    }}
+                  >
+                    Open in Zammad (Auto-Login) →
+                  </Button>
+                )}
+              </div>
+            )}
             {ticket.externalSystem === "osticket" && (
               <div className="flex items-center gap-2">
                 <Badge variant="outline" className="bg-purple-100 text-purple-700 border-purple-200">
@@ -336,11 +364,10 @@ export function TicketDetailDialog({
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <div className={`h-8 w-8 rounded-full flex items-center justify-center text-white text-sm font-medium ${
-                            comment.isInternal 
-                              ? "bg-linear-to-r from-[#6366f1] to-[#a855f7]" 
+                          <div className={`h-8 w-8 rounded-full flex items-center justify-center text-white text-sm font-medium ${comment.isInternal
+                              ? "bg-linear-to-r from-[#6366f1] to-[#a855f7]"
                               : "bg-linear-to-r from-[#3b82f6] to-[#06b6d4]"
-                          }`}>
+                            }`}>
                             {initials}
                           </div>
                           <div>

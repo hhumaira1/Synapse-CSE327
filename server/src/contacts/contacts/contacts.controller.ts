@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
   UseGuards,
   ForbiddenException,
 } from '@nestjs/common';
@@ -14,6 +15,7 @@ import { CreateContactDto } from '../dto/create-contact.dto';
 import { SupabaseAuthGuard } from 'src/supabase-auth/guards/supabase-auth/supabase-auth.guard';
 import { CurrentUser } from 'src/supabase-auth/decorators/current-user.decorator';
 import { AuthService } from 'src/auth/auth.service';
+import { EntityResolverService } from 'src/chatbot/entity-resolver.service';
 import { UserRole } from 'prisma/generated/client';
 
 @Controller('contacts')
@@ -22,6 +24,7 @@ export class ContactsController {
   constructor(
     private readonly contactsService: ContactsService,
     private readonly authService: AuthService,
+    private readonly entityResolver: EntityResolverService,
   ) {}
 
   @Post()
@@ -37,6 +40,31 @@ export class ContactsController {
     }
 
     return this.contactsService.create(currentUser.tenantId, createContactDto);
+  }
+
+  @Get('search')
+  async search(
+    @CurrentUser('id') supabaseUserId: string,
+    @Query('q') query: string,
+  ) {
+    const currentUser =
+      await this.authService.getUserBySupabaseId(supabaseUserId);
+
+    if (!currentUser) {
+      throw new ForbiddenException('User not found');
+    }
+
+    if (!query || query.trim() === '') {
+      return [];
+    }
+
+    // Use EntityResolverService for fuzzy search
+    const matches = await this.entityResolver.searchContacts(
+      query,
+      currentUser.tenantId,
+    );
+
+    return matches;
   }
 
   @Get()

@@ -129,7 +129,8 @@ exports.Prisma.TenantScalarFieldEnum = {
   type: 'type',
   settings: 'settings',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  isActive: 'isActive'
 };
 
 exports.Prisma.UserScalarFieldEnum = {
@@ -140,13 +141,15 @@ exports.Prisma.UserScalarFieldEnum = {
   firstName: 'firstName',
   lastName: 'lastName',
   name: 'name',
-  avatarUrl: 'avatarUrl',
   role: 'role',
   isActive: 'isActive',
   fcmToken: 'fcmToken',
   pushSubscription: 'pushSubscription',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  avatarUrl: 'avatarUrl',
+  zammadEmail: 'zammadEmail',
+  zammadUserId: 'zammadUserId'
 };
 
 exports.Prisma.ContactScalarFieldEnum = {
@@ -297,13 +300,15 @@ exports.Prisma.PortalCustomerScalarFieldEnum = {
   supabaseUserId: 'supabaseUserId',
   email: 'email',
   name: 'name',
-  avatarUrl: 'avatarUrl',
   accessToken: 'accessToken',
   fcmToken: 'fcmToken',
   pushSubscription: 'pushSubscription',
   isActive: 'isActive',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  avatarUrl: 'avatarUrl',
+  zammadEmail: 'zammadEmail',
+  zammadUserId: 'zammadUserId'
 };
 
 exports.Prisma.UserInvitationScalarFieldEnum = {
@@ -324,6 +329,7 @@ exports.Prisma.ConversationScalarFieldEnum = {
   userId: 'userId',
   tenantId: 'tenantId',
   title: 'title',
+  metadata: 'metadata',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -352,10 +358,10 @@ exports.Prisma.TelegramUserScalarFieldEnum = {
   username: 'username',
   firstName: 'firstName',
   lastName: 'lastName',
-  avatarUrl: 'avatarUrl',
   isActive: 'isActive',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  avatarUrl: 'avatarUrl'
 };
 
 exports.Prisma.CallEventScalarFieldEnum = {
@@ -415,6 +421,30 @@ exports.Prisma.UserPresenceScalarFieldEnum = {
   tenantId: 'tenantId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SuperAdminScalarFieldEnum = {
+  id: 'id',
+  supabaseUserId: 'supabaseUserId',
+  email: 'email',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  isActive: 'isActive',
+  lastLoginAt: 'lastLoginAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AuditLogScalarFieldEnum = {
+  id: 'id',
+  superAdminId: 'superAdminId',
+  action: 'action',
+  targetType: 'targetType',
+  targetId: 'targetId',
+  metadata: 'metadata',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -568,7 +598,9 @@ exports.Prisma.ModelName = {
   CallEvent: 'CallEvent',
   CallRecording: 'CallRecording',
   CallTranscription: 'CallTranscription',
-  UserPresence: 'UserPresence'
+  UserPresence: 'UserPresence',
+  SuperAdmin: 'SuperAdmin',
+  AuditLog: 'AuditLog'
 };
 
 /**

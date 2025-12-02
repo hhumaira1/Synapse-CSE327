@@ -25,6 +25,7 @@ interface ChatSidebarProps {
   onSelectConversation: (id: string) => void;
   onNewChat: () => void;
   onDeleteConversation?: (id: string) => void;
+  refreshTrigger?: number; // Trigger re-fetch when this changes
 }
 
 export function ChatSidebar({
@@ -32,6 +33,7 @@ export function ChatSidebar({
   onSelectConversation,
   onNewChat,
   onDeleteConversation,
+  refreshTrigger,
 }: ChatSidebarProps) {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [loading, setLoading] = useState(true);
@@ -41,7 +43,7 @@ export function ChatSidebar({
 
   useEffect(() => {
     loadConversations();
-  }, []);
+  }, [refreshTrigger]); // Re-fetch when refreshTrigger changes
 
   const loadConversations = async () => {
     try {
