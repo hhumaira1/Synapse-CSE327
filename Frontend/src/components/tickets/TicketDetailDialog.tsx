@@ -62,6 +62,11 @@ interface Ticket {
     firstName: string;
     lastName: string;
   };
+  assignedUser?: {
+    id: string;
+    name: string | null;
+    email: string;
+  } | null;
   comments: TicketComment[];
 }
 
@@ -199,6 +204,36 @@ export function TicketDetailDialog({
                 <AlertCircle className="h-5 w-5 text-red-500" />
               )}
             </DialogTitle>
+            {ticket.externalSystem === "jira" && (
+              <div className="flex items-center gap-2">
+                <Badge variant="outline" className="bg-blue-100 text-blue-700 border-blue-200 font-mono">
+                  🎫 Jira {ticket.externalId}
+                </Badge>
+                {ticket.externalId && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-6 text-xs"
+                    onClick={async () => {
+                      try {
+                        const response = await apiClient.get(`/jira/ticket/${ticket.id}/link`);
+                        if (response.data.hasJiraLink) {
+                          window.open(response.data.jiraUrl, "_blank");
+                          toast.success("Opening ticket in Jira...");
+                        } else {
+                          toast.error("Ticket not linked to Jira");
+                        }
+                      } catch (error) {
+                        console.error("Failed to open Jira:", error);
+                        toast.error("Failed to access Jira");
+                      }
+                    }}
+                  >
+                    Open in Jira →
+                  </Button>
+                )}
+              </div>
+            )}
             {ticket.externalSystem === "zammad" && (
               <div className="flex items-center gap-2">
                 <Badge variant="outline" className="bg-blue-100 text-blue-700 border-blue-200">
@@ -295,6 +330,18 @@ export function TicketDetailDialog({
                 })}
               </p>
             </div>
+
+            {ticket.assignedUser && (
+              <div className="space-y-1 col-span-2">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <User className="h-4 w-4" />
+                  <span>Assigned To</span>
+                </div>
+                <p className="font-medium">
+                  {ticket.assignedUser.name || ticket.assignedUser.email}
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Status & Priority Controls */}
@@ -365,8 +412,8 @@ export function TicketDetailDialog({
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <div className={`h-8 w-8 rounded-full flex items-center justify-center text-white text-sm font-medium ${comment.isInternal
-                              ? "bg-linear-to-r from-[#6366f1] to-[#a855f7]"
-                              : "bg-linear-to-r from-[#3b82f6] to-[#06b6d4]"
+                            ? "bg-linear-to-r from-[#6366f1] to-[#a855f7]"
+                            : "bg-linear-to-r from-[#3b82f6] to-[#06b6d4]"
                             }`}>
                             {initials}
                           </div>

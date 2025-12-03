@@ -33,6 +33,11 @@ export interface JiraIssue {
       id: string;
       name: string; // "Task", "Bug", "Story"
     };
+    assignee?: {
+      accountId: string;
+      displayName: string;
+      emailAddress: string;
+    };
     reporter?: {
       accountId: string;
       displayName: string;
@@ -66,6 +71,10 @@ export interface CreateJiraIssueRequest {
     priority?: {
       name: string;
     };
+    assignee?: {
+      accountId: string;
+    };
+    labels?: string[]; // ← Add labels for tenant separation
   };
 }
 

@@ -4,16 +4,16 @@ import { TicketsService } from './tickets/tickets.service';
 import { DatabaseModule } from '../database/database.module';
 import { AuthModule } from '../auth/auth.module';
 import { SupabaseAuthModule } from '../supabase-auth/supabase-auth.module';
-// import { JiraModule } from '../jira/jira.module'; // COMMENTED OUT - Using Zammad now
-import { ZammadModule } from '../zammad/zammad.module';
+import { JiraModule } from '../jira/jira.module'; // Jira integration enabled
+// import { ZammadModule } from '../zammad/zammad.module'; // COMMENTED OUT - Switched to Jira
 
 @Module({
   imports: [
     DatabaseModule,
     AuthModule,
     SupabaseAuthModule,
-    // JiraModule, // COMMENTED OUT
-    ZammadModule, // NEW - Zammad integration
+    JiraModule, // Using Jira now
+    // ZammadModule, // COMMENTED OUT
   ],
   controllers: [TicketsController],
   providers: [TicketsService],

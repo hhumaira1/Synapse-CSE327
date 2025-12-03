@@ -107,18 +107,10 @@ export default function TicketsPage() {
           <p className="text-gray-600 mt-1">Manage customer support tickets</p>
         </div>
         <div className="flex gap-2">
-          {/* Zammad Dashboard Auto-Login Button */}
           <Button
             variant="outline"
-            onClick={async () => {
-              try {
-                const response = await apiClient.get('/zammad/sso/agent-login');
-                window.open(response.data.loginUrl, "_blank");
-                toast.success("Opening Zammad...");
-              } catch (error) {
-                console.error("Failed to open Zammad:", error);
-                toast.error("Failed to access Zammad. Please try again.");
-              }
+            onClick={() => {
+              window.open('https://iftikherazamcolab1.atlassian.net/jira/software/projects/KAN/boards/1', '_blank');
             }}
           >
             <svg
@@ -134,9 +126,8 @@ export default function TicketsPage() {
                 d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
               />
             </svg>
-            Open Zammad (Auto-Login)
+            View Jira Board
           </Button>
-
           <Button
             onClick={() => setCreateDialogOpen(true)}
             className="bg-linear-to-r from-[#6366f1] to-[#a855f7] hover:from-[#5558e3] hover:to-[#9333ea]"

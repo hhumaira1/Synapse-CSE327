@@ -448,16 +448,16 @@ fun PortalTicketsScreen(
                                                 }
                                             }
 
-                                            // External system badge
-                                            if (ticket.externalSystem == "osticket") {
+                                            // Jira badge
+                                            if (ticket.externalSystem == "jira" && ticket.externalId != null) {
                                                 Surface(
-                                                    color = Color(0xFF8B5CF6).copy(alpha = 0.2f),
+                                                    color = Color(0xFF6366F1).copy(alpha = 0.2f),
                                                     shape = MaterialTheme.shapes.small
                                                 ) {
                                                     Text(
-                                                        text = "🎫 #${ticket.externalId ?: ""}",
+                                                        text = "\uD83C\uDFAB ${ticket.externalId}",
                                                         style = MaterialTheme.typography.labelMedium,
-                                                        color = Color(0xFF8B5CF6),
+                                                        color = Color(0xFF6366F1),
                                                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
                                                         fontWeight = FontWeight.Medium
                                                     )

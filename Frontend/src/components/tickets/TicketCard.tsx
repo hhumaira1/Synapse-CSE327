@@ -48,10 +48,10 @@ export function TicketCard({ ticket, onClick }: TicketCardProps) {
           ticket.priority === "URGENT"
             ? "#ef4444"
             : ticket.priority === "HIGH"
-            ? "#f97316"
-            : ticket.priority === "MEDIUM"
-            ? "#eab308"
-            : "#22c55e",
+              ? "#f97316"
+              : ticket.priority === "MEDIUM"
+                ? "#eab308"
+                : "#22c55e",
       }}
       onClick={onClick}
     >
@@ -68,6 +68,14 @@ export function TicketCard({ ticket, onClick }: TicketCardProps) {
               )}
               {ticket.priority}
             </Badge>
+            {ticket.externalSystem === "jira" && (
+              <Badge
+                variant="outline"
+                className="bg-blue-100 text-blue-700 border-blue-200 font-mono text-xs"
+              >
+                🎫 {ticket.externalId}
+              </Badge>
+            )}
             {ticket.externalSystem === "osticket" && (
               <Badge
                 variant="outline"

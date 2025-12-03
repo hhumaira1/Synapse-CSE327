@@ -1,5 +1,6 @@
 package com.example.synapse.presentation.tickets
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -27,9 +28,13 @@ fun TicketDetailDialog(
     comments: List<TicketComment>,
     onDismiss: () -> Unit,
     onAddComment: (String) -> Unit,
+    onUpdateStatus: ((String) -> Unit)? = null,
+    onUpdatePriority: ((String) -> Unit)? = null,
     isLoading: Boolean = false
 ) {
     var commentText by remember { mutableStateOf("") }
+    var showStatusMenu by remember { mutableStateOf(false) }
+    var showPriorityMenu by remember { mutableStateOf(false) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -73,19 +78,97 @@ fun TicketDetailDialog(
                         .verticalScroll(rememberScrollState()),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    // Status and Priority Badges
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Badge(
-                            containerColor = getStatusColor(ticket.status),
-                            contentColor = Color.White
-                        ) {
-                            Text(ticket.status.name.replace("_", " "))
+                    // Status and Priority Controls
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        // Status Dropdown
+                        Box {
+                            Badge(
+                                containerColor = getStatusColor(ticket.status),
+                                contentColor = Color.White,
+                                modifier = Modifier.clickable { 
+                                    if (onUpdateStatus != null && ticket.status != TicketStatus.CLOSED) {
+                                        showStatusMenu = true 
+                                    }
+                                }
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    Text(ticket.status.name.replace("_", " "))
+                                    if (onUpdateStatus != null && ticket.status != TicketStatus.CLOSED) {
+                                        Icon(
+                                            Icons.Default.ArrowDropDown,
+                                            contentDescription = "Change status",
+                                            modifier = Modifier.size(16.dp)
+                                        )
+                                    }
+                                }
+                            }
+                            
+                            DropdownMenu(
+                                expanded = showStatusMenu,
+                                onDismissRequest = { showStatusMenu = false }
+                            ) {
+                                TicketStatus.values().forEach { status ->
+                                    if (status != ticket.status) {
+                                        DropdownMenuItem(
+                                            text = { Text(status.name.replace("_", " ")) },
+                                            onClick = {
+                                                onUpdateStatus?.invoke(status.name)
+                                                showStatusMenu = false
+                                            }
+                                        )
+                                    }
+                                }
+                            }
                         }
-                        Badge(
-                            containerColor = getPriorityColor(ticket.priority),
-                            contentColor = Color.White
-                        ) {
-                            Text(ticket.priority.name)
+                        
+                        // Priority Dropdown
+                        Box {
+                            Badge(
+                                containerColor = getPriorityColor(ticket.priority),
+                                contentColor = Color.White,
+                                modifier = Modifier.clickable { 
+                                    if (onUpdatePriority != null) {
+                                        showPriorityMenu = true 
+                                    }
+                                }
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    Text(ticket.priority.name)
+                                    if (onUpdatePriority != null) {
+                                        Icon(
+                                            Icons.Default.ArrowDropDown,
+                                            contentDescription = "Change priority",
+                                            modifier = Modifier.size(16.dp)
+                                        )
+                                    }
+                                }
+                            }
+                            
+                            DropdownMenu(
+                                expanded = showPriorityMenu,
+                                onDismissRequest = { showPriorityMenu = false }
+                            ) {
+                                TicketPriority.values().forEach { priority ->
+                                    if (priority != ticket.priority) {
+                                        DropdownMenuItem(
+                                            text = { Text(priority.name) },
+                                            onClick = {
+                                                onUpdatePriority?.invoke(priority.name)
+                                                showPriorityMenu = false
+                                            }
+                                        )
+                                    }
+                                }
+                            }
                         }
                     }
 

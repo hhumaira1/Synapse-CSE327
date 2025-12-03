@@ -145,12 +145,13 @@ fun OnlineUsersScreen(
                     }
                 }
                 
-                // User list
                 items(users) { user ->
                     UserListItem(
                         user = user,
                         onCallClick = {
-                            callViewModel.startCall(user.id, user.name ?: user.email)
+                            // Use supabaseUserId for CRM agents, id for portal customers
+                            val calleeId = user.supabaseUserId ?: user.id
+                            callViewModel.startCall(calleeId, user.name ?: user.email)
                         }
                     )
                 }

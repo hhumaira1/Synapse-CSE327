@@ -143,6 +143,28 @@ fun TicketsScreen(
                 val ticketId = uiState.selectedTicket?.id ?: ""
                 viewModel.addComment(ticketId, content)
             },
+            onUpdateStatus = { status ->
+                val ticketId = uiState.selectedTicket?.id ?: ""
+                viewModel.updateTicketStatus(ticketId, status) {
+                    viewModel.loadTicketById(ticketId)
+                }
+            },
+            onUpdatePriority = { priority ->
+                val ticketId = uiState.selectedTicket?.id ?: ""
+                viewModel.updateTicket(
+                    ticketId,
+                    com.example.synapse.data.api.request.UpdateTicketRequest(
+                        title = null,
+                        description = null,
+                        status = null,
+                        priority = priority,
+                        contactId = null,
+                        dealId = null
+                    )
+                ) {
+                    viewModel.loadTicketById(ticketId)
+                }
+            },
             isLoading = uiState.isLoadingDetail
         )
     }
@@ -234,6 +256,22 @@ fun TicketCard(
                         ) 
                     }
                 )
+                
+                // Jira Badge (if linked to Jira)
+                if (ticket.externalSystem == "jira" && ticket.externalId != null) {
+                    AssistChip(
+                        onClick = { },
+                        label = { 
+                            Text(
+                                "\uD83C\uDFAB ${ticket.externalId}",
+                                style = MaterialTheme.typography.labelSmall
+                            ) 
+                        },
+                        colors = AssistChipDefaults.assistChipColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer
+                        )
+                    )
+                }
             }
             
             // Contact Name

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.synapse.data.api.voip.OnlineUser
 import com.example.synapse.data.repository.VoipRepository
+import com.example.synapse.data.preferences.PreferencesManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +23,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class OnlineUsersViewModel @Inject constructor(
-    private val voipRepository: VoipRepository
+    private val voipRepository: VoipRepository,
+    private val preferencesManager: PreferencesManager
 ) : ViewModel() {
     
     private val tag = "OnlineUsersViewModel"
@@ -38,9 +40,10 @@ class OnlineUsersViewModel @Inject constructor(
     val error: StateFlow<String?> = _error.asStateFlow()
     
     private var autoRefreshJob: kotlinx.coroutines.Job? = null
+    private var isPortalUserConnected = false
     
     init {
-        // Start auto-refresh
+        // Start auto-refresh - default to non-portal
         startAutoRefresh()
     }
     
@@ -52,6 +55,12 @@ class OnlineUsersViewModel @Inject constructor(
             try {
                 _isLoading.value = true
                 _error.value = null
+                
+                // Connect WebSocket for portal users (first time only)
+                if (isPortalUser && !isPortalUserConnected) {
+                    connectPortalWebSocket()
+                    isPortalUserConnected = true
+                }
                 
                 Log.d(tag, "🔍 Loading ${if (isPortalUser) "available agents" else "online users"}...")
                 
@@ -96,8 +105,34 @@ class OnlineUsersViewModel @Inject constructor(
         loadOnlineUsers(isPortalUser)
     }
     
+    /**
+     * Connect WebSocket for portal customers
+     */
+    private suspend fun connectPortalWebSocket() {
+        try {
+            val userId = preferencesManager.getUserId()
+            val tenantId = preferencesManager.getTenantId()
+            
+            if (userId.isNullOrEmpty() || tenantId.isNullOrEmpty()) {
+                Log.w(tag, "⚠️ Cannot connect portal WebSocket: userId or tenantId is null")
+                return
+            }
+            
+            Log.d(tag, "🔌 Portal customer connecting to WebSocket: userId=$userId, tenantId=$tenantId")
+            voipRepository.connectSocket(userId, tenantId)
+            Log.d(tag, "✅ Portal customer WebSocket connected")
+        } catch (e: Exception) {
+            Log.e(tag, "❌ Failed to connect portal WebSocket: ${e.message}", e)
+        }
+    }
+    
     override fun onCleared() {
         super.onCleared()
         autoRefreshJob?.cancel()
+        // Disconnect socket if portal user
+        if (isPortalUserConnected) {
+            voipRepository.disconnectSocket()
+            Log.d(tag, "🔌 Portal customer WebSocket disconnected")
+        }
     }
 }

@@ -560,7 +560,7 @@ fun NavigationDrawerContent(
         NavItem("Deals", Icons.Default.Business, "deals"),
         NavItem("Pipelines", Icons.Default.Leaderboard, "pipelines"),
         NavItem("Tickets", Icons.Default.ConfirmationNumber, "tickets"),
-        NavItem("Call", Icons.Default.Call, "call"),
+        NavItem("Call", Icons.Default.Call, "online_users"),
         NavItem("Analytics", Icons.Default.Assessment, "analytics")
     )
 

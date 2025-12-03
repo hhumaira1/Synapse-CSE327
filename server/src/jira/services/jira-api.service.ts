@@ -331,4 +331,80 @@ export class JiraApiService {
   getProjectKey(): string | null {
     return this.config?.projectKey || null;
   }
+
+  /**
+   * Find Jira user by email
+   */
+  async findUserByEmail(email: string): Promise<{ accountId: string; displayName: string } | null> {
+    if (!this.axiosInstance) {
+      throw new HttpException(
+        'Jira API not initialized',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    try {
+      const response = await this.axiosInstance.get<Array<{
+        accountId: string;
+        displayName: string;
+        emailAddress: string;
+      }>>('/user/search', {
+        params: { query: email },
+      });
+
+      if (response.data && response.data.length > 0) {
+        return {
+          accountId: response.data[0].accountId,
+          displayName: response.data[0].displayName,
+        };
+      }
+
+      return null;
+    } catch (error: any) {
+      this.logger.warn(`Failed to find Jira user by email ${email}:`, error?.message);
+      return null;
+    }
+  }
+
+  /**
+   * Assign issue to user
+   */
+  async assignIssue(issueKey: string, accountId: string | null): Promise<void> {
+    if (!this.axiosInstance) {
+      throw new HttpException(
+        'Jira API not initialized',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    try {
+      await this.axiosInstance.put(`/issue/${issueKey}`, {
+        fields: {
+          assignee: accountId ? { accountId } : null,
+        },
+      });
+
+      this.logger.log(`Issue ${issueKey} assigned to ${accountId || 'unassigned'}`);
+    } catch (error: any) {
+      const errorMsg =
+        error?.response?.data?.errorMessages?.join(', ') ||
+        error?.message ||
+        'Unknown error';
+      this.logger.error(`Failed to assign issue ${issueKey}:`, errorMsg);
+      throw new HttpException(
+        `Failed to assign issue: ${errorMsg}`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  /**
+   * Get Jira issue URL
+   */
+  getIssueUrl(issueKey: string): string | null {
+    if (!this.config) {
+      return null;
+    }
+    return `${this.config.baseUrl}/browse/${issueKey}`;
+  }
 }

@@ -59,6 +59,7 @@ data class EndCallResponse(
 
 data class OnlineUser(
     val id: String,
+    val supabaseUserId: String? = null, // For CRM users, this is the Supabase ID
     val name: String,
     val email: String,
     val type: String, // "CRM_USER" or "PORTAL_CUSTOMER"

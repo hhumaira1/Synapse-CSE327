@@ -15,25 +15,25 @@ import {
   TicketSource,
 } from 'prisma/generated/client';
 
-// ==================== ZAMMAD INTEGRATION ====================
-import { ZammadService } from '../../zammad/services/zammad.service';
-import { ZammadApiService } from '../../zammad/services/zammad-api.service';
+// ==================== JIRA INTEGRATION ====================
+import { JiraApiService } from '../../jira/services/jira-api.service';
+import {
+  CreateJiraIssueRequest,
+  PRIORITY_MAP,
+  STATUS_MAP,
+  JIRA_TO_INTERNAL_STATUS,
+  JIRA_TO_INTERNAL_PRIORITY,
+} from '../../jira/interfaces/jira-types';
 
-// ==================== JIRA INTEGRATION (COMMENTED OUT) ====================
-// import { JiraApiService } from '../../jira/services/jira-api.service';
-// import {
-//   CreateJiraIssueRequest,
-//   PRIORITY_MAP,
-//   STATUS_MAP,
-//   JIRA_TO_INTERNAL_STATUS,
-//   JIRA_TO_INTERNAL_PRIORITY,
-// } from '../../jira/interfaces/jira-types';
+// ==================== ZAMMAD INTEGRATION (COMMENTED OUT) ====================
+// import { ZammadService } from '../../zammad/services/zammad.service';
+// import { ZammadApiService } from '../../zammad/services/zammad-api.service';
 
 /**
- * Tickets Service - Zammad as PRIMARY system
+ * Tickets Service - Jira as PRIMARY system
  * Internal DB acts as CACHE for performance and analytics
  * 
- * MIGRATION NOTE: Jira code commented out, replaced with Zammad
+ * MIGRATION NOTE: Switched from Zammad to Jira
  */
 @Injectable()
 export class TicketsService {
@@ -41,13 +41,13 @@ export class TicketsService {
 
   constructor(
     private prisma: PrismaService,
-    private zammadApi: ZammadApiService,
-    private zammadService: ZammadService,
-    // private jiraApi: JiraApiService, // COMMENTED OUT
+    private jiraApi: JiraApiService,
+    // private zammadApi: ZammadApiService, // COMMENTED OUT
+    // private zammadService: ZammadService, // COMMENTED OUT
   ) { }
 
   /**
-   * Create ticket - PRIMARY operation in Zammad, then cache locally
+   * Create ticket - PRIMARY operation in Jira, then cache locally
    */
   async create(tenantId: string, createTicketDto: CreateTicketDto) {
     // Get contact details
@@ -73,20 +73,68 @@ export class TicketsService {
       }
     }
 
-    // Create ticket in Zammad FIRST (primary system)
-    let zammadTicket;
+    // Get assigned user's Jira account ID if assigned
+    let jiraAssigneeId: string | null = null;
+    if (createTicketDto.assignedUserId) {
+      const assignedUser = await this.prisma.user.findUnique({
+        where: { id: createTicketDto.assignedUserId },
+      });
+
+      if (assignedUser && assignedUser.email) {
+        const jiraUser = await this.jiraApi.findUserByEmail(assignedUser.email);
+        if (jiraUser) {
+          jiraAssigneeId = jiraUser.accountId;
+          this.logger.log(`Found Jira user for ${assignedUser.email}: ${jiraUser.displayName}`);
+        } else {
+          this.logger.warn(`No Jira user found for email: ${assignedUser.email}`);
+        }
+      }
+    }
+
+    // Create ticket in Jira FIRST (primary system)
+    let jiraIssue;
     try {
-      zammadTicket = await this.zammadService.createTicketInZammad(
-        tenantId,
-        createTicketDto,
-        contact.email || 'no-email@example.com',
-        contact.firstName || 'Unknown',
-        contact.lastName || 'Customer',
-      );
+      const descriptionText = `${createTicketDto.description || createTicketDto.title}
+
+Submitted by: ${contact.firstName} ${contact.lastName}
+Email: ${contact.email || 'N/A'}
+Phone: ${contact.phone || 'N/A'}`;
+
+      const jiraRequest: CreateJiraIssueRequest = {
+        fields: {
+          project: { key: this.jiraApi.getProjectKey() || 'KAN' },
+          summary: createTicketDto.title,
+          description: {
+            type: 'doc',
+            version: 1,
+            content: [
+              {
+                type: 'paragraph',
+                content: [
+                  {
+                    type: 'text',
+                    text: descriptionText,
+                  },
+                ],
+              },
+            ],
+          },
+          issuetype: { name: 'Task' },
+          priority: { name: PRIORITY_MAP[createTicketDto.priority || 'MEDIUM'] },
+          labels: [`tenant-${tenantId}`], // ← ADD TENANT LABEL for filtering
+        },
+      };
+
+      // Add assignee if available
+      if (jiraAssigneeId) {
+        jiraRequest.fields.assignee = { accountId: jiraAssigneeId };
+      }
+
+      jiraIssue = await this.jiraApi.createIssue(jiraRequest);
     } catch (error) {
-      this.logger.error('Failed to create ticket in Zammad:', error);
+      this.logger.error('Failed to create ticket in Jira:', error);
       throw new HttpException(
-        'Failed to create ticket in Zammad. Please check your integration settings.',
+        'Failed to create ticket in Jira. Please check your integration settings.',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -104,8 +152,8 @@ export class TicketsService {
         status: TicketStatus.OPEN,
         priority: createTicketDto.priority || TicketPriority.MEDIUM,
         source: createTicketDto.source || TicketSource.API,
-        externalId: zammadTicket.id.toString(), // Zammad ticket ID
-        externalSystem: 'zammad',
+        externalId: jiraIssue.key, // Jira issue key (e.g., "PROJ-123")
+        externalSystem: 'jira',
         submittedByPortalCustomer:
           createTicketDto.submittedByPortalCustomer || false,
       },
@@ -118,31 +166,10 @@ export class TicketsService {
     });
 
     this.logger.log(
-      `Created ticket in Zammad: #${zammadTicket.number}, cached as ${cachedTicket.id}`,
+      `Created ticket in Jira: ${jiraIssue.key}, cached as ${cachedTicket.id}`,
     );
 
     return cachedTicket;
-
-    // ==================== JIRA CODE (COMMENTED OUT) ====================
-    // await this.initializeJira(tenantId);
-    // const descriptionText = `${createTicketDto.description || createTicketDto.title}
-    //
-    // Submitted by: ${contact.firstName} ${contact.lastName}
-    // Email: ${contact.email || 'N/A'}
-    // Phone: ${contact.phone || 'N/A'}`;
-    //
-    // const jiraRequest: CreateJiraIssueRequest = {
-    //   fields: {
-    //     project: { key: this.jiraApi.getProjectKey() || 'KAN' },
-    //     summary: createTicketDto.title,
-    //     description: { ... },
-    //     issuetype: { name: 'Task' },
-    //     priority: { name: PRIORITY_MAP[createTicketDto.priority || 'MEDIUM'] },
-    //   },
-    // };
-    // const jiraResponse = await this.jiraApi.createIssue(jiraRequest);
-    // externalId: jiraResponse.key,
-    // externalSystem: 'jira',
   }
 
   /**
@@ -163,7 +190,7 @@ export class TicketsService {
     return this.prisma.ticket.findMany({
       where: {
         tenantId,
-        externalSystem: 'zammad', // Only return Zammad tickets
+        externalSystem: 'jira', // Only return Jira tickets
         ...(filters?.status && { status: filters.status }),
         ...(filters?.priority && { priority: filters.priority }),
         ...(filters?.assignedUserId && {
@@ -188,11 +215,11 @@ export class TicketsService {
   }
 
   /**
-   * Find one ticket - Read from CACHE, optionally refresh from Zammad
+   * Find one ticket - Read from CACHE, optionally refresh from Jira
    */
   async findOne(tenantId: string, id: string, refresh = false) {
     const ticket = await this.prisma.ticket.findFirst({
-      where: { id, tenantId, externalSystem: 'zammad' },
+      where: { id, tenantId, externalSystem: 'jira' },
       include: {
         contact: true,
         portalCustomer: true,
@@ -212,27 +239,28 @@ export class TicketsService {
       throw new NotFoundException(`Ticket with ID ${id} not found`);
     }
 
-    // Optionally refresh from Zammad
+    // Optionally refresh from Jira
     if (refresh && ticket.externalId) {
       try {
-        const zammadTicket = await this.zammadApi.getTicket(
-          parseInt(ticket.externalId),
-        );
+        const jiraIssue = await this.jiraApi.getIssue(ticket.externalId);
+
+        // Map Jira status to internal status
+        const mappedStatus = JIRA_TO_INTERNAL_STATUS[jiraIssue.fields.status.name] || 'OPEN';
+
+        // Map Jira priority to internal priority
+        const mappedPriority = JIRA_TO_INTERNAL_PRIORITY[jiraIssue.fields.priority?.name || 'Medium'] || 'MEDIUM';
 
         // Update cache with latest data
         await this.prisma.ticket.update({
           where: { id },
           data: {
-            status: this.zammadService.mapStatusFromZammad(
-              zammadTicket.state,
-            ) as TicketStatus,
-            priority: this.zammadService.mapPriorityFromZammad(
-              zammadTicket.priority,
-            ) as TicketPriority,
+            status: mappedStatus as TicketStatus,
+            priority: mappedPriority as TicketPriority,
+            title: jiraIssue.fields.summary,
           },
         });
       } catch (error) {
-        this.logger.warn(`Failed to refresh ticket from Zammad:`, error);
+        this.logger.warn(`Failed to refresh ticket from Jira:`, error);
       }
     }
 
@@ -240,11 +268,11 @@ export class TicketsService {
   }
 
   /**
-   * Update ticket - PRIMARY operation in Zammad, then update cache
+   * Update ticket - PRIMARY operation in Jira, then update cache
    */
   async update(tenantId: string, id: string, updateTicketDto: UpdateTicketDto) {
     const ticket = await this.prisma.ticket.findFirst({
-      where: { id, tenantId, externalSystem: 'zammad' },
+      where: { id, tenantId, externalSystem: 'jira' },
     });
 
     if (!ticket) {
@@ -253,37 +281,78 @@ export class TicketsService {
 
     if (!ticket.externalId) {
       throw new HttpException(
-        'Ticket not linked to Zammad',
+        'Ticket not linked to Jira',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    // Update in Zammad FIRST (primary system)
+    // Update in Jira FIRST (primary system)
     try {
+      // Handle status change via transition
+      if (updateTicketDto.status) {
+        const jiraStatus = STATUS_MAP[updateTicketDto.status];
+        if (jiraStatus) {
+          await this.jiraApi.transitionIssue(ticket.externalId, jiraStatus);
+        }
+      }
+
+      // Build fields to update
       const updateFields: any = {};
 
-      if (updateTicketDto.status) {
-        updateFields.state = this.zammadService.mapStatusToZammad(
-          updateTicketDto.status,
-        );
-      }
-
       if (updateTicketDto.priority) {
-        updateFields.priority = this.zammadService.mapPriorityToZammad(
-          updateTicketDto.priority,
-        );
+        updateFields.priority = { name: PRIORITY_MAP[updateTicketDto.priority] };
       }
 
+      if (updateTicketDto.title) {
+        updateFields.summary = updateTicketDto.title;
+      }
+
+      if (updateTicketDto.description) {
+        updateFields.description = {
+          type: 'doc',
+          version: 1,
+          content: [
+            {
+              type: 'paragraph',
+              content: [
+                {
+                  type: 'text',
+                  text: updateTicketDto.description,
+                },
+              ],
+            },
+          ],
+        };
+      }
+
+      // Handle assignee update
+      if (updateTicketDto.assignedUserId !== undefined) {
+        if (updateTicketDto.assignedUserId) {
+          // Assign to a user
+          const assignedUser = await this.prisma.user.findUnique({
+            where: { id: updateTicketDto.assignedUserId },
+          });
+
+          if (assignedUser && assignedUser.email) {
+            const jiraUser = await this.jiraApi.findUserByEmail(assignedUser.email);
+            if (jiraUser) {
+              await this.jiraApi.assignIssue(ticket.externalId, jiraUser.accountId);
+            }
+          }
+        } else {
+          // Unassign the ticket
+          await this.jiraApi.assignIssue(ticket.externalId, null);
+        }
+      }
+
+      // Update other fields if any
       if (Object.keys(updateFields).length > 0) {
-        await this.zammadApi.updateTicket(
-          parseInt(ticket.externalId),
-          updateFields,
-        );
+        await this.jiraApi.updateIssue(ticket.externalId, updateFields);
       }
     } catch (error) {
-      this.logger.error('Failed to update ticket in Zammad:', error);
+      this.logger.error('Failed to update ticket in Jira:', error);
       throw new HttpException(
-        'Failed to update ticket in Zammad',
+        'Failed to update ticket in Jira',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -300,17 +369,17 @@ export class TicketsService {
       },
     });
 
-    this.logger.log(`Updated ticket in Zammad: #${ticket.externalId}`);
+    this.logger.log(`Updated ticket in Jira: ${ticket.externalId}`);
 
     return updatedTicket;
   }
 
   /**
-   * Delete ticket - Close in Zammad, remove from cache
+   * Delete ticket - Close in Jira, remove from cache
    */
   async remove(tenantId: string, id: string) {
     const ticket = await this.prisma.ticket.findFirst({
-      where: { id, tenantId, externalSystem: 'zammad' },
+      where: { id, tenantId, externalSystem: 'jira' },
     });
 
     if (!ticket) {
@@ -318,14 +387,12 @@ export class TicketsService {
     }
 
     if (ticket.externalId) {
-      // Close ticket in Zammad
+      // Close ticket in Jira (transition to Closed status)
       try {
-        await this.zammadApi.updateTicket(parseInt(ticket.externalId), {
-          state: 'closed',
-        });
-        this.logger.log(`Closed ticket in Zammad: #${ticket.externalId}`);
+        await this.jiraApi.transitionIssue(ticket.externalId, 'Closed');
+        this.logger.log(`Closed ticket in Jira: ${ticket.externalId}`);
       } catch (error) {
-        this.logger.warn('Failed to close ticket in Zammad:', error);
+        this.logger.warn('Failed to close ticket in Jira:', error);
         // Continue to delete cache anyway
       }
     }
@@ -337,7 +404,7 @@ export class TicketsService {
   }
 
   /**
-   * Add comment - PRIMARY operation in Zammad, then cache locally
+   * Add comment - PRIMARY operation in Jira, then cache locally
    */
   async addComment(
     tenantId: string,
@@ -347,7 +414,7 @@ export class TicketsService {
     authorName?: string,
   ) {
     const ticket = await this.prisma.ticket.findFirst({
-      where: { id: ticketId, tenantId, externalSystem: 'zammad' },
+      where: { id: ticketId, tenantId, externalSystem: 'jira' },
     });
 
     if (!ticket) {
@@ -356,26 +423,22 @@ export class TicketsService {
 
     if (!ticket.externalId) {
       throw new HttpException(
-        'Ticket not linked to Zammad',
+        'Ticket not linked to Jira',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    // Add article to Zammad FIRST (primary system)
+    // Add comment to Jira FIRST (primary system)
     const commentText = authorName
       ? `${authorName}: ${addCommentDto.content}`
       : addCommentDto.content;
 
     try {
-      await this.zammadApi.addArticle(
-        parseInt(ticket.externalId),
-        commentText,
-        true, // internal note
-      );
+      await this.jiraApi.addComment(ticket.externalId, commentText);
     } catch (error) {
-      this.logger.error('Failed to add comment to Zammad:', error);
+      this.logger.error('Failed to add comment to Jira:', error);
       throw new HttpException(
-        'Failed to add comment to Zammad',
+        'Failed to add comment to Jira',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -395,13 +458,13 @@ export class TicketsService {
       },
     });
 
-    this.logger.log(`Added comment to Zammad ticket: #${ticket.externalId}`);
+    this.logger.log(`Added comment to Jira ticket: ${ticket.externalId}`);
 
     return comment;
   }
 
   /**
-   * Add portal comment - PRIMARY operation in Zammad, then cache
+   * Add portal comment - PRIMARY operation in Jira, then cache
    */
   async addPortalComment(
     tenantId: string,
@@ -411,7 +474,7 @@ export class TicketsService {
     authorName?: string,
   ) {
     const ticket = await this.prisma.ticket.findFirst({
-      where: { id: ticketId, tenantId, externalSystem: 'zammad' },
+      where: { id: ticketId, tenantId, externalSystem: 'jira' },
     });
 
     if (!ticket) {
@@ -420,26 +483,22 @@ export class TicketsService {
 
     if (!ticket.externalId) {
       throw new HttpException(
-        'Ticket not linked to Zammad',
+        'Ticket not linked to Jira',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    // Add article to Zammad FIRST
+    // Add comment to Jira FIRST
     const commentText = authorName
       ? `${authorName}: ${addCommentDto.content}`
       : addCommentDto.content;
 
     try {
-      await this.zammadApi.addArticle(
-        parseInt(ticket.externalId),
-        commentText,
-        false, // customer-facing
-      );
+      await this.jiraApi.addComment(ticket.externalId, commentText);
     } catch (error) {
-      this.logger.error('Failed to add portal comment to Zammad:', error);
+      this.logger.error('Failed to add portal comment to Jira:', error);
       throw new HttpException(
-        'Failed to add comment to Zammad',
+        'Failed to add comment to Jira',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -470,7 +529,7 @@ export class TicketsService {
       where: {
         tenantId,
         portalCustomerId,
-        externalSystem: 'zammad', // Only Zammad tickets
+        externalSystem: 'jira', // Only Jira tickets
       },
       include: {
         contact: true,
