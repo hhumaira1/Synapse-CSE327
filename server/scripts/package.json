@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "backfill:users": "tsx scripts/backfill-user-names.ts",
+    "setup:superadmin": "tsx scripts/setup-super-admin.ts",
+    "verify:superadmin": "tsx scripts/verify-super-admin.ts",
+    "check:tenants": "tsx scripts/check-tenants.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0"
+  }
+}
