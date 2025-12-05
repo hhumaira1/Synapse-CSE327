@@ -24,7 +24,7 @@ export class JiraSyncService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jiraApi: JiraApiService,
-  ) {}
+  ) { }
 
   /**
    * Auto-sync every 5 minutes
@@ -33,7 +33,7 @@ export class JiraSyncService {
   @Cron(CronExpression.EVERY_5_MINUTES)
   async handleAutoSync() {
     const enabled = process.env.JIRA_AUTO_SYNC_ENABLED !== 'false';
-    
+
     if (!enabled) {
       return;
     }
@@ -64,34 +64,52 @@ export class JiraSyncService {
   }
 
   /**
-   * Sync all tenants that have Jira enabled
+   * Sync all tenants - works with global Jira configuration
+   * Syncs all tickets that are linked to Jira across all tenants
    */
   async syncAllTenants(): Promise<{ synced: number; errors: string[] }> {
     const results = { synced: 0, errors: [] as string[] };
 
     try {
-      // Find all tenants with active Jira integration
-      const integrations = await this.prisma.integration.findMany({
+      // Get all tickets linked to Jira (across all tenants)
+      const tickets = await this.prisma.ticket.findMany({
         where: {
-          serviceName: 'jira',
-          isActive: true,
+          externalSystem: 'jira',
+          externalId: { not: null },
         },
         include: {
           tenant: true,
         },
       });
 
-      this.logger.log(`Found ${integrations.length} tenants with Jira integration`);
+      this.logger.log(`Found ${tickets.length} Jira-linked tickets across all tenants`);
 
-      // Sync each tenant
-      for (const integration of integrations) {
+      // Sync each ticket
+      for (const ticket of tickets) {
         try {
-          const tenantResult = await this.syncTenant(integration.tenantId);
-          results.synced += tenantResult.synced;
-          results.errors.push(...tenantResult.errors);
+          if (!ticket.externalId) continue;
+
+          // Fetch latest data from Jira
+          const jiraIssue = await this.jiraApi.getIssue(ticket.externalId);
+
+          // Update local cache with latest Jira data
+          await this.prisma.ticket.update({
+            where: { id: ticket.id },
+            data: {
+              title: jiraIssue.fields.summary,
+              description: this.extractTextFromADF(jiraIssue.fields.description),
+              status: (JIRA_TO_INTERNAL_STATUS[jiraIssue.fields.status.name] ||
+                TicketStatus.OPEN) as TicketStatus,
+              priority: (JIRA_TO_INTERNAL_PRIORITY[
+                jiraIssue.fields.priority?.name || 'Medium'
+              ] || TicketPriority.MEDIUM) as TicketPriority,
+            },
+          });
+
+          results.synced++;
         } catch (error) {
           const errorMsg = error instanceof Error ? error.message : 'Unknown error';
-          results.errors.push(`Tenant ${integration.tenantId}: ${errorMsg}`);
+          results.errors.push(`Ticket ${ticket.externalId}: ${errorMsg}`);
         }
       }
 

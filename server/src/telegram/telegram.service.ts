@@ -20,8 +20,12 @@ export class TelegramService implements OnModuleInit {
     this.logger.log(`🔧 Initializing Telegram bot... Token found: ${!!token}`);
 
     if (!token) {
-      this.logger.warn('⚠️ TELEGRAM_BOT_TOKEN not found in environment. Telegram bot disabled.');
-      this.logger.warn('   Add TELEGRAM_BOT_TOKEN to .env file to enable Telegram bot');
+      this.logger.warn(
+        '⚠️ TELEGRAM_BOT_TOKEN not found in environment. Telegram bot disabled.',
+      );
+      this.logger.warn(
+        '   Add TELEGRAM_BOT_TOKEN to .env file to enable Telegram bot',
+      );
       return;
     }
 
@@ -37,11 +41,14 @@ export class TelegramService implements OnModuleInit {
         },
       });
       this.logger.log('✅ Telegraf instance created successfully');
-      
+
       this.setupHandlers();
       this.logger.log('✅ Telegram bot handlers configured');
     } catch (error) {
-      this.logger.error('❌ Failed to create Telegraf instance:', error.message);
+      this.logger.error(
+        '❌ Failed to create Telegraf instance:',
+        error.message,
+      );
       this.logger.error('   Token may be invalid or malformed');
       this.bot = null;
     }
@@ -51,14 +58,18 @@ export class TelegramService implements OnModuleInit {
     this.logger.log('🚀 Telegram onModuleInit called');
 
     if (!this.bot) {
-      this.logger.warn('⚠️ Telegram bot not initialized - skipping launch (check TELEGRAM_BOT_TOKEN in .env)');
+      this.logger.warn(
+        '⚠️ Telegram bot not initialized - skipping launch (check TELEGRAM_BOT_TOKEN in .env)',
+      );
       return;
     }
 
     this.logger.log('✅ Bot instance exists, proceeding with launch...');
 
     // Check if webhook URL is configured
-    const webhookDomain = this.configService.get<string>('TELEGRAM_WEBHOOK_DOMAIN');
+    const webhookDomain = this.configService.get<string>(
+      'TELEGRAM_WEBHOOK_DOMAIN',
+    );
 
     if (webhookDomain) {
       // Webhook mode
@@ -99,7 +110,9 @@ export class TelegramService implements OnModuleInit {
         })
         .then(() => {
           clearTimeout(launchTimeout);
-          this.logger.log('✅ Telegram bot successfully started and listening!');
+          this.logger.log(
+            '✅ Telegram bot successfully started and listening!',
+          );
         })
         .catch((error: Error) => {
           clearTimeout(launchTimeout);
@@ -107,12 +120,16 @@ export class TelegramService implements OnModuleInit {
           this.logger.error('❌ Failed to start Telegram bot:', errorMsg);
 
           if (errorMsg.includes('401') || errorMsg.includes('Unauthorized')) {
-            this.logger.error('❌ Invalid bot token - check TELEGRAM_BOT_TOKEN');
+            this.logger.error(
+              '❌ Invalid bot token - check TELEGRAM_BOT_TOKEN',
+            );
           } else if (
             errorMsg.includes('ETIMEDOUT') ||
             errorMsg.includes('timeout')
           ) {
-            this.logger.error('❌ Connection timeout - Telegram API unreachable');
+            this.logger.error(
+              '❌ Connection timeout - Telegram API unreachable',
+            );
             this.logger.error(
               '   Check: Internet connection, firewall, proxy settings',
             );
@@ -136,7 +153,7 @@ export class TelegramService implements OnModuleInit {
 
   private setupHandlers() {
     this.logger.log('Setting up bot handlers...');
-    
+
     // Handle /start command with deep link code
     this.bot.start(async (ctx) => {
       this.logger.log(`📨 Received /start command from ${ctx.from.id}`);
@@ -194,7 +211,9 @@ export class TelegramService implements OnModuleInit {
 
     // Handle all text messages (natural language)
     this.bot.on('text', async (ctx) => {
-      this.logger.log(`📨 Received text message from ${ctx.from.id}: "${ctx.message.text}"`);
+      this.logger.log(
+        `📨 Received text message from ${ctx.from.id}: "${ctx.message.text}"`,
+      );
       const telegramId = ctx.from.id.toString();
       const message = ctx.message.text;
 
@@ -266,7 +285,7 @@ export class TelegramService implements OnModuleInit {
     // Handle inline keyboard button clicks
     this.bot.on('callback_query', async (ctx) => {
       if (!('data' in ctx.callbackQuery)) return;
-      
+
       const callbackData = ctx.callbackQuery.data;
 
       if (callbackData?.startsWith('action:')) {
@@ -290,7 +309,7 @@ export class TelegramService implements OnModuleInit {
 
           // Use same Telegram pseudo-JWT for callback queries
           const telegramJwt = `telegram:${user.userId}:${user.tenantId}`;
-          
+
           const response = await this.chatbotService.chat(
             { message: prompt, conversationId: telegramConversationId },
             user.userId,
